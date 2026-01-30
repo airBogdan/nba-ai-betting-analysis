@@ -6,6 +6,10 @@ from .types import (
     RawTeamStats,
     ProcessedTeamStats,
     RecentGame,
+    GameStatus,
+    GameTeam,
+    GameTeams,
+    ScheduledGame,
 )
 from .client import (
     fetch_nba_api,
@@ -16,6 +20,7 @@ from .client import (
     get_team_standings,
     get_team_statistics,
     get_team_players_statistics,
+    get_games_by_date,
 )
 from .processors import (
     parse_minutes,
@@ -24,6 +29,7 @@ from .processors import (
     get_all_standings,
     get_team_statistics_for_seasons,
     get_team_recent_games,
+    get_scheduled_games,
 )
 
 __all__ = [
@@ -33,6 +39,10 @@ __all__ = [
     "RawTeamStats",
     "ProcessedTeamStats",
     "RecentGame",
+    "GameStatus",
+    "GameTeam",
+    "GameTeams",
+    "ScheduledGame",
     # Client
     "fetch_nba_api",
     "get_teams",
@@ -42,6 +52,7 @@ __all__ = [
     "get_team_standings",
     "get_team_statistics",
     "get_team_players_statistics",
+    "get_games_by_date",
     # Processors
     "parse_minutes",
     "process_player_statistics",
@@ -49,4 +60,5 @@ __all__ = [
     "get_all_standings",
     "get_team_statistics_for_seasons",
     "get_team_recent_games",
+    "get_scheduled_games",
 ]

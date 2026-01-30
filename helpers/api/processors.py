@@ -9,8 +9,9 @@ from .types import (
     RawTeamStats,
     ProcessedTeamStats,
     RecentGame,
+    ScheduledGame,
 )
-from .client import fetch_nba_api, get_team_statistics
+from .client import fetch_nba_api, get_team_statistics, get_games_by_date
 
 
 def parse_minutes(min_str: str) -> float:
@@ -279,6 +280,46 @@ async def get_team_recent_games(
             "home": is_home,
             "margin": team_points - opp_points,
             "date": game["date"]["start"].split("T")[0],
+        })
+
+    return results
+
+
+async def get_scheduled_games(season: int, date: str) -> List[ScheduledGame]:
+    """
+    Get scheduled games for a date with filtered fields.
+
+    Args:
+        season: NBA season year (e.g., 2025)
+        date: Date in YYYY-MM-DD format (e.g., '2026-02-01')
+
+    Returns:
+        List of games with id, date_start, status, and teams (id/name only)
+    """
+    raw_games = await get_games_by_date(season, date)
+    if not raw_games:
+        return []
+
+    results: List[ScheduledGame] = []
+    for game in raw_games:
+        results.append({
+            "id": game["id"],
+            "date_start": game["date"]["start"],
+            "status": {
+                "clock": game["status"]["clock"],
+                "halftime": game["status"]["halftime"],
+                "long": game["status"]["long"],
+            },
+            "teams": {
+                "visitors": {
+                    "id": game["teams"]["visitors"]["id"],
+                    "name": game["teams"]["visitors"]["name"],
+                },
+                "home": {
+                    "id": game["teams"]["home"]["id"],
+                    "name": game["teams"]["home"]["name"],
+                },
+            },
         })
 
     return results

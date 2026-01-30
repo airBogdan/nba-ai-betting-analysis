@@ -95,3 +95,30 @@ class RecentGame(TypedDict):
     home: bool
     margin: int
     date: str
+
+
+class GameStatus(TypedDict):
+    """Game status info."""
+    clock: Optional[str]
+    halftime: bool
+    long: str
+
+
+class GameTeam(TypedDict):
+    """Simplified team info for a game."""
+    id: int
+    name: str
+
+
+class GameTeams(TypedDict):
+    """Teams in a game."""
+    visitors: GameTeam
+    home: GameTeam
+
+
+class ScheduledGame(TypedDict):
+    """Filtered game from schedule."""
+    id: int
+    date_start: str
+    status: GameStatus
+    teams: GameTeams

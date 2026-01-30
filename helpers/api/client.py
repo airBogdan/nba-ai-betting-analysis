@@ -69,3 +69,13 @@ async def get_team_statistics(team_id: int, season: int) -> Optional[List[Any]]:
 async def get_team_players_statistics(team_id: int, season: int) -> Optional[List[Any]]:
     """Get all player statistics for a team in a season."""
     return await fetch_nba_api(f"players/statistics?team={team_id}&season={season}")
+
+
+async def get_games_by_date(season: int, date: str) -> Optional[List[Any]]:
+    """Get all games for a specific date and season.
+
+    Args:
+        season: NBA season year (e.g., 2025)
+        date: Date in YYYY-MM-DD format (e.g., '2026-02-01')
+    """
+    return await fetch_nba_api(f"games?season={season}&league=standard&date={date}")
