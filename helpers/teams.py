@@ -76,10 +76,17 @@ def process_standing(season: int, raw: RawStanding) -> SeasonStanding:
 
 async def get_team_standings_for_seasons(
     team_id: int,
-    num_seasons: int = 2
+    num_seasons: int = 2,
+    season: Optional[int] = None,
 ) -> Optional[List[SeasonStanding]]:
-    """Get standings for a team across multiple seasons."""
-    current_season = get_current_nba_season_year()
+    """Get standings for a team across multiple seasons.
+
+    Args:
+        team_id: Team ID to fetch standings for
+        num_seasons: Number of seasons to fetch (default 2)
+        season: Base season year. If None, uses current season.
+    """
+    current_season = season or get_current_nba_season_year()
     if not current_season:
         return None
 
@@ -98,11 +105,20 @@ async def get_teams_standings(
     team1_id: int,
     team1_name: str,
     team2_id: int,
-    team2_name: str
+    team2_name: str,
+    season: Optional[int] = None,
 ) -> Dict[str, List[SeasonStanding]]:
-    """Get standings for two teams."""
-    team1_standings = await get_team_standings_for_seasons(team1_id)
-    team2_standings = await get_team_standings_for_seasons(team2_id)
+    """Get standings for two teams.
+
+    Args:
+        team1_id: First team ID
+        team1_name: First team name
+        team2_id: Second team ID
+        team2_name: Second team name
+        season: Base season year. If None, uses current season.
+    """
+    team1_standings = await get_team_standings_for_seasons(team1_id, season=season)
+    team2_standings = await get_team_standings_for_seasons(team2_id, season=season)
 
     teams_standings: Dict[str, List[SeasonStanding]] = {}
 

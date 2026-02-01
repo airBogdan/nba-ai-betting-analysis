@@ -2,21 +2,17 @@
 
 import asyncio
 import json
-import os
+import sys
 from pathlib import Path
-from typing import List
 
 from helpers.api import (
-    get_team_id_by_name,
+    get_scheduled_games,
     get_team_statistics_for_seasons,
     get_team_players_statistics,
     get_team_recent_games,
     get_all_standings,
     process_player_statistics,
-    ProcessedPlayerStats,
-    RecentGame,
 )
-from helpers.utils import get_current_nba_season_year
 from helpers.teams import get_teams_standings
 from helpers.games import h2h, compute_h2h_summary, add_game_statistics_to_h2h_results
 from helpers.matchup import build_matchup_analysis
@@ -35,95 +31,107 @@ def write_json(filename: str, data: dict) -> None:
     print(f"Written: {filepath}")
 
 
+async def analyze_game(
+    home_id: int,
+    home_name: str,
+    away_id: int,
+    away_name: str,
+    game_date: str,
+    season: int,
+) -> dict:
+    """Analyze a single matchup and return the analysis dict."""
+    team1_id, team1_name = home_id, home_name
+    team2_id, team2_name = away_id, away_name
+    home_team = home_name
+
+    # Pass season to all functions that need it
+    teams_standings = await get_teams_standings(
+        team1_id, team1_name, team2_id, team2_name, season=season
+    )
+
+    h2h_results = await h2h(team1_id, team2_id)
+    h2h_results = await add_game_statistics_to_h2h_results(h2h_results)
+    h2h_summary = compute_h2h_summary(h2h_results, team1_name, team2_name) if h2h_results else None
+
+    team1_stats = await get_team_statistics_for_seasons(team1_id, season=season)
+    team2_stats = await get_team_statistics_for_seasons(team2_id, season=season)
+
+    team1_raw_stats = await get_team_players_statistics(team1_id, season)
+    team1_players = process_player_statistics(team1_raw_stats or [])
+
+    team2_raw_stats = await get_team_players_statistics(team2_id, season)
+    team2_players = process_player_statistics(team2_raw_stats or [])
+
+    all_standings = await get_all_standings(season)
+
+    team1_recent_games = await get_team_recent_games(team1_id, season, 5, all_standings)
+    team2_recent_games = await get_team_recent_games(team2_id, season, 5, all_standings)
+
+    matchup_analysis = build_matchup_analysis({
+        "team1_name": team1_name,
+        "team2_name": team2_name,
+        "home_team": home_team,
+        "team1_standings": teams_standings.get(team1_name, []),
+        "team2_standings": teams_standings.get(team2_name, []),
+        "team1_stats": team1_stats,
+        "team2_stats": team2_stats,
+        "team1_players": team1_players,
+        "team2_players": team2_players,
+        "team1_recent_games": team1_recent_games,
+        "team2_recent_games": team2_recent_games,
+        "h2h_summary": h2h_summary,
+        "h2h_results": h2h_results,
+        "game_date": game_date,
+    })
+
+    return matchup_analysis
+
+
 async def main() -> None:
-    """Main entry point for matchup analysis."""
-    try:
-        team1_name = "Atlanta Hawks"
-        team2_name = "Philadelphia 76ers"
-        home_team = team1_name  # Set which team is hosting
-        game_date = "2026-01-31"  # Game date for rest calculations (or None for today)
+    """Process all games for a given date."""
+    if len(sys.argv) != 2:
+        print("Usage: python main.py YYYY-MM-DD")
+        sys.exit(1)
 
-        # Get team IDs
-        team1_id = await get_team_id_by_name(team1_name)
-        team2_id = await get_team_id_by_name(team2_name)
+    game_date = sys.argv[1]  # e.g., "2026-01-31"
+    season = 2025  # Hardcoded for now
 
-        if not team1_id or not team2_id:
-            print(f"Could not find one or both teams: {team1_name}={team1_id}, {team2_name}={team2_id}")
-            return
+    # Fetch all scheduled games for the date
+    games = await get_scheduled_games(season, game_date)
+    if not games:
+        print(f"No games found for {game_date}")
+        return
 
-        # Fetch standings and H2H data
-        teams_standings = await get_teams_standings(team1_id, team1_name, team2_id, team2_name)
-        print(f"Teams Standings: {len(teams_standings)} teams loaded")
+    print(f"Found {len(games)} games for {game_date}")
 
-        h2h_results = await h2h(team1_id, team2_id)
-        h2h_game_count = sum(len(games) for games in h2h_results.values()) if h2h_results else 0
-        print(f"H2H Results: {h2h_game_count} games loaded")
+    for game in games:
+        home = game["teams"]["home"]
+        away = game["teams"]["visitors"]
 
-        # Enrich H2H games with detailed box score statistics
-        h2h_results = await add_game_statistics_to_h2h_results(h2h_results)
-        print(f"H2H Game Statistics: enriched {h2h_game_count} games")
+        print(f"\nProcessing: {away['name']} @ {home['name']}")
 
-        h2h_summary = compute_h2h_summary(h2h_results, team1_name, team2_name) if h2h_results else None
-        print("H2H Summary: computed")
+        try:
+            analysis = await analyze_game(
+                home_id=home["id"],
+                home_name=home["name"],
+                away_id=away["id"],
+                away_name=away["name"],
+                game_date=game_date,
+                season=season,
+            )
 
-        # Fetch team statistics
-        team1_stats = await get_team_statistics_for_seasons(team1_id)
-        print(f"{team1_name} Stats: {len(team1_stats) if team1_stats else 0} seasons")
+            # Filename: away_vs_home_date.json (standard "@ notation")
+            away_slug = away["name"].lower().replace(" ", "_")
+            home_slug = home["name"].lower().replace(" ", "_")
+            filename = f"{away_slug}_vs_{home_slug}_{game_date}.json"
 
-        team2_stats = await get_team_statistics_for_seasons(team2_id)
-        print(f"{team2_name} Stats: {len(team2_stats) if team2_stats else 0} seasons")
+            write_json(filename, analysis)
 
-        # Fetch and process player statistics
-        current_season = get_current_nba_season_year()
-        team1_players: List[ProcessedPlayerStats] = []
-        team2_players: List[ProcessedPlayerStats] = []
-        team1_recent_games: List[RecentGame] = []
-        team2_recent_games: List[RecentGame] = []
+        except Exception as e:
+            print(f"Error processing {away['name']} @ {home['name']}: {e}")
+            continue
 
-        if current_season:
-            team1_raw_stats = await get_team_players_statistics(team1_id, current_season)
-            team1_players = process_player_statistics(team1_raw_stats or [])
-            print(f"{team1_name} Players: {len(team1_players)} rotation players")
-
-            team2_raw_stats = await get_team_players_statistics(team2_id, current_season)
-            team2_players = process_player_statistics(team2_raw_stats or [])
-            print(f"{team2_name} Players: {len(team2_players)} rotation players")
-
-            # Fetch all standings for opponent strength lookup
-            all_standings = await get_all_standings(current_season)
-            print(f"All Standings: {len(all_standings) if all_standings else 0} teams")
-
-            # Fetch recent games with opponent strength context
-            team1_recent_games = await get_team_recent_games(team1_id, current_season, 5, all_standings)
-            print(f"{team1_name} Recent Games: {len(team1_recent_games)} games")
-
-            team2_recent_games = await get_team_recent_games(team2_id, current_season, 5, all_standings)
-            print(f"{team2_name} Recent Games: {len(team2_recent_games)} games")
-
-        # Build unified matchup analysis
-        matchup_analysis = build_matchup_analysis({
-            "team1_name": team1_name,
-            "team2_name": team2_name,
-            "home_team": home_team,
-            "team1_standings": teams_standings.get(team1_name, []),
-            "team2_standings": teams_standings.get(team2_name, []),
-            "team1_stats": team1_stats,
-            "team2_stats": team2_stats,
-            "team1_players": team1_players,
-            "team2_players": team2_players,
-            "team1_recent_games": team1_recent_games,
-            "team2_recent_games": team2_recent_games,
-            "h2h_summary": h2h_summary,
-            "h2h_results": h2h_results,
-            "game_date": game_date
-        })
-
-        write_json("matchup_analysis.json", matchup_analysis)
-        print("Matchup Analysis: written")
-
-    except Exception as error:
-        print(f"Error: {error}")
-        raise
+    print(f"\nDone. Processed {len(games)} games.")
 
 
 def run() -> None:

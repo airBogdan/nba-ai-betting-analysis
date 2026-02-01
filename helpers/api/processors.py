@@ -191,10 +191,17 @@ async def get_all_standings(season: int) -> Optional[Dict[str, Dict[str, Any]]]:
 
 async def get_team_statistics_for_seasons(
     team_id: int,
-    num_seasons: int = 2
+    num_seasons: int = 2,
+    season: Optional[int] = None,
 ) -> Optional[Dict[int, ProcessedTeamStats]]:
-    """Get processed team statistics for multiple seasons."""
-    current_season = get_current_nba_season_year()
+    """Get processed team statistics for multiple seasons.
+
+    Args:
+        team_id: Team ID to fetch stats for
+        num_seasons: Number of seasons to fetch (default 2)
+        season: Base season year. If None, uses current season.
+    """
+    current_season = season or get_current_nba_season_year()
     if not current_season:
         return None
 
