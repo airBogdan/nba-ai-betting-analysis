@@ -1,0 +1,103 @@
+{
+  "bets": [
+    {
+      "id": "e524e8cf-a6e6-4cce-9302-8aaa6a49c2d3",
+      "game_id": "la_clippers_vs_phoenix_suns_2026-02-02",
+      "matchup": "LA Clippers @ Phoenix Suns",
+      "pick": "Phoenix Suns",
+      "confidence": "medium",
+      "units": 1.0,
+      "reasoning": "Phoenix's 17-6 home record against Clippers' dismal 9-16 road record creates a significant venue edge. The 6-1 recent H2H record and +3.5 net rating differential provide strong statistical backing. While Clippers are 8-2 L10, their road struggles and missing ~24% of offense with Jones Jr./Bogdanovic limited tips the balance clearly to Phoenix at home.",
+      "primary_edge": "Phoenix 17-6 home vs Clippers 9-16 road combined with 6-1 recent H2H dominance",
+      "date": "2026-02-02",
+      "created_at": "2026-02-01T22:57:46.205483+00:00",
+      "result": "loss",
+      "winner": "LA Clippers",
+      "final_score": "LA Clippers 117 @ Phoenix Suns 93",
+      "actual_total": 210,
+      "actual_margin": -24,
+      "profit_loss": -1.0,
+      "reflection": "The 24-point blowout wasn't variance - we overweighted historical H2H and home/road splits while underweighting the Clippers' surging form. A team going 8-2 in their last 10 with clear momentum deserved more respect than season-long road struggles."
+    },
+    {
+      "id": "3f10aefc-93dc-480f-8ba4-b172a4c9f756",
+      "game_id": "cleveland_cavaliers_vs_portland_trail_blazers_2026-02-02",
+      "matchup": "Cleveland Cavaliers @ Portland Trail Blazers",
+      "pick": "Cleveland Cavaliers",
+      "confidence": "medium",
+      "units": 1.0,
+      "reasoning": "Cleveland's nearly 5-point net rating advantage (+2.19 vs -2.58) is substantial. Portland's 4-game losing streak and 0-2 home record vs Cleveland in H2H history provide additional confidence. Cleveland's 4th quarter strength (+2.8 avg in H2H) suggests they close games well. Garland concerns are noted but Mitchell's 28.2 PPG provides reliable scoring.",
+      "primary_edge": "~5 point net rating differential with Cleveland 7-3 L10 vs Portland on 4-game skid",
+      "date": "2026-02-02",
+      "created_at": "2026-02-01T22:57:46.205509+00:00",
+      "result": "win",
+      "winner": "Cleveland Cavaliers",
+      "final_score": "Cleveland Cavaliers 130 @ Portland Trail Blazers 111",
+      "actual_total": 241,
+      "actual_margin": -19,
+      "profit_loss": 1.0,
+      "reflection": "The primary edge was spot-on - Cleveland's superior net rating and Portland's losing streak played out exactly as expected, with the 19-point margin exceeding even our projections. Process was sound; the medium confidence was perhaps too conservative given the clear statistical separation."
+    },
+    {
+      "id": "9d61cf00-0584-4610-91ab-53911e8eb453",
+      "game_id": "los_angeles_lakers_vs_new_york_knicks_2026-02-02",
+      "matchup": "Los Angeles Lakers @ New York Knicks",
+      "pick": "New York Knicks",
+      "confidence": "low",
+      "units": 0.5,
+      "reasoning": "Knicks' 19-6 home record and +6.3 net rating differential are compelling, but Lakers' 3-1 H2H record (2-0 at MSG) creates real concern. The deciding factor is Lakers' significant availability issues - LeBron (57% games), Reaves (51%), Vincent (58%) representing 29% offensive impact. Knicks' 5-game win streak with dominant margins (+26 avg) shows current form. Lower confidence due to H2H pattern.",
+      "primary_edge": "Knicks elite 19-6 home record + Lakers major availability concerns offset concerning H2H history",
+      "date": "2026-02-02",
+      "created_at": "2026-02-01T22:57:46.205521+00:00",
+      "result": "win",
+      "winner": "New York Knicks",
+      "final_score": "Los Angeles Lakers 100 @ New York Knicks 112",
+      "actual_total": 212,
+      "actual_margin": 12,
+      "profit_loss": 0.5,
+      "reflection": "The primary edge held - Knicks' home dominance and Lakers' availability issues proved decisive despite concerning H2H history. The 12-point margin validated our read on the situational factors, and appropriately sizing down due to H2H uncertainty was the right call."
+    }
+  ],
+  "summary": {
+    "total_bets": 3,
+    "wins": 2,
+    "losses": 1,
+    "pushes": 0,
+    "win_rate": 0.667,
+    "total_units_wagered": 2.5,
+    "net_units": 0.5,
+    "roi": 0.2,
+    "by_confidence": {
+      "medium": {
+        "wins": 1,
+        "losses": 1,
+        "win_rate": 0.5
+      },
+      "low": {
+        "wins": 1,
+        "losses": 0,
+        "win_rate": 1.0
+      }
+    },
+    "by_primary_edge": {
+      "home_court": {
+        "wins": 1,
+        "losses": 1,
+        "win_rate": 0.5
+      },
+      "ratings_edge": {
+        "wins": 1,
+        "losses": 0,
+        "win_rate": 1.0
+      }
+    },
+    "by_bet_type": {
+      "moneyline": {
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 0.667
+      }
+    },
+    "current_streak": "W2"
+  }
+}

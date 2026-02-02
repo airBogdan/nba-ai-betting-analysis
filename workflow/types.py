@@ -1,0 +1,145 @@
+"""TypedDict definitions for betting workflow."""
+
+from typing import Dict, List, Literal, Optional, TypedDict
+
+
+class MoneylineAnalysis(TypedDict):
+    """Moneyline bet analysis from LLM."""
+
+    pick: Optional[str]  # Team name or None if skip
+    confidence: Literal["low", "medium", "high", "skip"]
+    edge: str
+
+
+class SpreadAnalysis(TypedDict):
+    """Spread bet analysis from LLM."""
+
+    pick: str  # Team name
+    line: float  # Negative = favorite, positive = underdog
+    confidence: Literal["low", "medium", "high", "skip"]
+    edge: str
+
+
+class TotalAnalysis(TypedDict):
+    """Totals bet analysis from LLM."""
+
+    pick: Literal["over", "under"]
+    line: float  # The total line (e.g., 224.5)
+    confidence: Literal["low", "medium", "high", "skip"]
+    edge: str
+
+
+class BetRecommendation(TypedDict):
+    """LLM output per game - matches ANALYZE_GAME_PROMPT response."""
+
+    game_id: str
+    matchup: str
+    expected_margin: float  # Positive = home favored, negative = away favored
+    expected_total: float  # Projected combined score
+    moneyline: MoneylineAnalysis
+    spread: SpreadAnalysis
+    total: TotalAnalysis
+    best_bet: Literal["moneyline", "spread", "total", "none"]
+    primary_edge: str
+    case_for: List[str]
+    case_against: List[str]
+    analysis_summary: str
+
+
+class SelectedBet(TypedDict):
+    """Final bet after synthesis."""
+
+    game_id: str
+    matchup: str
+    bet_type: Literal["moneyline", "spread", "total"]
+    pick: str  # Team name for ML/spread, "over"/"under" for totals
+    line: Optional[float]  # Spread number or total number (e.g., -4.5 or 224.5)
+    confidence: Literal["low", "medium", "high"]
+    units: float
+    reasoning: str
+    primary_edge: str
+
+
+class ActiveBet(TypedDict):
+    """Bet awaiting results."""
+
+    id: str
+    game_id: str
+    matchup: str
+    bet_type: Literal["moneyline", "spread", "total"]
+    pick: str  # Team name for ML/spread, "over"/"under" for totals
+    line: Optional[float]  # Spread number or total number
+    confidence: Literal["low", "medium", "high"]
+    units: float
+    reasoning: str
+    primary_edge: str
+    date: str
+    created_at: str
+
+
+class CompletedBet(TypedDict):
+    """Bet with result."""
+
+    id: str
+    game_id: str
+    matchup: str
+    bet_type: Literal["moneyline", "spread", "total"]
+    pick: str
+    line: Optional[float]
+    confidence: Literal["low", "medium", "high"]
+    units: float
+    reasoning: str
+    primary_edge: str
+    date: str
+    created_at: str
+    result: Literal["win", "loss", "push"]
+    winner: str
+    final_score: str
+    actual_total: Optional[int]  # For totals bets
+    actual_margin: Optional[int]  # For spread bets (positive = home win margin)
+    profit_loss: float
+    reflection: str
+
+
+class GameResult(TypedDict):
+    """From API."""
+
+    game_id: str
+    home_team: str
+    away_team: str
+    home_score: int
+    away_score: int
+    winner: str
+    status: str
+
+
+class ConfidenceStats(TypedDict):
+    """Stats by confidence level."""
+
+    wins: int
+    losses: int
+    win_rate: float
+
+
+class BetHistorySummary(TypedDict):
+    """Summary statistics for bet history."""
+
+    total_bets: int
+    wins: int
+    losses: int
+    pushes: int
+    win_rate: float
+    total_units_wagered: float
+    net_units: float
+    roi: float
+    by_confidence: Dict[str, ConfidenceStats]
+    by_primary_edge: Dict[str, ConfidenceStats]
+    by_bet_type: Dict[str, ConfidenceStats]
+    current_streak: str
+
+
+class BetHistory(TypedDict):
+    """Full bet history structure."""
+
+    bets: List[CompletedBet]
+    summary: BetHistorySummary
