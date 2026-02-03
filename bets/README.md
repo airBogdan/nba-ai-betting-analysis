@@ -18,7 +18,7 @@ Creates analysis files in `output/` for today's games.
 
 ### 2. Pre-game: Analyze and select bets
 ```bash
-python3.13 betting.py analyze --date 2026-02-02
+python3.13 betting.py analyze
 ```
 - Analyzes all matchups for the date
 - Selects up to 3 bets (use `--max-bets N` to change)
