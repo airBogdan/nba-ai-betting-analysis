@@ -10,6 +10,7 @@ from .types import (
     GameTeam,
     GameTeams,
     ScheduledGame,
+    Injury,
 )
 from .client import (
     fetch_nba_api,
@@ -32,6 +33,10 @@ from .processors import (
     get_team_recent_games,
     get_scheduled_games,
 )
+from .injuries import (
+    fetch_injuries,
+    filter_injuries_by_teams,
+)
 
 __all__ = [
     # Types
@@ -44,6 +49,7 @@ __all__ = [
     "GameTeam",
     "GameTeams",
     "ScheduledGame",
+    "Injury",
     # Client
     "fetch_nba_api",
     "get_teams",
@@ -63,4 +69,7 @@ __all__ = [
     "get_team_statistics_for_seasons",
     "get_team_recent_games",
     "get_scheduled_games",
+    # Injuries
+    "fetch_injuries",
+    "filter_injuries_by_teams",
 ]

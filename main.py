@@ -12,6 +12,8 @@ from helpers.api import (
     get_team_recent_games,
     get_all_standings,
     process_player_statistics,
+    fetch_injuries,
+    filter_injuries_by_teams,
 )
 from helpers.teams import get_teams_standings
 from helpers.games import h2h, compute_h2h_summary, add_game_statistics_to_h2h_results
@@ -29,6 +31,61 @@ def write_json(filename: str, data: dict) -> None:
     with open(filepath, "w") as f:
         json.dump(data, f, indent=2)
     print(f"Written: {filepath}")
+
+
+def read_json(filename: str) -> dict:
+    """Read data from JSON file."""
+    filepath = OUTPUT_DIR / filename
+    with open(filepath, "r") as f:
+        return json.load(f)
+
+
+async def enrich_with_injuries(
+    game_date: str,
+    generated_files: list[tuple[str, str, str]],
+) -> None:
+    """Fetch injuries and enrich output files.
+
+    Args:
+        game_date: Date in YYYY-MM-DD format
+        generated_files: List of (filename, home_name, away_name) tuples
+    """
+    if not generated_files:
+        return
+
+    print(f"\nFetching injuries for {game_date}...")
+    injuries = await fetch_injuries(game_date)
+
+    if not injuries:
+        print("No injuries data available")
+        return
+
+    print(f"Found {len(injuries)} injury reports")
+
+    # Get all team names involved
+    all_teams = set()
+    for _, home_name, away_name in generated_files:
+        all_teams.add(home_name)
+        all_teams.add(away_name)
+
+    # Filter injuries by teams playing
+    injuries_by_team = filter_injuries_by_teams(injuries, list(all_teams))
+
+    # Enrich each output file
+    for filename, home_name, away_name in generated_files:
+        data = read_json(filename)
+
+        # Add injuries to players section
+        if "players" in data:
+            if home_name in data["players"]:
+                data["players"][home_name]["injuries"] = injuries_by_team.get(home_name, [])
+            if away_name in data["players"]:
+                data["players"][away_name]["injuries"] = injuries_by_team.get(away_name, [])
+
+        write_json(filename, data)
+
+    injury_count = sum(len(v) for v in injuries_by_team.values())
+    print(f"Added {injury_count} injuries to {len(generated_files)} matchup files")
 
 
 async def analyze_game(
@@ -106,6 +163,9 @@ async def main() -> None:
 
     print(f"Found {len(games)} games for {game_date}")
 
+    # Track generated files and their teams for injury enrichment
+    generated_files: list[tuple[str, str, str]] = []  # (filename, home_name, away_name)
+
     for game in games:
         home = game["teams"]["home"]
         away = game["teams"]["visitors"]
@@ -129,12 +189,18 @@ async def main() -> None:
             filename = f"{away_slug}_vs_{home_slug}_{game_date}.json"
 
             write_json(filename, analysis)
+            generated_files.append((filename, home["name"], away["name"]))
 
         except Exception as e:
             print(f"Error processing {away['name']} @ {home['name']}: {e}")
             continue
 
-    print(f"\nDone. Processed {len(games)} games.")
+    print(f"\nProcessed {len(games)} games.")
+
+    # Fetch and apply injuries
+    await enrich_with_injuries(game_date, generated_files)
+
+    print("\nDone.")
 
 
 def run() -> None:

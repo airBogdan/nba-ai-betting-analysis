@@ -122,3 +122,11 @@ class ScheduledGame(TypedDict):
     date_start: str
     status: GameStatus
     teams: GameTeams
+
+
+class Injury(TypedDict):
+    """Player injury report."""
+    player: str
+    status: str  # "Out", "Questionable", "Probable", "Day-to-day"
+    reason: str
+    report_time: str

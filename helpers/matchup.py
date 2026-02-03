@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 from typing_extensions import TypedDict
 
-from .api import ProcessedPlayerStats, ProcessedTeamStats, RecentGame
+from .api import ProcessedPlayerStats, ProcessedTeamStats, RecentGame, Injury
 from .games import compute_quarter_analysis
 from .teams import SeasonStanding
 from .types import H2HResults, H2HSummary, QuarterAnalysis
@@ -146,7 +146,7 @@ class RotationPlayer(TypedDict):
     games: int
 
 
-class TeamPlayers(TypedDict):
+class TeamPlayers(TypedDict, total=False):
     """Team player analysis."""
     rotation: List[RotationPlayer]
     availability_concerns: List[str]
@@ -157,6 +157,7 @@ class TeamPlayers(TypedDict):
     star_dependency: float
     depth_rating: str
     bench_scoring: float
+    injuries: List[Injury]  # Added post-generation from injuries API
 
 
 class MatchupAnalysis(TypedDict):
