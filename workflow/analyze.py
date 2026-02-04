@@ -62,19 +62,52 @@ def format_matchup_string(matchup: Dict[str, Any]) -> str:
     return f"{team1} @ {team2}"
 
 
+def _save_game_file(game: Dict[str, Any]) -> None:
+    """Save game data back to its JSON file, preserving search_context."""
+    filename = game["_file"]
+    path = OUTPUT_DIR / filename
+    save_data = {k: v for k, v in game.items() if not k.startswith("_")}
+    path.write_text(json.dumps(save_data, indent=2))
+
+
+async def _enrich_games_with_search(
+    games: List[Dict[str, Any]], search_mode: str
+) -> None:
+    """Run search enrichment on games and save results to their JSON files."""
+    from .search import search_enrich
+
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_LLM_CALLS)
+
+    async def enrich_one(game: Dict[str, Any]) -> None:
+        async with semaphore:
+            matchup_str = format_matchup_string(game["matchup"])
+            result = await search_enrich(search_mode, game, matchup_str)
+            if result:
+                game["search_context"] = result
+                _save_game_file(game)
+
+    tasks = [enrich_one(game) for game in games]
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    for r in results:
+        if isinstance(r, Exception):
+            print(f"Search enrichment error: {r}")
+
+
 async def analyze_game(
     game_data: Dict[str, Any],
     game_id: str,
     matchup_str: str,
     strategy: Optional[str],
-    search_context: Optional[str] = None,
 ) -> Optional[BetRecommendation]:
     """Analyze a single game with the LLM."""
     home_team = game_data.get("matchup", {}).get("home_team", "Unknown")
+
+    search_context = game_data.get("search_context")
     search_section = f"\n## Web Search Context\n{search_context}\n\n" if search_context else "\n"
 
-    # Strip internal keys before serializing for the LLM
-    clean_data = {k: v for k, v in game_data.items() if not k.startswith("_")}
+    # Strip internal/search keys before serializing for the LLM (search_context
+    # is injected as its own prompt section, not buried in the JSON blob)
+    clean_data = {k: v for k, v in game_data.items() if not k.startswith("_") and k != "search_context"}
 
     prompt = ANALYZE_GAME_PROMPT.format(
         matchup_json=compact_json(clean_data),
@@ -247,14 +280,16 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
 
     print(f"Found {len(games)} games for {date}")
 
+    # Phase 1: Search enrichment (saves results into game JSON files)
+    if search_mode != "none":
+        print(f"Running web search enrichment (strategy {search_mode.upper()})...")
+        await _enrich_games_with_search(games, search_mode)
+
     # Load context
     strategy = read_text(BETS_DIR / "strategy.md")
     history = get_history()
 
-    # Analyze games with concurrency limiting
-    if search_mode != "none":
-        print(f"Web search enrichment: strategy {search_mode.upper()}")
-        from .search import search_enrich
+    # Phase 2: Analyze games with concurrency limiting
     print("Analyzing games...")
     semaphore = asyncio.Semaphore(MAX_CONCURRENT_LLM_CALLS)
 
@@ -263,12 +298,7 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
             # Prefer api_game_id from JSON, fallback to filename-based ID for legacy files
             game_id = str(game["api_game_id"]) if game.get("api_game_id") else extract_game_id(game["_file"])
             matchup_str = format_matchup_string(game["matchup"])
-
-            search_context = None
-            if search_mode != "none":
-                search_context = await search_enrich(search_mode, game, matchup_str)
-
-            return await analyze_game(game, game_id, matchup_str, strategy, search_context)
+            return await analyze_game(game, game_id, matchup_str, strategy)
 
     tasks = [analyze_with_limit(game) for game in games]
     results = await asyncio.gather(*tasks, return_exceptions=True)
