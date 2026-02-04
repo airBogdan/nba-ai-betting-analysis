@@ -214,16 +214,6 @@ SEARCH_QUERY_SYSTEM = (
     "Not keywords. Be specific. Follow the user's instructions exactly."
 )
 
-SEARCH_QUERY_GENERATION_PROMPT = """Identify what's most important to research for this NBA game from a betting perspective.
-
-Matchup: {matchup}
-
-{search_summary}
-
-Consider what's uncertain or could move the line: injury statuses that are questionable, recent news, matchup-specific factors, coaching changes, or roster moves.
-
-Output a 1-2 sentence research directive describing what to look into and why it matters for this game. Not keywords — a clear description."""
-
 SEARCH_PERPLEXITY_WRAPPER = """Research the following for an NBA betting analysis.
 
 Game: {matchup}
@@ -236,26 +226,6 @@ Report your findings organized under clear headers. Include:
 - Any context that explains *why* something matters for this game
 
 Keep it factual and concise. Do not make predictions or betting recommendations."""
-
-SEARCH_DIRECT_PROMPT = """I need current betting-relevant information for an NBA game.
-
-{search_summary}
-
-Research and report on the following, organized under clear headers:
-
-### Injury Report
-Current injury/availability statuses for key players on both teams. Include the specific status (out, doubtful, questionable, probable) and the injury if known.
-
-### Betting Lines
-Current spread, moneyline, and over/under total from major sportsbooks.
-
-### Line Movement
-Any significant line moves from the opening lines and the likely reason (injury news, sharp action, public betting).
-
-### Recent News
-Relevant team news from the last 48 hours — trades, rotation changes, coach comments, rest decisions.
-
-Report facts only. If information is unavailable for a section, say so briefly rather than speculating."""
 
 SEARCH_TEMPLATE_PROMPT = """I need a pre-game research report for an NBA game today.
 

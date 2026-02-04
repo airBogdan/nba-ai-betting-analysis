@@ -78,9 +78,9 @@ async def enrich_with_injuries(
             team1_name = data["matchup"].get("team1", "")
             team2_name = data["matchup"].get("team2", "")
 
-            if "team1" in data["players"]:
+            if data["players"].get("team1") is not None:
                 data["players"]["team1"]["injuries"] = injuries_by_team.get(team1_name, [])
-            if "team2" in data["players"]:
+            if data["players"].get("team2") is not None:
                 data["players"]["team2"]["injuries"] = injuries_by_team.get(team2_name, [])
 
         write_json(filename, data)

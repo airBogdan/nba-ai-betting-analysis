@@ -70,18 +70,18 @@ def _save_game_file(game: Dict[str, Any]) -> None:
     path.write_text(json.dumps(save_data, indent=2))
 
 
-async def _enrich_games_with_search(
-    games: List[Dict[str, Any]], search_mode: str
-) -> None:
-    """Run search enrichment on games and save results to their JSON files."""
-    from .search import search_enrich
+async def _enrich_games_with_search(games: List[Dict[str, Any]], date: str) -> None:
+    """Run web search enrichment on games and save results to their JSON files."""
+    from .search import sanitize_label, search_enrich
 
     semaphore = asyncio.Semaphore(MAX_CONCURRENT_LLM_CALLS)
 
     async def enrich_one(game: Dict[str, Any]) -> None:
         async with semaphore:
             matchup_str = format_matchup_string(game["matchup"])
-            result = await search_enrich(search_mode, game, matchup_str)
+            game_label = sanitize_label(matchup_str)
+            print(f"  {matchup_str}")
+            result = await search_enrich(game, matchup_str, game_label)
             if result:
                 game["search_context"] = result
                 _save_game_file(game)
@@ -107,7 +107,7 @@ async def analyze_game(
 
     # Strip internal/search keys before serializing for the LLM (search_context
     # is injected as its own prompt section, not buried in the JSON blob)
-    clean_data = {k: v for k, v in game_data.items() if not k.startswith("_") and k != "search_context"}
+    clean_data = {k: v for k, v in game_data.items() if not k.startswith("_") and not k.startswith("search_context")}
 
     prompt = ANALYZE_GAME_PROMPT.format(
         matchup_json=compact_json(clean_data),
@@ -260,9 +260,9 @@ def write_journal_pre_game(
     write_text(journal_path, "\n".join(lines))
 
 
-async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False, search_mode: str = "none") -> None:
+async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False) -> None:
     """Run the pre-game analysis workflow."""
-    # Check for existing bets on this date
+    # Check for existing bets on this date (before any API calls)
     active = get_active_bets()
     existing_date_bets = [b for b in active if b["date"] == date]
     if existing_date_bets and not force:
@@ -280,10 +280,9 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
 
     print(f"Found {len(games)} games for {date}")
 
-    # Phase 1: Search enrichment (saves results into game JSON files)
-    if search_mode != "none":
-        print(f"Running web search enrichment (strategy {search_mode.upper()})...")
-        await _enrich_games_with_search(games, search_mode)
+    # Phase 1: Web search enrichment (saves results into game JSON files)
+    print("Running web search enrichment...")
+    await _enrich_games_with_search(games, date)
 
     # Load context
     strategy = read_text(BETS_DIR / "strategy.md")
