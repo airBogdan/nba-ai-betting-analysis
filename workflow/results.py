@@ -11,13 +11,15 @@ from .io import (
     append_text,
     clear_output_dir,
     get_active_bets,
+    get_bankroll,
     get_history,
     save_active_bets,
+    save_bankroll,
     save_history,
 )
 from .llm import complete_json
 from .prompts import REFLECT_BET_PROMPT, SYSTEM_ANALYST
-from .types import ActiveBet, BetHistory, CompletedBet, GameResult
+from .types import ActiveBet, Bankroll, BetHistory, CompletedBet, GameResult
 
 # Limit concurrent LLM calls to avoid rate limiting
 MAX_CONCURRENT_LLM_CALLS = 4
@@ -138,6 +140,56 @@ def _teams_match(name1: str, name2: str) -> bool:
 def _format_score(result: GameResult) -> str:
     """Format score as 'Away 110 @ Home 105' style."""
     return f"{result['away_team']} {result['away_score']} @ {result['home_team']} {result['home_score']}"
+
+
+def calculate_payout(amount: float, odds_price: int, result: str) -> float:
+    """Calculate payout based on American odds.
+
+    American odds:
+    - Negative (e.g., -150): Bet $150 to win $100 → payout = stake * (1 + 100/150)
+    - Positive (e.g., +130): Bet $100 to win $130 → payout = stake * (1 + 130/100)
+    """
+    if result == "push":
+        return amount  # Stake returned
+    if result == "loss":
+        return 0.0  # Already deducted when placed
+
+    # Win: return stake + profit
+    if odds_price == 0:
+        # Fallback to -110 if odds_price is invalid
+        odds_price = -110
+    if odds_price < 0:
+        # Favorite: profit = stake * (100 / abs(odds))
+        profit = amount * (100 / abs(odds_price))
+    else:
+        # Underdog: profit = stake * (odds / 100)
+        profit = amount * (odds_price / 100)
+
+    return amount + profit  # Stake back + profit
+
+
+def update_bankroll_for_result(bet: CompletedBet, bankroll: Bankroll) -> None:
+    """Update bankroll after bet result."""
+    amount = bet.get("amount", 0)
+    if not amount:
+        return  # Legacy bet without amount
+
+    odds_price = bet.get("odds_price", -110)  # Default to standard juice
+    payout = calculate_payout(amount, odds_price, bet["result"])
+
+    if payout > 0:
+        if bet["result"] == "win":
+            description = f"WIN: {bet['matchup']} (+${payout - amount:.2f})"
+        else:  # push
+            description = f"PUSH: {bet['matchup']}"
+        bankroll["transactions"].append({
+            "date": bet["date"],
+            "type": "result",
+            "amount": payout,
+            "bet_id": bet["id"],
+            "description": description,
+        })
+        bankroll["current"] += payout
 
 
 def _evaluate_bet(bet: ActiveBet, result: GameResult) -> tuple:
@@ -542,6 +594,12 @@ async def _process_results_for_date(date: str, season: int) -> None:
             completed.append(completed_bet)
             history = update_history_with_bet(history, completed_bet)
 
+    # Update bankroll for completed bets
+    bankroll = get_bankroll()
+    for completed_bet in completed:
+        update_bankroll_for_result(completed_bet, bankroll)
+    save_bankroll(bankroll)
+
     # Update files
     # Keep bets that weren't for this date, plus unresolved bets from this date
     other_bets = [b for b in active if b["date"] != date]
@@ -561,6 +619,9 @@ async def _process_results_for_date(date: str, season: int) -> None:
         print(f"\nResults: {wins}-{losses}-{pushes}, {net:+.1f} units")
     else:
         print(f"\nResults: {wins}-{losses}, {net:+.1f} units")
+
+    # Print bankroll summary
+    print(f"Bankroll: ${bankroll['current']:.2f}")
 
     if unresolved:
         print(f"{len(unresolved)} bets still pending (games not finished)")

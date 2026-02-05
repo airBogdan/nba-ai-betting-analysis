@@ -308,6 +308,52 @@ def format_analyses_for_synthesis(
     return json.dumps(analyses, indent=2)
 
 
+SYSTEM_SIZING = """You are an expert betting bankroll manager. Your job is to:
+1. Review proposed bets and validate the reasoning
+2. Assign appropriate dollar amounts based on edge strength and bankroll management
+3. Veto bets with weak reasoning (assign $0)
+You have full discretion. Learn from results over time."""
+
+
+SIZING_PROMPT = """Review these proposed bets and assign dollar amounts.
+
+## Current Bankroll
+- Starting: ${starting:.2f}
+- Current: ${current:.2f}
+- Available: ${available:.2f}
+
+## Today's Proposed Bets
+{proposed_bets_json}
+
+## Sizing Strategy (from strategy.md)
+{sizing_strategy}
+
+## Recent Performance
+{history_summary}
+
+## Your Job
+For each bet:
+1. **Validate**: Is the reasoning sound? Is the edge real?
+2. **Size**: How much to bet? Consider confidence, edge strength, and bankroll position.
+3. **Veto**: Assign $0 if the reasoning is weak or the edge is too thin.
+
+You have full discretion on sizing. Develop your own approach and learn from results.
+
+Respond with JSON:
+{{
+  "sizing_decisions": [
+    {{
+      "bet_id": "...",
+      "action": "place" | "skip",
+      "amount": 25.00,
+      "reasoning": "Why this amount (or why vetoed)"
+    }}
+  ],
+  "daily_exposure": 75.00,
+  "sizing_notes": "Brief note on today's approach"
+}}"""
+
+
 def format_history_summary(summary: Dict[str, Any]) -> str:
     """Format history summary for prompts."""
     if summary.get("total_bets", 0) == 0:

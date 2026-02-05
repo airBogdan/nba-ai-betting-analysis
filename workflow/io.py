@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, List, Optional
 
-from .types import ActiveBet, BetHistory, BetHistorySummary
+from .types import ActiveBet, Bankroll, BetHistory, BetHistorySummary
 
 BETS_DIR = Path(__file__).parent.parent / "bets"
 JOURNAL_DIR = BETS_DIR / "journal"
@@ -105,3 +105,34 @@ def get_history() -> BetHistory:
 def save_history(history: BetHistory) -> None:
     """Save history to history.json."""
     write_json(BETS_DIR / "history.json", history)
+
+
+def get_bankroll() -> Bankroll:
+    """Load bankroll.json, create with $1000 if missing."""
+    data = read_json(BETS_DIR / "bankroll.json")
+    if data is None:
+        return {
+            "starting": 1000.0,
+            "current": 1000.0,
+            "transactions": [],
+        }
+    return data
+
+
+def save_bankroll(bankroll: Bankroll) -> None:
+    """Save bankroll to bankroll.json."""
+    write_json(BETS_DIR / "bankroll.json", bankroll)
+
+
+def revert_bankroll_for_date(bankroll: Bankroll, date: str) -> Bankroll:
+    """Revert all transactions for a specific date (for --force re-analysis)."""
+    # Find transactions for this date
+    date_txns = [t for t in bankroll["transactions"] if t["date"] == date]
+    other_txns = [t for t in bankroll["transactions"] if t["date"] != date]
+
+    # Reverse the amounts
+    reverted_amount = sum(t["amount"] for t in date_txns)
+    bankroll["current"] -= reverted_amount  # Undo the transactions
+    bankroll["transactions"] = other_txns
+
+    return bankroll

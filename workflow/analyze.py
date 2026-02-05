@@ -5,27 +5,32 @@ import json
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from .io import (
     BETS_DIR,
     JOURNAL_DIR,
     get_active_bets,
+    get_bankroll,
     get_history,
     read_text,
+    revert_bankroll_for_date,
     save_active_bets,
+    save_bankroll,
     write_text,
 )
 from .llm import complete_json
 from .prompts import (
     ANALYZE_GAME_PROMPT,
+    SIZING_PROMPT,
     SYNTHESIZE_BETS_PROMPT,
     SYSTEM_ANALYST,
+    SYSTEM_SIZING,
     compact_json,
     format_analyses_for_synthesis,
     format_history_summary,
 )
-from .types import ActiveBet, BetRecommendation, SelectedBet
+from .types import ActiveBet, Bankroll, BetRecommendation, SelectedBet
 
 # Limit concurrent LLM calls to avoid rate limiting
 MAX_CONCURRENT_LLM_CALLS = 4
@@ -203,9 +208,105 @@ def create_active_bet(selected: SelectedBet, date: str) -> ActiveBet:
     }
 
 
+def _extract_sizing_strategy(strategy: Optional[str]) -> str:
+    """Extract Position Sizing section from strategy.md."""
+    if not strategy:
+        return "No sizing strategy defined yet."
+    # Find the Position Sizing section
+    if "## Position Sizing" in strategy:
+        start = strategy.index("## Position Sizing")
+        # Find next ## or end of file
+        rest = strategy[start + len("## Position Sizing") :]
+        if "\n## " in rest:
+            end = rest.index("\n## ")
+            return strategy[start : start + len("## Position Sizing") + end]
+        return strategy[start:]
+    return "No sizing strategy defined yet."
+
+
+def _get_odds_price(bet: ActiveBet) -> int:
+    """Get American odds price for a bet. Default to -110 for spread/total."""
+    # TODO: Could enhance to pull from stored odds data
+    # For now, use -110 as standard juice for spread/total
+    if bet["bet_type"] in ("spread", "total"):
+        return -110
+    # Moneyline: would need to look up from game data
+    # For now default to -110 (conservative)
+    return -110
+
+
+def _fallback_sizing(bets: List[ActiveBet], bankroll: Bankroll) -> List[ActiveBet]:
+    """Fallback sizing based on units if LLM fails."""
+    unit_value = bankroll["current"] * 0.01  # 1% per unit
+    for bet in bets:
+        bet["amount"] = round(bet["units"] * unit_value, 2)
+        bet["odds_price"] = _get_odds_price(bet)
+    return bets
+
+
+async def size_bets(
+    proposed_bets: List[ActiveBet],
+    bankroll: Bankroll,
+    strategy: Optional[str],
+    history_summary: Dict[str, Any],
+) -> Tuple[List[ActiveBet], List[Dict[str, str]]]:
+    """Size bets using LLM. Returns (sized_bets, sizing_skipped)."""
+    # Calculate available bankroll (exclude pending bets from other dates)
+    other_pending = [b for b in get_active_bets() if b.get("amount")]
+    pending_amount = sum(b.get("amount", 0) for b in other_pending)
+    available = bankroll["current"] - pending_amount
+
+    prompt = SIZING_PROMPT.format(
+        starting=bankroll["starting"],
+        current=bankroll["current"],
+        available=available,
+        proposed_bets_json=json.dumps(
+            [
+                {
+                    "id": b["id"],
+                    "matchup": b["matchup"],
+                    "bet_type": b["bet_type"],
+                    "pick": b["pick"],
+                    "line": b.get("line"),
+                    "confidence": b["confidence"],
+                    "units": b["units"],
+                    "reasoning": b["reasoning"],
+                    "primary_edge": b["primary_edge"],
+                }
+                for b in proposed_bets
+            ],
+            indent=2,
+        ),
+        sizing_strategy=_extract_sizing_strategy(strategy),
+        history_summary=format_history_summary(history_summary),
+    )
+
+    result = await complete_json(prompt, system=SYSTEM_SIZING)
+    if not result:
+        # Fallback: use unit-based sizing
+        return _fallback_sizing(proposed_bets, bankroll), []
+
+    # Apply sizing decisions
+    sized_bets = []
+    skipped = []
+    decisions = {d["bet_id"]: d for d in result.get("sizing_decisions", [])}
+
+    for bet in proposed_bets:
+        decision = decisions.get(bet["id"])
+        if decision and decision.get("action") == "place" and decision.get("amount", 0) > 0:
+            bet["amount"] = round(decision["amount"], 2)
+            bet["odds_price"] = _get_odds_price(bet)
+            sized_bets.append(bet)
+        else:
+            reason = decision.get("reasoning", "No reasoning") if decision else "No sizing decision"
+            skipped.append({"matchup": bet["matchup"], "reason": f"Vetoed: {reason}"})
+
+    return sized_bets, skipped
+
+
 def write_journal_pre_game(
     date: str,
-    selected: List[SelectedBet],
+    selected: List[ActiveBet],
     skipped: List[Dict[str, str]],
     summary: str,
 ) -> None:
@@ -224,6 +325,13 @@ def write_journal_pre_game(
     if selected:
         lines.append("### Selected Bets")
         lines.append("")
+
+        # Show total wagered if amounts are present
+        total_wagered = sum(b.get("amount", 0) for b in selected)
+        if total_wagered > 0:
+            lines.append(f"**Total wagered: ${total_wagered:.2f}**")
+            lines.append("")
+
         for bet in selected:
             bet_type = bet.get('bet_type', 'moneyline')
             pick = bet.get('pick', 'Unknown')
@@ -239,7 +347,12 @@ def write_journal_pre_game(
 
             lines.append(f"**{bet.get('matchup', 'Unknown')}** - {bet_type.upper()}")
             lines.append(f"- Pick: {pick_display} ({bet.get('confidence', 'unknown')} confidence)")
-            lines.append(f"- Units: {bet.get('units', '?')}")
+            # Show amount if present, otherwise show units
+            amount = bet.get('amount')
+            if amount:
+                lines.append(f"- Amount: ${amount:.2f}")
+            else:
+                lines.append(f"- Units: {bet.get('units', '?')}")
             lines.append(f"- Edge: {bet.get('primary_edge', 'Unknown')}")
             lines.append(f"- Reasoning: {bet.get('reasoning', 'No reasoning provided')}")
             lines.append("")
@@ -268,9 +381,17 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
     if existing_date_bets and not force:
         print(f"Bets already exist for {date}. Use --force to re-analyze or run 'results' first.")
         return
+
+    # Handle --force by reverting bankroll transactions
+    bankroll = get_bankroll()
     if existing_date_bets and force:
         print(f"Removing {len(existing_date_bets)} existing bets for {date} (--force)")
         active = [b for b in active if b["date"] != date]
+        # Revert bankroll transactions for this date
+        bankroll = revert_bankroll_for_date(bankroll, date)
+        # Save immediately so revert persists even if we exit early
+        save_bankroll(bankroll)
+        save_active_bets(active)
 
     # Load games
     games = load_games_for_date(date)
@@ -330,17 +451,45 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
     valid_bets = [s for s in selected if s.get("pick") and s.get("matchup")]
     new_bets = [create_active_bet(s, date) for s in valid_bets]
 
-    # Save
-    save_active_bets(active + new_bets)
-    write_journal_pre_game(
-        date,
-        valid_bets,
-        synthesis.get("skipped", []),
-        synthesis.get("summary", ""),
+    if not new_bets:
+        print("No bets selected by analysis.")
+        write_journal_pre_game(date, [], synthesis.get("skipped", []), synthesis.get("summary", ""))
+        return
+
+    # Size bets
+    print("Sizing bets...")
+    sized_bets, sizing_skipped = await size_bets(
+        new_bets, bankroll, strategy, history["summary"]
     )
 
-    print(f"\nSelected {len(new_bets)} bets:")
-    for bet in new_bets:
+    # Combine skipped lists for journal
+    all_skipped = synthesis.get("skipped", []) + sizing_skipped
+
+    if not sized_bets:
+        print("All bets were vetoed by sizing.")
+        write_journal_pre_game(date, [], all_skipped, synthesis.get("summary", ""))
+        save_bankroll(bankroll)  # Save even if no bets (for force revert)
+        return
+
+    # Record bankroll transactions
+    for bet in sized_bets:
+        bankroll["transactions"].append({
+            "date": date,
+            "type": "bet",
+            "amount": -bet["amount"],  # Negative = deduction
+            "bet_id": bet["id"],
+            "description": f"{bet['matchup']} - {bet['bet_type']} {bet['pick']}",
+        })
+    bankroll["current"] -= sum(b["amount"] for b in sized_bets)
+
+    # Save everything
+    save_bankroll(bankroll)
+    save_active_bets(active + sized_bets)
+    write_journal_pre_game(date, sized_bets, all_skipped, synthesis.get("summary", ""))
+
+    # Print summary with amounts
+    print(f"\nPlaced {len(sized_bets)} bets (${sum(b['amount'] for b in sized_bets):.2f} total):")
+    for bet in sized_bets:
         bet_type = bet['bet_type']
         if bet_type == "spread" and bet.get('line') is not None:
             pick_str = f"{bet['pick']} {bet['line']:+.1f}"
@@ -348,6 +497,7 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
             pick_str = f"{bet['pick']} {bet['line']:.1f}"
         else:
             pick_str = bet['pick']
-        print(f"  {bet['matchup']}: [{bet_type.upper()}] {pick_str} ({bet['confidence']}, {bet['units']}u)")
+        print(f"  {bet['matchup']}: [{bet_type.upper()}] {pick_str} - ${bet['amount']:.2f}")
 
-    print(f"\nSee bets/journal/{date}.md for details")
+    print(f"\nBankroll: ${bankroll['current']:.2f} (was ${bankroll['starting']:.2f})")
+    print(f"See bets/journal/{date}.md for details")

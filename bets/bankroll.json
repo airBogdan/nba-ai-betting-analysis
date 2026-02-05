@@ -1,0 +1,48 @@
+{
+  "starting": 1000.0,
+  "current": 755.0,
+  "transactions": [
+    {
+      "date": "2026-02-05",
+      "type": "bet",
+      "amount": -50.0,
+      "bet_id": "79eb1e41-82b6-4db8-99cd-02bfe327632a",
+      "description": "Oklahoma City Thunder @ San Antonio Spurs - moneyline San Antonio Spurs"
+    },
+    {
+      "date": "2026-02-05",
+      "type": "bet",
+      "amount": -35.0,
+      "bet_id": "9034f958-a22d-4288-9379-51d2296e57c5",
+      "description": "Denver Nuggets @ New York Knicks - spread New York Knicks"
+    },
+    {
+      "date": "2026-02-05",
+      "type": "bet",
+      "amount": -30.0,
+      "bet_id": "91f8484d-5e16-406a-b00d-7e2046ac824f",
+      "description": "Boston Celtics @ Houston Rockets - spread Houston Rockets"
+    },
+    {
+      "date": "2026-02-06",
+      "type": "bet",
+      "amount": -45.0,
+      "bet_id": "bfc2b174-80af-40ff-934e-be3c0d9b4e8a",
+      "description": "San Antonio Spurs @ Dallas Mavericks - spread San Antonio Spurs"
+    },
+    {
+      "date": "2026-02-06",
+      "type": "bet",
+      "amount": -35.0,
+      "bet_id": "c2aa4131-2210-474d-8584-55b03f8242bc",
+      "description": "Chicago Bulls @ Toronto Raptors - total under"
+    },
+    {
+      "date": "2026-02-06",
+      "type": "bet",
+      "amount": -50.0,
+      "bet_id": "7fa882c2-3577-4154-a385-45a106948902",
+      "description": "Golden State Warriors @ Phoenix Suns - total under"
+    }
+  ]
+}

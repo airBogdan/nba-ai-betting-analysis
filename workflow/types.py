@@ -3,6 +3,24 @@
 from typing import Dict, List, Literal, Optional, TypedDict
 
 
+class BankrollTransaction(TypedDict):
+    """Single bankroll transaction."""
+
+    date: str
+    type: Literal["bet", "result", "adjustment"]
+    amount: float  # Negative for bets placed, positive for payouts
+    bet_id: Optional[str]
+    description: str
+
+
+class Bankroll(TypedDict):
+    """Bankroll state."""
+
+    starting: float
+    current: float
+    transactions: List[BankrollTransaction]
+
+
 class MoneylineAnalysis(TypedDict):
     """Moneyline bet analysis from LLM."""
 
@@ -70,8 +88,8 @@ class SelectedBet(TypedDict):
     primary_edge: str
 
 
-class ActiveBet(TypedDict):
-    """Bet awaiting results."""
+class _ActiveBetRequired(TypedDict):
+    """Required fields for ActiveBet."""
 
     id: str
     game_id: str
@@ -87,8 +105,15 @@ class ActiveBet(TypedDict):
     created_at: str
 
 
-class CompletedBet(TypedDict):
-    """Bet with result."""
+class ActiveBet(_ActiveBetRequired, total=False):
+    """Bet awaiting results."""
+
+    amount: float  # Dollar amount to wager
+    odds_price: int  # American odds price for payout calc (e.g., -150, +130)
+
+
+class _CompletedBetRequired(TypedDict):
+    """Required fields for CompletedBet."""
 
     id: str
     game_id: str
@@ -109,6 +134,13 @@ class CompletedBet(TypedDict):
     actual_margin: Optional[int]  # For spread bets (positive = home win margin)
     profit_loss: float
     reflection: str
+
+
+class CompletedBet(_CompletedBetRequired, total=False):
+    """Bet with result."""
+
+    amount: float  # Dollar amount wagered
+    odds_price: int  # American odds used
 
 
 class GameResult(TypedDict):
