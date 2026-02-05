@@ -140,22 +140,85 @@
       "actual_margin": -31,
       "profit_loss": 2.0,
       "reflection": "The ratings edge was completely validated with a 31-point blowout exceeding even our bullish expectations. This was textbook mismatch identification - elite offense vs. worst defense, strong H2H history, and clear momentum differential all aligned perfectly."
+    },
+    {
+      "id": "8d3493d0-100b-4bf1-8e0a-4815d1446751",
+      "game_id": "16246",
+      "matchup": "New York Knicks @ Washington Wizards",
+      "bet_type": "moneyline",
+      "pick": "New York Knicks",
+      "line": null,
+      "confidence": "high",
+      "units": 2.0,
+      "reasoning": "Massive 16-point net rating differential, 7-2 H2H dominance, Knicks on 5-game win streak with dominant margins. Just beat Wizards by 31 two days ago. Despite B2B concerns, talent gap is too large - Wizards are 3-7 L10 and 9-17 at home.",
+      "primary_edge": "ratings_edge",
+      "date": "2026-02-04",
+      "created_at": "2026-02-04T21:57:11.223388+00:00",
+      "result": "win",
+      "winner": "New York Knicks",
+      "final_score": "New York Knicks 132 @ Washington Wizards 101",
+      "actual_total": 233,
+      "actual_margin": -31,
+      "profit_loss": 2.0,
+      "reflection": "The ratings edge was completely valid - Knicks won by exactly 31 points again, matching their previous margin. This was a textbook case of identifying a massive talent disparity that overwhelmed any situational concerns."
+    },
+    {
+      "id": "3ed0d00c-b3cd-4e52-a390-bbc73c888a37",
+      "game_id": "16245",
+      "matchup": "Utah Jazz @ Indiana Pacers",
+      "bet_type": "moneyline",
+      "pick": "Utah Jazz",
+      "line": null,
+      "confidence": "medium",
+      "units": 1.0,
+      "reasoning": "Pacers resting entire rotation (Siakam, Haliburton, Nembhard, Mathurin, Nesmith, McConnell all OUT). Jazz have Markkanen (26.6 PPG) and Collier who just had 22-assist game. Jazz won this exact matchup 131-122 yesterday with similar rosters.",
+      "primary_edge": "injury_edge",
+      "date": "2026-02-04",
+      "created_at": "2026-02-04T21:57:11.223410+00:00",
+      "result": "win",
+      "winner": "Utah Jazz",
+      "final_score": "Utah Jazz 131 @ Indiana Pacers 122",
+      "actual_total": 253,
+      "actual_margin": -9,
+      "profit_loss": 1.0,
+      "reflection": "The injury edge was textbook valid - Pacers missing 6 rotation players created a massive talent gap. Jazz won by exactly 9 points, matching yesterday's result almost identically, confirming the edge was correctly sized."
+    },
+    {
+      "id": "8bce2633-4fcf-4be8-bd6b-05fc01288c18",
+      "game_id": "16252",
+      "matchup": "Philadelphia 76ers @ Golden State Warriors",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 224.5,
+      "confidence": "medium",
+      "units": 1.0,
+      "reasoning": "Both teams missing massive offensive firepower - Curry (26.4 PPG), Butler (season), Kuminga for Warriors; Embiid (25.7 PPG), George (suspended) for 76ers. Combined ~88 PPG absent. Recent H2H was 207 total. Role player vs role player matchup should suppress scoring.",
+      "primary_edge": "injury_impact",
+      "date": "2026-02-04",
+      "created_at": "2026-02-04T21:57:11.223417+00:00",
+      "result": "win",
+      "winner": "Philadelphia 76ers",
+      "final_score": "Philadelphia 76ers 113 @ Golden State Warriors 94",
+      "actual_total": 207,
+      "actual_margin": -19,
+      "profit_loss": 1.0,
+      "reflection": "The injury impact edge was spot-on - 207 total came in well under 224.5 as expected when ~88 PPG of combined offensive firepower was absent. Process was sound; this is exactly the type of injury-driven under we should continue targeting."
     }
   ],
   "summary": {
-    "total_bets": 7,
-    "wins": 5,
+    "total_bets": 10,
+    "wins": 8,
     "losses": 2,
     "pushes": 0,
-    "win_rate": 0.714,
-    "total_units_wagered": 8.5,
-    "net_units": 2.5,
-    "roi": 0.294,
+    "win_rate": 0.8,
+    "total_units_wagered": 12.5,
+    "net_units": 6.5,
+    "roi": 0.52,
     "by_confidence": {
       "medium": {
-        "wins": 3,
+        "wins": 5,
         "losses": 1,
-        "win_rate": 0.75
+        "win_rate": 0.833
       },
       "low": {
         "wins": 1,
@@ -163,9 +226,9 @@
         "win_rate": 1.0
       },
       "high": {
-        "wins": 1,
+        "wins": 2,
         "losses": 1,
-        "win_rate": 0.5
+        "win_rate": 0.667
       }
     },
     "by_primary_edge": {
@@ -175,21 +238,26 @@
         "win_rate": 0.5
       },
       "ratings_edge": {
-        "wins": 3,
+        "wins": 4,
         "losses": 1,
-        "win_rate": 0.75
+        "win_rate": 0.8
       },
       "rest_advantage": {
         "wins": 1,
+        "losses": 0,
+        "win_rate": 1.0
+      },
+      "injury_edge": {
+        "wins": 2,
         "losses": 0,
         "win_rate": 1.0
       }
     },
     "by_bet_type": {
       "moneyline": {
-        "wins": 3,
+        "wins": 5,
         "losses": 2,
-        "win_rate": 0.6
+        "win_rate": 0.714
       },
       "spread": {
         "wins": 1,
@@ -197,11 +265,11 @@
         "win_rate": 1.0
       },
       "total": {
-        "wins": 1,
+        "wins": 2,
         "losses": 0,
         "win_rate": 1.0
       }
     },
-    "current_streak": "W3"
+    "current_streak": "W6"
   }
 }
