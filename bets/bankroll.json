@@ -1,6 +1,6 @@
 {
   "starting": 1000.0,
-  "current": 755.0,
+  "current": 750.4545454545455,
   "transactions": [
     {
       "date": "2026-02-05",
@@ -43,6 +43,13 @@
       "amount": -50.0,
       "bet_id": "7fa882c2-3577-4154-a385-45a106948902",
       "description": "Golden State Warriors @ Phoenix Suns - total under"
+    },
+    {
+      "date": "2026-02-05",
+      "type": "result",
+      "amount": 95.45454545454545,
+      "bet_id": "79eb1e41-82b6-4db8-99cd-02bfe327632a",
+      "description": "WIN: Oklahoma City Thunder @ San Antonio Spurs (+$45.45)"
     }
   ]
 }

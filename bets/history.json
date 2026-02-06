@@ -203,22 +203,91 @@
       "actual_margin": -19,
       "profit_loss": 1.0,
       "reflection": "The injury impact edge was spot-on - 207 total came in well under 224.5 as expected when ~88 PPG of combined offensive firepower was absent. Process was sound; this is exactly the type of injury-driven under we should continue targeting."
+    },
+    {
+      "id": "79eb1e41-82b6-4db8-99cd-02bfe327632a",
+      "game_id": "16258",
+      "matchup": "Oklahoma City Thunder @ San Antonio Spurs",
+      "bet_type": "moneyline",
+      "pick": "San Antonio Spurs",
+      "line": null,
+      "confidence": "high",
+      "units": 2.0,
+      "reasoning": "OKC is catastrophically depleted - missing SGA, Holmgren, Williams, Hartenstein, Dort, Caruso, and Mitchell. This is a G-League roster on B2B after losing by 10 to this same Spurs team yesterday. Wembanyama healthy at home is a massive mismatch. Our injury_edge bets are 2-0.",
+      "primary_edge": "injury_edge",
+      "date": "2026-02-05",
+      "created_at": "2026-02-05T12:24:53.487707+00:00",
+      "amount": 50.0,
+      "odds_price": -110,
+      "result": "win",
+      "winner": "San Antonio Spurs",
+      "final_score": "Oklahoma City Thunder 106 @ San Antonio Spurs 116",
+      "actual_total": 222,
+      "actual_margin": 10,
+      "profit_loss": 2.0,
+      "reflection": "The injury edge was textbook valid - OKC's depleted roster on a B2B couldn't compete with a healthy Wembanyama at home, losing by exactly 10 again. Our injury_edge bets are now 3-0, confirming this as our most reliable edge type."
+    },
+    {
+      "id": "9034f958-a22d-4288-9379-51d2296e57c5",
+      "game_id": "16254",
+      "matchup": "Denver Nuggets @ New York Knicks",
+      "bet_type": "spread",
+      "pick": "New York Knicks",
+      "line": -7.5,
+      "confidence": "medium",
+      "units": 1.0,
+      "reasoning": "Jokic OUT is catastrophic for Denver - losing 27.8 PPG, 10 APG and their entire offensive identity. Combined with Gordon/Watson/Johnson out, Nuggets fielding skeleton crew. Knicks 20-6 at home, 8-game win streak, 4-1 H2H with +13.8 avg margin.",
+      "primary_edge": "injury_edge",
+      "date": "2026-02-05",
+      "created_at": "2026-02-05T12:24:53.487743+00:00",
+      "amount": 35.0,
+      "odds_price": -110,
+      "result": "loss",
+      "winner": "New York Knicks",
+      "final_score": "Denver Nuggets 127 @ New York Knicks 134",
+      "actual_total": 261,
+      "actual_margin": 7,
+      "profit_loss": -1.0,
+      "reflection": "The injury edge was real - Knicks won by 7 as expected in a high-scoring game. Lost by the hook (0.5 points) despite correct read on game direction; the 7.5 line was slightly inflated."
+    },
+    {
+      "id": "91f8484d-5e16-406a-b00d-7e2046ac824f",
+      "game_id": "16256",
+      "matchup": "Boston Celtics @ Houston Rockets",
+      "bet_type": "spread",
+      "pick": "Houston Rockets",
+      "line": -6.5,
+      "confidence": "medium",
+      "units": 1.0,
+      "reasoning": "Celtics decimated - missing Tatum (out), Brown (doubtful), Hauser, Simons (traded), Boucher. Houston 17-4 at home with 4th-ranked defense facing what amounts to a developmental squad. Clear personnel mismatch.",
+      "primary_edge": "injury_edge",
+      "date": "2026-02-05",
+      "created_at": "2026-02-05T12:24:53.487756+00:00",
+      "amount": 30.0,
+      "odds_price": -110,
+      "result": "loss",
+      "winner": "Boston Celtics",
+      "final_score": "Boston Celtics 114 @ Houston Rockets 93",
+      "actual_total": 207,
+      "actual_margin": -21,
+      "profit_loss": -1.0,
+      "reflection": "The injury edge was real but we overestimated its impact - Boston's system and depth players delivered a 21-point road win despite missing their stars. Houston laying big numbers at home has been inconsistent, and we should have recognized that elite organizations often have 'next man up' cultures that mitigate personnel losses."
     }
   ],
   "summary": {
-    "total_bets": 10,
-    "wins": 8,
-    "losses": 2,
+    "total_bets": 13,
+    "wins": 9,
+    "losses": 4,
     "pushes": 0,
-    "win_rate": 0.8,
-    "total_units_wagered": 12.5,
+    "win_rate": 0.692,
+    "total_units_wagered": 16.5,
     "net_units": 6.5,
-    "roi": 0.52,
+    "roi": 0.394,
     "by_confidence": {
       "medium": {
         "wins": 5,
-        "losses": 1,
-        "win_rate": 0.833
+        "losses": 3,
+        "win_rate": 0.625
       },
       "low": {
         "wins": 1,
@@ -226,9 +295,9 @@
         "win_rate": 1.0
       },
       "high": {
-        "wins": 2,
+        "wins": 3,
         "losses": 1,
-        "win_rate": 0.667
+        "win_rate": 0.75
       }
     },
     "by_primary_edge": {
@@ -248,21 +317,21 @@
         "win_rate": 1.0
       },
       "injury_edge": {
-        "wins": 2,
-        "losses": 0,
-        "win_rate": 1.0
+        "wins": 3,
+        "losses": 2,
+        "win_rate": 0.6
       }
     },
     "by_bet_type": {
       "moneyline": {
-        "wins": 5,
+        "wins": 6,
         "losses": 2,
-        "win_rate": 0.714
+        "win_rate": 0.75
       },
       "spread": {
         "wins": 1,
-        "losses": 0,
-        "win_rate": 1.0
+        "losses": 2,
+        "win_rate": 0.333
       },
       "total": {
         "wins": 2,
@@ -270,6 +339,6 @@
         "win_rate": 1.0
       }
     },
-    "current_streak": "W6"
+    "current_streak": "L2"
   }
 }
