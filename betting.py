@@ -85,6 +85,12 @@ def main():
         from workflow.results import run_results_workflow
 
         asyncio.run(run_results_workflow(args.date))
+
+        # Clear output folder so processed matchup files get removed on commit
+        if OUTPUT_DIR.exists():
+            for f in OUTPUT_DIR.glob("*.json"):
+                f.unlink()
+            print("Cleared output folder.")
     elif args.command == "update-strategy":
         from workflow.strategy import run_strategy_workflow
 
