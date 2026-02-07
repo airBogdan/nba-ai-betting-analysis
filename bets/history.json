@@ -272,22 +272,91 @@
       "actual_margin": -21,
       "profit_loss": -1.0,
       "reflection": "The injury edge was real but we overestimated its impact - Boston's system and depth players delivered a 21-point road win despite missing their stars. Houston laying big numbers at home has been inconsistent, and we should have recognized that elite organizations often have 'next man up' cultures that mitigate personnel losses."
+    },
+    {
+      "id": "e52a9702-e535-40fc-a851-8b6f0dd2fd2a",
+      "game_id": "16266",
+      "matchup": "San Antonio Spurs @ Dallas Mavericks",
+      "bet_type": "moneyline",
+      "pick": "San Antonio Spurs",
+      "line": null,
+      "confidence": "high",
+      "units": 2.0,
+      "reasoning": "Elite team (35-16) vs struggling team (19-32) with massive injury issues. Spurs have +7.2 net rating edge, just beat Dallas 135-123 two days ago, and Dallas is missing Kyrie Irving, Dereck Lively II, and P.J. Washington. Spurs 16-10 on road vs Dallas 14-16 at home. Multiple strong edges align.",
+      "primary_edge": "ratings_edge",
+      "date": "2026-02-06",
+      "created_at": "2026-02-06T18:03:20.881615+00:00",
+      "amount": 45.0,
+      "odds_price": -110,
+      "result": "win",
+      "winner": "San Antonio Spurs",
+      "final_score": "San Antonio Spurs 135 @ Dallas Mavericks 123",
+      "actual_total": 258,
+      "actual_margin": -12,
+      "profit_loss": 2.0,
+      "reflection": "The exact same score as the recent H2H game (135-123) validates our analysis completely. Elite team vs depleted opponent with clear statistical edges is a reliable betting spot."
+    },
+    {
+      "id": "fff94076-b9dc-44ca-aee8-645531d1bf40",
+      "game_id": "16262",
+      "matchup": "Brooklyn Nets @ Orlando Magic",
+      "bet_type": "moneyline",
+      "pick": "Orlando Magic",
+      "line": null,
+      "confidence": "high",
+      "units": 2.0,
+      "reasoning": "Magic 7-0 vs Nets in recent H2H with complete dominance. +8.4 net rating differential, 15-8 home record vs Nets' 7-19 road record. Nets depleted (missing Cam Thomas), 1-9 L10, and just lost by 20 to this same team yesterday. Franz Wagner out but talent gap is massive.",
+      "primary_edge": "ratings_edge",
+      "date": "2026-02-06",
+      "created_at": "2026-02-06T18:03:20.881697+00:00",
+      "amount": 50.0,
+      "odds_price": -110,
+      "result": "win",
+      "winner": "Orlando Magic",
+      "final_score": "Brooklyn Nets 98 @ Orlando Magic 118",
+      "actual_total": 216,
+      "actual_margin": 20,
+      "profit_loss": 2.0,
+      "reflection": "The 20-point margin matched yesterday's blowout exactly, validating our read on the massive talent gap and situational factors. This was a textbook spot where multiple edges stacked - H2H dominance, home court, back-to-back fatigue, and depleted opponent."
+    },
+    {
+      "id": "dc8000ab-5297-4326-9912-c0ee0e7a1fb3",
+      "game_id": "16262",
+      "matchup": "Brooklyn Nets @ Orlando Magic",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 218.7,
+      "confidence": "medium",
+      "units": 1.0,
+      "reasoning": "H2H average only 211.6 with just 27% of games going over 220. Both teams on B2B fatigue. Nets missing Thomas (15.6 PPG) and other scorers. Yesterday's game totaled 216. Independent edge from the moneyline - Magic can win comfortably while game stays low-scoring.",
+      "primary_edge": "injury_edge",
+      "date": "2026-02-06",
+      "created_at": "2026-02-06T18:03:20.881734+00:00",
+      "amount": 25.0,
+      "odds_price": -110,
+      "result": "win",
+      "winner": "Orlando Magic",
+      "final_score": "Brooklyn Nets 98 @ Orlando Magic 118",
+      "actual_total": 216,
+      "actual_margin": 20,
+      "profit_loss": 1.0,
+      "reflection": "The injury edge and fatigue factors played out exactly as expected - Nets scored just 98 points with their depleted roster, and the 216 total came in comfortably under our 218.7 line. Process was solid with multiple converging factors supporting the under."
     }
   ],
   "summary": {
-    "total_bets": 13,
-    "wins": 9,
+    "total_bets": 16,
+    "wins": 12,
     "losses": 4,
     "pushes": 0,
-    "win_rate": 0.692,
-    "total_units_wagered": 16.5,
-    "net_units": 6.5,
-    "roi": 0.394,
+    "win_rate": 0.75,
+    "total_units_wagered": 21.5,
+    "net_units": 11.5,
+    "roi": 0.535,
     "by_confidence": {
       "medium": {
-        "wins": 5,
+        "wins": 6,
         "losses": 3,
-        "win_rate": 0.625
+        "win_rate": 0.667
       },
       "low": {
         "wins": 1,
@@ -295,9 +364,9 @@
         "win_rate": 1.0
       },
       "high": {
-        "wins": 3,
+        "wins": 5,
         "losses": 1,
-        "win_rate": 0.75
+        "win_rate": 0.833
       }
     },
     "by_primary_edge": {
@@ -307,9 +376,9 @@
         "win_rate": 0.5
       },
       "ratings_edge": {
-        "wins": 4,
+        "wins": 6,
         "losses": 1,
-        "win_rate": 0.8
+        "win_rate": 0.857
       },
       "rest_advantage": {
         "wins": 1,
@@ -317,16 +386,16 @@
         "win_rate": 1.0
       },
       "injury_edge": {
-        "wins": 3,
+        "wins": 4,
         "losses": 2,
-        "win_rate": 0.6
+        "win_rate": 0.667
       }
     },
     "by_bet_type": {
       "moneyline": {
-        "wins": 6,
+        "wins": 8,
         "losses": 2,
-        "win_rate": 0.75
+        "win_rate": 0.8
       },
       "spread": {
         "wins": 1,
@@ -334,11 +403,11 @@
         "win_rate": 0.333
       },
       "total": {
-        "wins": 2,
+        "wins": 3,
         "losses": 0,
         "win_rate": 1.0
       }
     },
-    "current_streak": "L2"
+    "current_streak": "W3"
   }
 }

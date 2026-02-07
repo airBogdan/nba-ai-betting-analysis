@@ -1,6 +1,6 @@
 {
   "starting": 1000.0,
-  "current": 630.4545454545455,
+  "current": 859.5454545454546,
   "transactions": [
     {
       "date": "2026-02-05",
@@ -71,6 +71,27 @@
       "amount": -25.0,
       "bet_id": "dc8000ab-5297-4326-9912-c0ee0e7a1fb3",
       "description": "Brooklyn Nets @ Orlando Magic - total under"
+    },
+    {
+      "date": "2026-02-06",
+      "type": "result",
+      "amount": 85.9090909090909,
+      "bet_id": "e52a9702-e535-40fc-a851-8b6f0dd2fd2a",
+      "description": "WIN: San Antonio Spurs @ Dallas Mavericks (+$40.91)"
+    },
+    {
+      "date": "2026-02-06",
+      "type": "result",
+      "amount": 95.45454545454545,
+      "bet_id": "fff94076-b9dc-44ca-aee8-645531d1bf40",
+      "description": "WIN: Brooklyn Nets @ Orlando Magic (+$45.45)"
+    },
+    {
+      "date": "2026-02-06",
+      "type": "result",
+      "amount": 47.72727272727273,
+      "bet_id": "dc8000ab-5297-4326-9912-c0ee0e7a1fb3",
+      "description": "WIN: Brooklyn Nets @ Orlando Magic (+$22.73)"
     }
   ]
 }
