@@ -1,0 +1,515 @@
+{
+  "matchup": {
+    "team1": "Washington Wizards",
+    "team2": "Miami Heat",
+    "home_team": "Washington Wizards"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Washington Wizards",
+      "record": "14-37",
+      "conf_rank": 14,
+      "games": 54,
+      "ppg": 112.2,
+      "opp_ppg": 121.2,
+      "ortg": 107.1,
+      "drtg": 116.9,
+      "apg": 25.1,
+      "rpg": 44.1,
+      "topg": 15.7,
+      "net_rating": -9.83,
+      "fgp": 45.7,
+      "tpp": 35.1,
+      "last_ten": "4-6",
+      "last_ten_pct": 0.4,
+      "home_record": "9-17",
+      "away_record": "5-19",
+      "home_win_pct": 0.346,
+      "away_win_pct": 0.208,
+      "pace": 103.7
+    },
+    "team2": {
+      "name": "Miami Heat",
+      "record": "27-26",
+      "conf_rank": 8,
+      "games": 59,
+      "ppg": 118.6,
+      "opp_ppg": 120.0,
+      "ortg": 112.3,
+      "drtg": 111.7,
+      "apg": 28.2,
+      "rpg": 46.6,
+      "topg": 14.7,
+      "net_rating": 0.68,
+      "fgp": 46.0,
+      "tpp": 35.3,
+      "last_ten": "5-5",
+      "last_ten_pct": 0.5,
+      "home_record": "16-10",
+      "away_record": "11-16",
+      "home_win_pct": 0.615,
+      "away_win_pct": 0.407,
+      "pace": 107.4
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 1,
+      "streak": "L1",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.5,
+      "quality_wins": 1,
+      "quality_losses": 2
+    },
+    "team2": {
+      "days_rest": 1,
+      "streak": "L2",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.506,
+      "quality_wins": 0,
+      "quality_losses": 1
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Brooklyn Nets",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "L",
+        "score": "113-127",
+        "home": false,
+        "margin": -14,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Detroit Pistons",
+        "vs_record": "38-13",
+        "vs_win_pct": 0.745,
+        "result": "W",
+        "score": "126-117",
+        "home": false,
+        "margin": 9,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "New York Knicks",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "101-132",
+        "home": true,
+        "margin": -31,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-41",
+        "vs_win_pct": 0.226,
+        "result": "W",
+        "score": "116-112",
+        "home": true,
+        "margin": 4,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "L",
+        "score": "111-142",
+        "home": true,
+        "margin": -31,
+        "date": "2026-01-31"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Boston Celtics",
+        "vs_record": "34-18",
+        "vs_win_pct": 0.654,
+        "result": "L",
+        "score": "96-98",
+        "home": false,
+        "margin": -2,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-27",
+        "vs_win_pct": 0.491,
+        "result": "L",
+        "score": "115-127",
+        "home": true,
+        "margin": -12,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "134-91",
+        "home": true,
+        "margin": 43,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "L",
+        "score": "118-125",
+        "home": true,
+        "margin": -7,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "116-113",
+        "home": false,
+        "margin": 3,
+        "date": "2026-01-30"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "CJ McCollum",
+          "ppg": 18.8,
+          "plus_minus": -4.6,
+          "games": 37
+        },
+        {
+          "name": "Kyshawn George",
+          "ppg": 15.0,
+          "plus_minus": -6.1,
+          "games": 44
+        },
+        {
+          "name": "Alex Sarr",
+          "ppg": 17.0,
+          "plus_minus": -6.3,
+          "games": 42
+        },
+        {
+          "name": "Bub Carrington",
+          "ppg": 9.8,
+          "plus_minus": -8.5,
+          "games": 54
+        },
+        {
+          "name": "Bilal Coulibaly",
+          "ppg": 9.7,
+          "plus_minus": -6.2,
+          "games": 31
+        },
+        {
+          "name": "T. Johnson",
+          "ppg": 12.5,
+          "plus_minus": -3.0,
+          "games": 42
+        }
+      ],
+      "availability_concerns": [
+        "CJ McCollum (37/54 games)",
+        "Bilal Coulibaly (31/54 games)",
+        "Khris Middleton (36/54 games)",
+        "Corey Kispert (22/54 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "McCollum 18.8, Sarr 17.0, George 15.0",
+      "playmaker": "Kyshawn George 4.7 APG",
+      "hot_hand": "Johnson -3.0",
+      "star_dependency": 16.8,
+      "depth_rating": "balanced (3.4 MPG std dev)",
+      "bench_scoring": 31.5,
+      "injuries": []
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Tyler Herro",
+          "ppg": 21.9,
+          "plus_minus": -3.4,
+          "games": 11
+        },
+        {
+          "name": "Andrew Wiggins",
+          "ppg": 15.1,
+          "plus_minus": -0.2,
+          "games": 53
+        },
+        {
+          "name": "Bam Adebayo",
+          "ppg": 17.4,
+          "plus_minus": 2.7,
+          "games": 50
+        },
+        {
+          "name": "Norman Powell",
+          "ppg": 22.3,
+          "plus_minus": 1.6,
+          "games": 49
+        },
+        {
+          "name": "Jamie Jr. Jaquez",
+          "ppg": 14.9,
+          "plus_minus": 1.9,
+          "games": 54
+        },
+        {
+          "name": "Davion Mitchell",
+          "ppg": 9.0,
+          "plus_minus": 3.3,
+          "games": 46
+        }
+      ],
+      "availability_concerns": [
+        "Tyler Herro (11/59 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Powell 22.3, Herro 21.9, Adebayo 17.4",
+      "playmaker": "Davion Mitchell 6.9 APG",
+      "hot_hand": "Mitchell +3.3",
+      "star_dependency": 18.8,
+      "depth_rating": "balanced (3.1 MPG std dev)",
+      "bench_scoring": 30.8,
+      "injuries": [
+        {
+          "player": "Bam Adebayo",
+          "status": "Probable",
+          "reason": "Injury/Illness - Right Hip; Tightness",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Tyler Herro",
+          "status": "Out",
+          "reason": "Injury/Illness - Right Costochondral; Injury to the Ribs",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Kasparas Jakucionis",
+          "status": "Available",
+          "reason": "Injury/Illness - Left Ankle; Inflammation",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Jaime Jaquez Jr.",
+          "status": "Available",
+          "reason": "Injury/Illness - Left Knee; Sprain",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Nikola Jovic",
+          "status": "Available",
+          "reason": "Injury/Illness - Right Hip; Impingement",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Pelle Larsson",
+          "status": "Doubtful",
+          "reason": "Injury/Illness - Right Elbow; Contusion",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Norman Powell",
+          "status": "Questionable",
+          "reason": "Injury/Illness - Right Hand; Sprain",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Terry Rozier",
+          "status": "Out",
+          "reason": "Not With Team",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Dru Smith",
+          "status": "Available",
+          "reason": "Injury/Illness - Left Ankle; Soreness",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Andrew Wiggins",
+          "status": "Available",
+          "reason": "Injury/Illness - Left Hamstring; Tightness",
+          "report_time": "02PM"
+        }
+      ]
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 8,
+      "team1_wins_all_time": 2,
+      "team2_wins_all_time": 6,
+      "team1_win_pct": 0.25,
+      "team1_home_wins": 0,
+      "team1_home_losses": 4,
+      "team1_away_wins": 2,
+      "team1_away_losses": 2,
+      "avg_point_diff": -10.8,
+      "team1_avg_points": 104.2,
+      "team2_avg_points": 115.0,
+      "last_5_games": [
+        "Miami Heat",
+        "Washington Wizards",
+        "Miami Heat",
+        "Miami Heat",
+        "Miami Heat"
+      ],
+      "recent_trend": "team2_hot",
+      "close_games": 2,
+      "blowouts": 3
+    },
+    "patterns": {
+      "avg_total": 219.2,
+      "home_win_pct": 0.25,
+      "high_scoring_pct": 0.38,
+      "close_game_pct": 0.25
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 1,
+      "team2_wins_last_2_seasons": 3,
+      "last_winner": "Miami Heat",
+      "home_team_home_record": "0-2",
+      "games_last_2_seasons": 4
+    },
+    "quarters": {
+      "avg_q1_total": 58.4,
+      "avg_q2_total": 51.9,
+      "avg_q3_total": 56.8,
+      "avg_q4_total": 52.2,
+      "avg_first_half": 110.2,
+      "avg_second_half": 109.0,
+      "team1_q1_avg": 27.4,
+      "team2_q1_avg": 31.0,
+      "team1_q4_avg": 26.4,
+      "team2_q4_avg": 25.9,
+      "halftime_leader_wins_pct": 0.75
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 60.9,
+        "avg_tpp": 33.1,
+        "avg_rebounds": 40.5,
+        "avg_assists": 27.9,
+        "avg_turnovers": 14.2,
+        "avg_disruption": 11.5
+      },
+      "team2": {
+        "avg_fgp": 63.0,
+        "avg_tpp": 34.4,
+        "avg_rebounds": 51.2,
+        "avg_assists": 26.0,
+        "avg_turnovers": 14.1,
+        "avg_disruption": 12.5
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 226.2,
+    "total_diff_from_h2h": 11.6,
+    "team1_h2h_scoring_diff": 8.0,
+    "team2_h2h_scoring_diff": 3.6,
+    "margin_volatility": 8.2,
+    "h2h_total_variance": 12.5,
+    "pace_adjusted_total": 115.8,
+    "defense_factor": 114.3,
+    "recent_scoring_trend": -3.0
+  },
+  "comparison": {
+    "ppg": -6.4,
+    "net_rating": -10.51,
+    "form": -0.1,
+    "turnovers": -1.0,
+    "rebounds": -2.5,
+    "fgp": -0.3,
+    "three_pt_pct": -0.2,
+    "pace": -3.7,
+    "combined_pace": 105.6
+  },
+  "signals": [
+    "Washington Wizards on back-to-back (fatigue factor)",
+    "Miami Heat on back-to-back (fatigue factor)",
+    "Miami Heat starts faster (+3.6 Q1 avg in H2H)",
+    "Halftime leader wins 75% in this matchup",
+    "Washington Wizards injury concerns: CJ McCollum (37/54 games), Bilal Coulibaly (31/54 games)",
+    "Miami Heat injury concerns: Tyler Herro (11/59 games)",
+    "Washington Wizards struggling at home (9-17)",
+    "Miami Heat +6.4 PPG edge",
+    "Miami Heat significantly better net rating (-10.5)",
+    "Miami Heat 3-1 in recent H2H",
+    "Miami Heat won 4+ of last 5 H2H meetings",
+    "Fast-paced matchup (avg 105.6 possessions) - lean OVER",
+    "Washington Wizards FG% elevated vs Miami Heat: 60.9% H2H vs 45.7% season",
+    "Miami Heat FG% elevated vs Washington Wizards: 63.0% H2H vs 46.0% season",
+    "Washington Wizards struggles on boards vs Miami Heat: 40.5 H2H vs 44.1 season",
+    "Miami Heat dominates boards vs Washington Wizards: 51.2 H2H vs 46.6 season"
+  ],
+  "api_game_id": 16286,
+  "odds": {
+    "spread": {
+      "home": {
+        "line": 11.0,
+        "price": -112
+      },
+      "away": {
+        "line": -11.0,
+        "price": -108
+      }
+    },
+    "total": {
+      "line": 235.5,
+      "over": -110,
+      "under": -110
+    },
+    "moneyline": {
+      "home": 385,
+      "away": -500
+    },
+    "alternate_spreads": [
+      {
+        "line": 10.5,
+        "price": -106
+      },
+      {
+        "line": 9.5,
+        "price": 110
+      },
+      {
+        "line": 11.5,
+        "price": -120
+      },
+      {
+        "line": 12.5,
+        "price": -134
+      }
+    ],
+    "alternate_totals": [
+      {
+        "line": 234.5,
+        "price": -120
+      },
+      {
+        "line": 233.5,
+        "price": -130
+      },
+      {
+        "line": 236.5,
+        "price": 100
+      },
+      {
+        "line": 237.5,
+        "price": 108
+      }
+    ]
+  },
+  "search_context": "### Injury Report\n**Miami Heat:**\n- Bam Adebayo: Probable (Right Hip; Tightness)[7][2]\n- Norman Powell: Questionable/GTD (Hand)[2][6][8]\n- Pelle Larsson: Doubtful/GTD (Elbow)[1][2][6]\n- Tyler Herro: Out (Ribs)[1][2][6][7]\n- Terry Rozier: Out (Not Injury Related/Not with team)[1][2][6]\n\n**Washington Wizards:**\n- Alex Sarr: GTD/Day-to-day (Ankle)[2][6]\n- Kyshawn George/Keyshawn George: GTD/Day-to-day (Knee)[2][6]\n- Jaden Hardy: Out (Not Injury Related/Trade Pending)[1][2][3][6]\n- D'Angelo Russell: Out (Not Injury Related/Trade Pending)[1][2][3][6]\n- Tre Johnson: Out/Questionable (Ankle)[1][2][3][6]\n- Bilal Coulibaly: GTD/Day-to-day (Back)[1][2][6]\n- Anthony Davis: Out/OFS (Hand/Trade Pending)[1][2][6]\n- Trae Young: Out (Knee/Quad)[3][6]\n- Cam Whitmore: Out (DVT)[3][6]\n- Dante Exum: Out (Trade Pending)[3][6]\n\n### Betting Lines\nWashington Wizards +11.5 spread; Over/Under 235.5[3]\n\n### Line Movement\nNo relevant information.\n\n### Recent News\nMiami Heat coach Erik Spoelstra commented after a loss to the Boston Celtics: \"Our offense, we were pressing a little bit more in the second half and it's all from the right place, we have great competitors in our locker room. You knew that they wouldn't go one-for-20, whatever it was, again from three.\"[6]\n\n### Additional Context\n### Wizards' Backcourt Injuries and Defensive Context\nNo search results confirm D'Angelo Russell, Trae Young, or Jaden Hardy as Washington Wizards players or report their absences for this game or recent matchups[1][2][3][4][5][6][7][8]. Wizards' current season predictive rating is -9.0 (NBA rank #30), with home rating -11.7 (#30), indicating overall poor performance that could limit perimeter defense regardless of specific injuries[6]. This matters as it suggests baseline defensive vulnerabilities against Miami's three-point shooting, though no direct data on Wizards' depleted backcourt vs. Heat threes exists in results.\n\n### Recent Matchups: Wizards Defense vs. Heat Three-Point Shooting\nNo specific data on Wizards' defense against Miami's three-point shooting in recent games with a depleted backcourt[1][2][3][7]. Head-to-head since 2023-24 season: Miami leads 6-2 in last 8 meetings[2]. Recent 2025 games: Wizards won 119-118 at Miami (Apr 13), Miami won 120-94 vs Wizards (Mar 31) and date not specified (Mar 3)[7]. Historical H2H (93 games since 2004): Miami won 65, Wizards 28; Miami PPG 104.3, Wizards allowed 104.3 PPG to Miami[1]. Last 5 H2H for each: Miami 2-3 (allowed 123.6 OPP PPG), Wizards 3-2 (115.6 OPP PPG allowed)[1]. Lacks three-point specifics or backcourt injury context, limiting direct analysis for Heat's shooting exploitation.\n\n### Injury Statuses\nNo results detail Miami injuries for Bam Adebayo (probable) or Norman Powell (questionable), nor confirm Washington's \"more clearly unavailable key players\" like named guards[1][2][3][4][5][6][7][8]. Season context shows Miami at 14-15 (Eastern rank ~7th per partial standings[3][5]), Wizards 8-20 (rank 14th[5]). This matters as injury uncertainty could impact Miami's favored status (11.5-point spread noted in query), but no sourced statuses available.\n\n### Current Season Stats and Spread Context\nMiami averages 119.5 PPG (+1.8 margin), Wizards 112.3 PPG (-10.2 margin); Miami effective FG% 53.3%, Wizards 53.0%[6]. Wizards rank last (#30) in home score margin (-11.7), predictive rating (-9.0), and away rating (-8.2)[6]. Game listed as Feb 8, 2026 (Wizards home per context[5][6][7]); odds N/A in results[2]. 11.5-point spread unaddressed directly, but Wizards' poor rankings align with large favorite status for Miami, factoring overall team strength over unconfirmed injuries[6]. H2H ATS win% 48.0%, total over 60.0% historically[1]."
+}

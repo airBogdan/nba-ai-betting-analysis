@@ -1,6 +1,6 @@
 {
   "starting": 1000.0,
-  "current": 739.5454545454546,
+  "current": 624.5454545454546,
   "transactions": [
     {
       "date": "2026-02-05",
@@ -113,6 +113,27 @@
       "amount": -40.0,
       "bet_id": "a7880b50-ab6a-4681-bfca-9bdd0f1c51d5",
       "description": "Houston Rockets @ Oklahoma City Thunder - total under"
+    },
+    {
+      "date": "2026-02-08",
+      "type": "bet",
+      "amount": -50.0,
+      "bet_id": "977f63e1-5606-4d20-ac25-2611508f8164",
+      "description": "Cleveland Cavaliers @ Sacramento Kings - moneyline Cleveland Cavaliers"
+    },
+    {
+      "date": "2026-02-08",
+      "type": "bet",
+      "amount": -30.0,
+      "bet_id": "a77d6f94-307e-442d-bf87-fe5656c547ec",
+      "description": "LA Clippers @ Minnesota Timberwolves - spread Minnesota Timberwolves"
+    },
+    {
+      "date": "2026-02-08",
+      "type": "bet",
+      "amount": -35.0,
+      "bet_id": "a2d83b3d-3bd6-4866-b013-8632474d0f21",
+      "description": "LA Clippers @ Minnesota Timberwolves - total under"
     }
   ]
 }

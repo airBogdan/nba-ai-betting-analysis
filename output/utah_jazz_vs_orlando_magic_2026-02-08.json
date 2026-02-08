@@ -1,0 +1,397 @@
+{
+  "matchup": {
+    "team1": "Orlando Magic",
+    "team2": "Utah Jazz",
+    "home_team": "Orlando Magic"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Orlando Magic",
+      "record": "26-24",
+      "conf_rank": 7,
+      "games": 55,
+      "ppg": 116.0,
+      "opp_ppg": 115.6,
+      "ortg": 112.4,
+      "drtg": 111.6,
+      "apg": 26.3,
+      "rpg": 44.2,
+      "topg": 14.4,
+      "net_rating": 0.73,
+      "fgp": 46.4,
+      "tpp": 33.8,
+      "last_ten": "4-6",
+      "last_ten_pct": 0.4,
+      "home_record": "15-8",
+      "away_record": "10-14",
+      "home_win_pct": 0.652,
+      "away_win_pct": 0.417,
+      "pace": 103.6
+    },
+    "team2": {
+      "name": "Utah Jazz",
+      "record": "16-36",
+      "conf_rank": 13,
+      "games": 57,
+      "ppg": 118.6,
+      "opp_ppg": 122.8,
+      "ortg": 107.9,
+      "drtg": 116.1,
+      "apg": 29.9,
+      "rpg": 43.8,
+      "topg": 15.8,
+      "net_rating": -8.28,
+      "fgp": 47.0,
+      "tpp": 35.1,
+      "last_ten": "2-8",
+      "last_ten_pct": 0.2,
+      "home_record": "10-17",
+      "away_record": "6-19",
+      "home_win_pct": 0.37,
+      "away_win_pct": 0.24,
+      "pace": 105.8
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "W2",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.525,
+      "quality_wins": 1,
+      "quality_losses": 2
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "L2",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.424,
+      "quality_wins": 0,
+      "quality_losses": 2
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "16-36",
+        "vs_win_pct": 0.308,
+        "result": "W",
+        "score": "120-117",
+        "home": true,
+        "margin": 3,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Brooklyn Nets",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "W",
+        "score": "118-98",
+        "home": true,
+        "margin": 20,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Oklahoma City Thunder",
+        "vs_record": "40-12",
+        "vs_win_pct": 0.769,
+        "result": "L",
+        "score": "92-128",
+        "home": false,
+        "margin": -36,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "San Antonio Spurs",
+        "vs_record": "35-16",
+        "vs_win_pct": 0.686,
+        "result": "L",
+        "score": "103-112",
+        "home": false,
+        "margin": -9,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Toronto Raptors",
+        "vs_record": "31-22",
+        "vs_win_pct": 0.585,
+        "result": "W",
+        "score": "130-120",
+        "home": true,
+        "margin": 10,
+        "date": "2026-01-31"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Orlando Magic",
+        "vs_record": "26-24",
+        "vs_win_pct": 0.52,
+        "result": "L",
+        "score": "117-120",
+        "home": false,
+        "margin": -3,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-27",
+        "vs_win_pct": 0.491,
+        "result": "L",
+        "score": "119-121",
+        "home": false,
+        "margin": -2,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Indiana Pacers",
+        "vs_record": "13-39",
+        "vs_win_pct": 0.25,
+        "result": "W",
+        "score": "131-122",
+        "home": false,
+        "margin": 9,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Toronto Raptors",
+        "vs_record": "31-22",
+        "vs_win_pct": 0.585,
+        "result": "L",
+        "score": "100-107",
+        "home": false,
+        "margin": -7,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Brooklyn Nets",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "L",
+        "score": "99-109",
+        "home": true,
+        "margin": -10,
+        "date": "2026-01-31"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Paolo Banchero",
+          "ppg": 21.1,
+          "plus_minus": -1.5,
+          "games": 44
+        },
+        {
+          "name": "Desmond Bane",
+          "ppg": 18.7,
+          "plus_minus": 1.1,
+          "games": 54
+        },
+        {
+          "name": "Franz Wagner",
+          "ppg": 21.6,
+          "plus_minus": 1.6,
+          "games": 29
+        },
+        {
+          "name": "Anthony Black",
+          "ppg": 15.5,
+          "plus_minus": 0.0,
+          "games": 55
+        },
+        {
+          "name": "Wendell Carter Jr.",
+          "ppg": 12.0,
+          "plus_minus": 0.7,
+          "games": 53
+        },
+        {
+          "name": "Jalen Suggs",
+          "ppg": 14.2,
+          "plus_minus": 4.3,
+          "games": 31
+        }
+      ],
+      "availability_concerns": [
+        "Franz Wagner (29/55 games)",
+        "Jalen Suggs (31/55 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Wagner 21.6, Banchero 21.1, Bane 18.7",
+      "playmaker": "Jalen Suggs 5.2 APG (limited: 31 games)",
+      "hot_hand": "Suggs +4.3 (limited: 31 games)",
+      "star_dependency": 18.6,
+      "depth_rating": "star-dependent (5.7 MPG std dev)",
+      "bench_scoring": 29.0,
+      "injuries": []
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Lauri Markkanen",
+          "ppg": 26.4,
+          "plus_minus": -1.1,
+          "games": 41
+        },
+        {
+          "name": "Keyonte George",
+          "ppg": 23.0,
+          "plus_minus": -6.2,
+          "games": 52
+        },
+        {
+          "name": "Walker Kessler",
+          "ppg": 14.3,
+          "plus_minus": 4.2,
+          "games": 6
+        },
+        {
+          "name": "Jusuf Nurkic",
+          "ppg": 11.1,
+          "plus_minus": -4.7,
+          "games": 43
+        },
+        {
+          "name": "A. Bailey",
+          "ppg": 11.8,
+          "plus_minus": -6.3,
+          "games": 49
+        },
+        {
+          "name": "Isaiah Collier",
+          "ppg": 10.2,
+          "plus_minus": -7.3,
+          "games": 45
+        }
+      ],
+      "availability_concerns": [
+        "Walker Kessler (6/57 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Markkanen 26.4, George 23.0, Kessler 14.3",
+      "playmaker": "Isaiah Collier 7.2 APG",
+      "hot_hand": "Kessler +4.2 (limited: 6 games)",
+      "star_dependency": 22.3,
+      "depth_rating": "balanced (4.3 MPG std dev)",
+      "bench_scoring": 28.4,
+      "injuries": []
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 6,
+      "team1_wins_all_time": 4,
+      "team2_wins_all_time": 2,
+      "team1_win_pct": 0.667,
+      "team1_home_wins": 2,
+      "team1_home_losses": 1,
+      "team1_away_wins": 2,
+      "team1_away_losses": 1,
+      "avg_point_diff": -2.2,
+      "team1_avg_points": 111.5,
+      "team2_avg_points": 113.7,
+      "last_5_games": [
+        "Orlando Magic",
+        "Orlando Magic",
+        "Utah Jazz",
+        "Utah Jazz",
+        "Orlando Magic"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 3,
+      "blowouts": 0
+    },
+    "patterns": {
+      "avg_total": 225.2,
+      "home_win_pct": 0.5,
+      "high_scoring_pct": 0.67,
+      "close_game_pct": 0.5
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 2,
+      "team2_wins_last_2_seasons": 2,
+      "last_winner": "Utah Jazz",
+      "home_team_home_record": "1-1",
+      "games_last_2_seasons": 4
+    },
+    "quarters": {
+      "avg_q1_total": 58.3,
+      "avg_q2_total": 52.3,
+      "avg_q3_total": 53.5,
+      "avg_q4_total": 57.8,
+      "avg_first_half": 110.7,
+      "avg_second_half": 111.3,
+      "team1_q1_avg": 29.0,
+      "team2_q1_avg": 29.3,
+      "team1_q4_avg": 29.0,
+      "team2_q4_avg": 28.8,
+      "halftime_leader_wins_pct": 0.83
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 57.1,
+        "avg_tpp": 30.5,
+        "avg_rebounds": 44.0,
+        "avg_assists": 26.0,
+        "avg_turnovers": 13.0,
+        "avg_disruption": 17.5
+      },
+      "team2": {
+        "avg_fgp": 51.9,
+        "avg_tpp": 36.8,
+        "avg_rebounds": 48.7,
+        "avg_assists": 27.2,
+        "avg_turnovers": 17.8,
+        "avg_disruption": 12.0
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 230.8,
+    "total_diff_from_h2h": 9.4,
+    "team1_h2h_scoring_diff": 4.5,
+    "team2_h2h_scoring_diff": 4.9,
+    "margin_volatility": 5.2,
+    "h2h_total_variance": 18.3,
+    "pace_adjusted_total": 115.3,
+    "defense_factor": 113.8,
+    "recent_scoring_trend": -8.2
+  },
+  "comparison": {
+    "ppg": -2.6,
+    "net_rating": 9.01,
+    "form": 0.2,
+    "turnovers": 1.4,
+    "rebounds": 0.4,
+    "fgp": -0.6,
+    "three_pt_pct": -1.3,
+    "pace": -2.2,
+    "combined_pace": 104.7
+  },
+  "signals": [
+    "Orlando Magic playing second game today (fatigue factor)",
+    "Utah Jazz playing second game today (fatigue factor)",
+    "Utah Jazz missing 22% of offense with key players limited",
+    "Halftime leader wins 83% in this matchup",
+    "Orlando Magic injury concerns: Franz Wagner (29/55 games), Jalen Suggs (31/55 games)",
+    "Utah Jazz injury concerns: Walker Kessler (6/57 games)",
+    "Utah Jazz struggling (2-8 L10)",
+    "Orlando Magic strong at home (15-8)",
+    "Utah Jazz poor on road (6-19)",
+    "Orlando Magic significantly better net rating (+9.0)",
+    "High-scoring matchup (67% H2H games over 220)",
+    "Competitive series (50% decided by 5 or less)",
+    "Both teams scoring below season avg in recent games (-8.2 combined)",
+    "High-variance H2H (\u00b118.3 pts std dev in totals)",
+    "Orlando Magic FG% elevated vs Utah Jazz: 57.1% H2H vs 46.4% season",
+    "Utah Jazz FG% elevated vs Orlando Magic: 51.9% H2H vs 47.0% season",
+    "Utah Jazz more careless vs Orlando Magic: 17.8 H2H vs 15.8 season TOV",
+    "Utah Jazz dominates boards vs Orlando Magic: 48.7 H2H vs 43.8 season"
+  ],
+  "api_game_id": 16278,
+  "search_context": "### Injury Report\n**Utah Jazz:** Keyonte George (right ankle sprain, day-to-day, exited early in prior game and did not return).[1][2][3] Walker Kessler (shoulder, out for season).[2][3][5] Elijah Harkless (hamstring, out, est. return Feb 12).[5]  \n**Orlando Magic:** Franz Wagner (day-to-day).[2][6] No other injuries reported; official report not yet submitted.[4]\n\n### Betting Lines\nNo current consensus spread, moneyline odds, or over/under total available in search results.\n\n### Line Movement\nNo information on opening lines or notable moves available.\n\n### Recent News\nUtah Jazz lost 120-117 to Orlando Magic on February 7, 2026, in Jaren Jackson Jr.'s debut (22 points, 4 rebounds, 3 assists) alongside new additions John Konchar and Vince Williams Jr.; Jazz held a 17-point lead before collapsing with 11 turnovers in second half.[2][3] Keyonte George exited mid-game with right ankle sprain on minutes restriction after prior left ankle issue, ruled out for rest of game.[1][2][3] Walker Kessler absent; otherwise near-full roster.[2][3] Jazz coach Will Hardy prioritized caution with George's injury.[3] Orlando without Franz Wagner.[2]\n\n### Additional Context\n# Utah Jazz @ Orlando Magic: Injury Status Analysis\n\n## Keyonte George (Utah Jazz)\n\n**Current Status:** George **did not play** in Saturday's game (February 7) against Orlando and will not be available for upcoming contests in the immediate term.\n\n**What Happened:** George suffered a **right ankle sprain** in the second quarter of Saturday's matchup at Amway Center[1][2]. This injury occurred on the same day he was returning from a left ankle sprain that had sidelined him for three games[1]. George initially left the floor, briefly returned, then exited again for further evaluation and did not return to the game[1].\n\n**Game Performance (Before Exit):** In 13 minutes of play, George finished with 5 points (1-5 FG, 0-2 3PT, 3-3 FT), 1 rebound, 1 assist, and 1 steal[2].\n\n**Next Opportunity:** George's next chance to play is Monday against Miami[2], meaning he will miss at least one additional game after Saturday's injury.\n\n**Context:** George had been on a 24-minute minutes restriction heading into Saturday's game due to his recent left ankle injury[1]. The back-to-back ankle injuries to opposite ankles represent a significant setback for the Jazz's third-year guard.\n\n## Franz Wagner (Orlando Magic)\n\n**Current Status:** Wagner is **ruled out** and will not play in Saturday's game against Utah[7].\n\n**Injury Details:** Wagner is managing a left high ankle sprain and has missed nine consecutive games as of the pre-game injury report[7].\n\n**Impact on Perimeter Defense:** With Wagner unavailable, Anthony Black and Tristan da Silva are expected to see increased playing time on the perimeter for Orlando[7]."
+}

@@ -1,0 +1,395 @@
+{
+  "matchup": {
+    "team1": "Chicago Bulls",
+    "team2": "Denver Nuggets",
+    "home_team": "Chicago Bulls"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Chicago Bulls",
+      "record": "24-28",
+      "conf_rank": 11,
+      "games": 58,
+      "ppg": 117.3,
+      "opp_ppg": 118.5,
+      "ortg": 110.4,
+      "drtg": 113.6,
+      "apg": 29.6,
+      "rpg": 45.3,
+      "topg": 14.6,
+      "net_rating": -3.16,
+      "fgp": 47.3,
+      "tpp": 36.3,
+      "last_ten": "4-6",
+      "last_ten_pct": 0.4,
+      "home_record": "15-11",
+      "away_record": "9-17",
+      "home_win_pct": 0.577,
+      "away_win_pct": 0.346,
+      "pace": 104.3
+    },
+    "team2": {
+      "name": "Denver Nuggets",
+      "record": "33-19",
+      "conf_rank": 3,
+      "games": 58,
+      "ppg": 119.4,
+      "opp_ppg": 111.0,
+      "ortg": 113.9,
+      "drtg": 110.1,
+      "apg": 27.7,
+      "rpg": 42.5,
+      "topg": 12.9,
+      "net_rating": 3.84,
+      "fgp": 49.5,
+      "tpp": 39.2,
+      "last_ten": "4-6",
+      "last_ten_pct": 0.4,
+      "home_record": "14-10",
+      "away_record": "19-9",
+      "home_win_pct": 0.583,
+      "away_win_pct": 0.679,
+      "pace": 100.8
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "L4",
+      "games_last_7_days": 5,
+      "recent_opponent_avg_win_pct": 0.532,
+      "quality_wins": 1,
+      "quality_losses": 3
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "W1",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.616,
+      "quality_wins": 0,
+      "quality_losses": 3
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Denver Nuggets",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "120-136",
+        "home": true,
+        "margin": -16,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Toronto Raptors",
+        "vs_record": "31-22",
+        "vs_win_pct": 0.585,
+        "result": "L",
+        "score": "107-123",
+        "home": false,
+        "margin": -16,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Milwaukee Bucks",
+        "vs_record": "21-29",
+        "vs_win_pct": 0.42,
+        "result": "L",
+        "score": "115-131",
+        "home": false,
+        "margin": -16,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Miami Heat",
+        "vs_record": "27-26",
+        "vs_win_pct": 0.509,
+        "result": "L",
+        "score": "91-134",
+        "home": false,
+        "margin": -43,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Miami Heat",
+        "vs_record": "27-26",
+        "vs_win_pct": 0.509,
+        "result": "W",
+        "score": "125-118",
+        "home": false,
+        "margin": 7,
+        "date": "2026-02-01"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "136-120",
+        "home": false,
+        "margin": 16,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "New York Knicks",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "127-134",
+        "home": false,
+        "margin": -7,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Detroit Pistons",
+        "vs_record": "38-13",
+        "vs_win_pct": 0.745,
+        "result": "L",
+        "score": "121-124",
+        "home": false,
+        "margin": -3,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Oklahoma City Thunder",
+        "vs_record": "40-12",
+        "vs_win_pct": 0.769,
+        "result": "L",
+        "score": "111-121",
+        "home": true,
+        "margin": -10,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "24-27",
+        "vs_win_pct": 0.471,
+        "result": "W",
+        "score": "122-109",
+        "home": true,
+        "margin": 13,
+        "date": "2026-01-31"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Josh Giddey",
+          "ppg": 18.0,
+          "plus_minus": -2.6,
+          "games": 39
+        },
+        {
+          "name": "Nikola Vucevic",
+          "ppg": 16.1,
+          "plus_minus": -2.9,
+          "games": 52
+        },
+        {
+          "name": "Coby White",
+          "ppg": 18.6,
+          "plus_minus": -0.1,
+          "games": 29
+        },
+        {
+          "name": "Matas Buzelis",
+          "ppg": 15.3,
+          "plus_minus": -2.2,
+          "games": 58
+        },
+        {
+          "name": "Tre Jones",
+          "ppg": 12.0,
+          "plus_minus": -0.1,
+          "games": 42
+        },
+        {
+          "name": "Ayo Dosunmu",
+          "ppg": 15.1,
+          "plus_minus": -2.0,
+          "games": 49
+        }
+      ],
+      "availability_concerns": [
+        "Josh Giddey (39/58 games)",
+        "Coby White (29/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "White 18.6, Giddey 18.0, Vucevic 16.1",
+      "playmaker": "Josh Giddey 8.5 APG (limited: 39 games)",
+      "hot_hand": "White -0.1 (limited: 29 games)",
+      "star_dependency": 15.9,
+      "depth_rating": "balanced (2.4 MPG std dev)",
+      "bench_scoring": 34.4,
+      "injuries": []
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Jamal Murray",
+          "ppg": 25.2,
+          "plus_minus": 5.0,
+          "games": 52
+        },
+        {
+          "name": "Nikola Jokic",
+          "ppg": 27.6,
+          "plus_minus": 9.0,
+          "games": 41
+        },
+        {
+          "name": "Peyton Watson",
+          "ppg": 14.4,
+          "plus_minus": 3.3,
+          "games": 54
+        },
+        {
+          "name": "Cameron Johnson",
+          "ppg": 11.2,
+          "plus_minus": 7.4,
+          "games": 34
+        },
+        {
+          "name": "Christian Braun",
+          "ppg": 9.4,
+          "plus_minus": 7.0,
+          "games": 21
+        },
+        {
+          "name": "Aaron Gordon",
+          "ppg": 17.5,
+          "plus_minus": 8.3,
+          "games": 26
+        }
+      ],
+      "availability_concerns": [
+        "Cameron Johnson (34/58 games)",
+        "Christian Braun (21/58 games)",
+        "Aaron Gordon (26/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Jokic 27.6, Murray 25.2, Gordon 17.5",
+      "playmaker": "Nikola Jokic 10.1 APG",
+      "hot_hand": "Jokic +9.0",
+      "star_dependency": 23.1,
+      "depth_rating": "balanced (3.2 MPG std dev)",
+      "bench_scoring": 38.2,
+      "injuries": []
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 9,
+      "team1_wins_all_time": 4,
+      "team2_wins_all_time": 5,
+      "team1_win_pct": 0.444,
+      "team1_home_wins": 2,
+      "team1_home_losses": 2,
+      "team1_away_wins": 2,
+      "team1_away_losses": 3,
+      "avg_point_diff": -4.1,
+      "team1_avg_points": 118.6,
+      "team2_avg_points": 122.7,
+      "last_5_games": [
+        "Denver Nuggets",
+        "Chicago Bulls",
+        "Denver Nuggets",
+        "Chicago Bulls",
+        "Chicago Bulls"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 1,
+      "blowouts": 2
+    },
+    "patterns": {
+      "avg_total": 241.2,
+      "home_win_pct": 0.556,
+      "high_scoring_pct": 0.78,
+      "close_game_pct": 0.11
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 3,
+      "team2_wins_last_2_seasons": 2,
+      "last_winner": "Chicago Bulls",
+      "home_team_home_record": "1-1",
+      "games_last_2_seasons": 5
+    },
+    "quarters": {
+      "avg_q1_total": 60.6,
+      "avg_q2_total": 57.9,
+      "avg_q3_total": 62.6,
+      "avg_q4_total": 56.6,
+      "avg_first_half": 118.4,
+      "avg_second_half": 119.1,
+      "team1_q1_avg": 28.7,
+      "team2_q1_avg": 31.9,
+      "team1_q4_avg": 27.3,
+      "team2_q4_avg": 29.2,
+      "halftime_leader_wins_pct": 0.33
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 54.5,
+        "avg_tpp": 37.3,
+        "avg_rebounds": 44.4,
+        "avg_assists": 29.1,
+        "avg_turnovers": 14.3,
+        "avg_disruption": 12.2
+      },
+      "team2": {
+        "avg_fgp": 63.7,
+        "avg_tpp": 37.0,
+        "avg_rebounds": 44.2,
+        "avg_assists": 30.3,
+        "avg_turnovers": 13.4,
+        "avg_disruption": 14.1
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 238.5,
+    "total_diff_from_h2h": -4.5,
+    "team1_h2h_scoring_diff": -1.3,
+    "team2_h2h_scoring_diff": -3.3,
+    "margin_volatility": 5.3,
+    "h2h_total_variance": 15.4,
+    "pace_adjusted_total": 115.0,
+    "defense_factor": 111.8,
+    "recent_scoring_trend": 9.4
+  },
+  "comparison": {
+    "ppg": -2.1,
+    "net_rating": -7.0,
+    "form": 0.0,
+    "turnovers": -1.7,
+    "rebounds": 2.8,
+    "fgp": -2.2,
+    "three_pt_pct": -2.9,
+    "pace": 3.5,
+    "combined_pace": 102.5
+  },
+  "signals": [
+    "Chicago Bulls playing second game today (fatigue factor)",
+    "Denver Nuggets playing second game today (fatigue factor)",
+    "Denver Nuggets missing 23% of offense with key players limited",
+    "Chicago Bulls lost 4 straight",
+    "Denver Nuggets starts faster (+3.2 Q1 avg in H2H)",
+    "Chicago Bulls injury concerns: Josh Giddey (39/58 games), Coby White (29/58 games)",
+    "Denver Nuggets injury concerns: Cameron Johnson (34/58 games), Christian Braun (21/58 games)",
+    "Denver Nuggets solid on road (19-9)",
+    "Denver Nuggets significantly better net rating (-7.0)",
+    "High-scoring matchup (78% H2H games over 220)",
+    "Both teams scoring above season avg in recent games (+9.4 combined)",
+    "High-variance H2H (\u00b115.4 pts std dev in totals)",
+    "Chicago Bulls FG% elevated vs Denver Nuggets: 54.5% H2H vs 47.3% season",
+    "Denver Nuggets FG% elevated vs Chicago Bulls: 63.7% H2H vs 49.5% season"
+  ],
+  "api_game_id": 16280,
+  "search_context": "### Injury Report\n**Denver Nuggets:**\n- Jamal Murray: Status unclear (apparent leg/hip injury from recent game vs. Bulls; did not return, awaiting further update)[1][2][6]\n- Nikola Jokic: Questionable (left ankle sprain)[2]\n- Cameron Johnson: Questionable (right knee bone bruise)[2]\n- Christian Braun: Probable (left ankle sprain)[2]\n- Aaron Gordon: Out (hamstring)[1][2][5]\n- Peyton Watson: Out (hamstring)[1][2][5]\n- Spencer Jones: Out (concussion protocol)[2][5][7]\n- Tamar Bates: Out (foot)[2][5]\n\n**Chicago Bulls:**\n- Josh Giddey: Out (left hamstring strain)[2][4]\n- Tre Jones: Out (left hamstring strain; expected back no earlier than Feb. 9)[2][4]\n- Zach Collins: Out (right toe sprain)[2]\n- Noa Essengue: Out (left shoulder surgery)[2]\n- Jalen Smith: Questionable (right calf strain)[2]\n\nOfficial NBA injury report for 02/08/26 does not list Nuggets or Bulls (not yet submitted or no game-specific data provided)[3].\n\n### Betting Lines\nNo current consensus spread, moneyline odds, or over/under total available in search results.\n\n### Line Movement\nNo information on opening lines or notable moves available in search results.\n\n### Recent News\n- Nuggets defeated Bulls 136-120 in recent matchup, but Jamal Murray exited late with lower body injury after 28 points, 3 rebounds, 11 assists in 31 minutes[1][6].\n- Bulls underwent major trades: Acquired Jaden Ivey, Anfernee Simons, Guerschon Yabusele, Collin Sexton; traded Coby White, Nikola Vucevic, Ayo Dosunmu, Kevin Huerter; received nine second-round picks[2].\n- Nuggets at 33-19 record; Cameron Johnson returned after two-month knee absence during recent Bulls game[1][2].\n- Bulls at 24-28 record post-road trip; Matas Buzelis leads scoring at 15.0 PPG[2].\n- Expected Nuggets lineup (if Jokic out): Murray, Pickett, Brown, Hardaway Jr., Valanciunas[2].\n- Expected Bulls lineup: Sexton, Ivey, Okoro, Buzelis, Miller[2].\n\n### Additional Context\n### Jamal Murray Injury Status\nJamal Murray exited Denver's 136-120 win at Chicago on Saturday (February 7, 2026) with 4:05 left in the fourth quarter due to a **left hip issue** (also described as apparent leg/lower body injury)[1][2][3][5][6]. He played 31 minutes, scoring 28 points (11-18 FG, 4-9 3PT), 3 rebounds, and 11 assists[1][2][3]. Head coach David Adelman stated post-game he is \"confident [Murray] will be okay\" after further evaluation (reported February 7-8, 2026)[1][2]. No specific severity or return timeline confirmed; he is considered questionable for next game vs. Cavaliers (Monday, February 9)[2]. This matters as Murray averages 25+ points, 4+ rebounds, 7.5 assists on career-best efficiency (48.6% FG, 43.2% 3PT) in 47 games, forming Denver's core offense with Jokic; any absence amplifies losses of Aaron Gordon (hamstring, re-eval 4-6 weeks from Jan 29) and Peyton Watson (Grade 2 hamstring, out at least 4 weeks from Feb 6)[1][3][4].\n\n### Nikola Jokic Status\nNo injury concerns for **Nikola Jokic**; he played and made history with a triple-double in Saturday's win vs. Bulls (specific stats not detailed in reports)[3]. Jokic is Denver's anchor, complementing Murray as the team's top player; his availability is not in question, preserving half of Denver's offensive engine[1].\n\n### Betting Lines and Sharp Money Movement\nSearch results contain **no current betting lines**, odds, or sharp money movement data for Nuggets @ Bulls[1][2][3][4][5][6]. No evidence market has priced in Murray's injury (news from Feb 7-8 game); absence of line info prevents assessing roster impact mismatch.\n\n### Game Context and Roster Impact\nDenver won Saturday's game 136-120 despite Murray's exit (up 15 points at departure), ending a three-game skid, but faces injury-plagued roster with Gordon and Watson out long-term[1][2][3][4][5]. Two home games remain before All-Star break (vs. Cavaliers Monday, Grizzlies Wednesday), offering recovery window if Murray misses time[1][3]. Murray/Jokic duo critical: Murray's health vital amid Jokic's prior knee absence and team's championship reliance on star backcourt[1]."
+}

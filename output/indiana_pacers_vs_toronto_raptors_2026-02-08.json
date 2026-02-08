@@ -1,0 +1,535 @@
+{
+  "matchup": {
+    "team1": "Toronto Raptors",
+    "team2": "Indiana Pacers",
+    "home_team": "Toronto Raptors"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Toronto Raptors",
+      "record": "31-22",
+      "conf_rank": 5,
+      "games": 59,
+      "ppg": 114.0,
+      "opp_ppg": 114.1,
+      "ortg": 112.8,
+      "drtg": 111.2,
+      "apg": 29.5,
+      "rpg": 43.1,
+      "topg": 14.1,
+      "net_rating": 1.59,
+      "fgp": 46.9,
+      "tpp": 34.5,
+      "last_ten": "6-4",
+      "last_ten_pct": 0.6,
+      "home_record": "15-12",
+      "away_record": "16-10",
+      "home_win_pct": 0.556,
+      "away_win_pct": 0.615,
+      "pace": 102.6
+    },
+    "team2": {
+      "name": "Indiana Pacers",
+      "record": "13-39",
+      "conf_rank": 15,
+      "games": 56,
+      "ppg": 111.1,
+      "opp_ppg": 120.1,
+      "ortg": 108.2,
+      "drtg": 115.8,
+      "apg": 26.1,
+      "rpg": 42.9,
+      "topg": 14.8,
+      "net_rating": -7.66,
+      "fgp": 44.8,
+      "tpp": 34.8,
+      "last_ten": "3-7",
+      "last_ten_pct": 0.3,
+      "home_record": "10-18",
+      "away_record": "3-21",
+      "home_win_pct": 0.357,
+      "away_win_pct": 0.125,
+      "pace": 103.7
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 2,
+      "streak": "W1",
+      "games_last_7_days": 3,
+      "recent_opponent_avg_win_pct": 0.506,
+      "quality_wins": 0,
+      "quality_losses": 3
+    },
+    "team2": {
+      "days_rest": 1,
+      "streak": "L3",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.46,
+      "quality_wins": 0,
+      "quality_losses": 1
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "123-107",
+        "home": true,
+        "margin": 16,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Minnesota Timberwolves",
+        "vs_record": "32-21",
+        "vs_win_pct": 0.604,
+        "result": "L",
+        "score": "126-128",
+        "home": true,
+        "margin": -2,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "16-36",
+        "vs_win_pct": 0.308,
+        "result": "W",
+        "score": "107-100",
+        "home": true,
+        "margin": 7,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Orlando Magic",
+        "vs_record": "26-24",
+        "vs_win_pct": 0.52,
+        "result": "L",
+        "score": "120-130",
+        "home": false,
+        "margin": -10,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "New York Knicks",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "92-119",
+        "home": true,
+        "margin": -27,
+        "date": "2026-01-29"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Milwaukee Bucks",
+        "vs_record": "21-29",
+        "vs_win_pct": 0.42,
+        "result": "L",
+        "score": "99-105",
+        "home": false,
+        "margin": -6,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "16-36",
+        "vs_win_pct": 0.308,
+        "result": "L",
+        "score": "122-131",
+        "home": true,
+        "margin": -9,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "L",
+        "score": "114-118",
+        "home": true,
+        "margin": -4,
+        "date": "2026-02-03"
+      },
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-27",
+        "vs_win_pct": 0.491,
+        "result": "W",
+        "score": "129-124",
+        "home": true,
+        "margin": 5,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "113-110",
+        "home": true,
+        "margin": 3,
+        "date": "2026-01-29"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Scottie Barnes",
+          "ppg": 18.8,
+          "plus_minus": 2.5,
+          "games": 56
+        },
+        {
+          "name": "Brandon Ingram",
+          "ppg": 21.9,
+          "plus_minus": 0.9,
+          "games": 55
+        },
+        {
+          "name": "Immanuel Quickley",
+          "ppg": 16.7,
+          "plus_minus": 1.6,
+          "games": 55
+        },
+        {
+          "name": "RJ Barrett",
+          "ppg": 18.5,
+          "plus_minus": 1.2,
+          "games": 34
+        },
+        {
+          "name": "Jakob Poeltl",
+          "ppg": 9.7,
+          "plus_minus": -0.7,
+          "games": 23
+        },
+        {
+          "name": "Sandro Mamukelashvili",
+          "ppg": 11.1,
+          "plus_minus": 2.1,
+          "games": 57
+        }
+      ],
+      "availability_concerns": [
+        "RJ Barrett (34/59 games)",
+        "Jakob Poeltl (23/59 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Ingram 21.9, Barnes 18.8, Barrett 18.5",
+      "playmaker": "Immanuel Quickley 6.0 APG",
+      "hot_hand": "Barnes +2.5",
+      "star_dependency": 19.2,
+      "depth_rating": "balanced (4.9 MPG std dev)",
+      "bench_scoring": 25.9,
+      "injuries": [
+        {
+          "player": "Chucky Hepburn",
+          "status": "Out",
+          "reason": "G League - Two- Way",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Chris Paul",
+          "status": "Out",
+          "reason": "Not With Team",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Jakob Poeltl",
+          "status": "Questionable",
+          "reason": "Return to Competition Reconditioning",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Immanuel Quickley",
+          "status": "Questionable",
+          "reason": "Injury/Illness - Right Ankle; Sprain",
+          "report_time": "02PM"
+        }
+      ]
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Pascal Siakam",
+          "ppg": 23.1,
+          "plus_minus": -2.3,
+          "games": 52
+        },
+        {
+          "name": "Andrew Nembhard",
+          "ppg": 16.9,
+          "plus_minus": -5.6,
+          "games": 44
+        },
+        {
+          "name": "Bennedict Mathurin",
+          "ppg": 17.6,
+          "plus_minus": -5.8,
+          "games": 32
+        },
+        {
+          "name": "Aaron Nesmith",
+          "ppg": 13.6,
+          "plus_minus": -1.9,
+          "games": 33
+        },
+        {
+          "name": "Jarace Walker",
+          "ppg": 10.3,
+          "plus_minus": -4.9,
+          "games": 55
+        },
+        {
+          "name": "Ben Sheppard",
+          "ppg": 6.1,
+          "plus_minus": -4.5,
+          "games": 42
+        }
+      ],
+      "availability_concerns": [
+        "Bennedict Mathurin (32/56 games)",
+        "Aaron Nesmith (33/56 games)",
+        "Obi Toppin (7/56 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Siakam 23.1, Mathurin 17.6, Nembhard 16.9",
+      "playmaker": "Andrew Nembhard 7.4 APG",
+      "hot_hand": "Nesmith -1.9 (limited: 33 games)",
+      "star_dependency": 20.8,
+      "depth_rating": "star-dependent (5.0 MPG std dev)",
+      "bench_scoring": 24.0,
+      "injuries": [
+        {
+          "player": "Kobe Brown",
+          "status": "Out",
+          "reason": "Not With Team",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Tyrese Haliburton",
+          "status": "Out",
+          "reason": "Injury/Illness - Right Achilles Tendon; Tear",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Quenton Jackson",
+          "status": "Questionable",
+          "reason": "G League - Two- Way Injury Report: 02/08/26",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Aaron Nesmith",
+          "status": "Questionable",
+          "reason": "Injury/Illness - Left Elbow; Sprain",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Taelon Peter",
+          "status": "Doubtful",
+          "reason": "G League - Two- Way",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Micah Potter",
+          "status": "Questionable",
+          "reason": "Injury/Illness - Left Hip; Contusion",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Ethan Thompson",
+          "status": "Doubtful",
+          "reason": "G League - Two- Way",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Obi Toppin",
+          "status": "Out",
+          "reason": "Injury/Illness - Right Foot; Stress Fracture",
+          "report_time": "02PM"
+        },
+        {
+          "player": "Ivica Zubac",
+          "status": "Out",
+          "reason": "Not With Team",
+          "report_time": "02PM"
+        }
+      ]
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 10,
+      "team1_wins_all_time": 7,
+      "team2_wins_all_time": 3,
+      "team1_win_pct": 0.7,
+      "team1_home_wins": 3,
+      "team1_home_losses": 2,
+      "team1_away_wins": 4,
+      "team1_away_losses": 1,
+      "avg_point_diff": 2.6,
+      "team1_avg_points": 119.4,
+      "team2_avg_points": 116.8,
+      "last_5_games": [
+        "Toronto Raptors",
+        "Toronto Raptors",
+        "Toronto Raptors",
+        "Toronto Raptors",
+        "Toronto Raptors"
+      ],
+      "recent_trend": "team1_hot",
+      "close_games": 3,
+      "blowouts": 3
+    },
+    "patterns": {
+      "avg_total": 236.2,
+      "home_win_pct": 0.4,
+      "high_scoring_pct": 0.7,
+      "close_game_pct": 0.3
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 5,
+      "team2_wins_last_2_seasons": 1,
+      "last_winner": "Indiana Pacers",
+      "home_team_home_record": "3-0",
+      "games_last_2_seasons": 6
+    },
+    "quarters": {
+      "avg_q1_total": 57.5,
+      "avg_q2_total": 60.0,
+      "avg_q3_total": 60.8,
+      "avg_q4_total": 57.9,
+      "avg_first_half": 117.5,
+      "avg_second_half": 118.7,
+      "team1_q1_avg": 30.8,
+      "team2_q1_avg": 26.7,
+      "team1_q4_avg": 28.6,
+      "team2_q4_avg": 29.3,
+      "halftime_leader_wins_pct": 0.9
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 57.5,
+        "avg_tpp": 31.8,
+        "avg_rebounds": 45.8,
+        "avg_assists": 26.7,
+        "avg_turnovers": 16.5,
+        "avg_disruption": 12.3
+      },
+      "team2": {
+        "avg_fgp": 57.0,
+        "avg_tpp": 36.9,
+        "avg_rebounds": 39.3,
+        "avg_assists": 27.1,
+        "avg_turnovers": 14.4,
+        "avg_disruption": 15.2
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 229.5,
+    "total_diff_from_h2h": -11.1,
+    "team1_h2h_scoring_diff": -5.4,
+    "team2_h2h_scoring_diff": -5.7,
+    "margin_volatility": 6.7,
+    "h2h_total_variance": 23.8,
+    "pace_adjusted_total": 114.0,
+    "defense_factor": 113.5,
+    "recent_scoring_trend": 2.1
+  },
+  "comparison": {
+    "ppg": 2.9,
+    "net_rating": 9.25,
+    "form": 0.3,
+    "turnovers": 0.7,
+    "rebounds": 0.2,
+    "fgp": 2.1,
+    "three_pt_pct": -0.3,
+    "pace": -1.1,
+    "combined_pace": 103.2
+  },
+  "signals": [
+    "Indiana Pacers on back-to-back (fatigue factor)",
+    "Indiana Pacers lost 3 straight",
+    "Toronto Raptors starts faster (+4.1 Q1 avg in H2H)",
+    "Halftime leader wins 90% in this matchup",
+    "Toronto Raptors injury concerns: RJ Barrett (34/59 games), Jakob Poeltl (23/59 games)",
+    "Indiana Pacers injury concerns: Bennedict Mathurin (32/56 games), Aaron Nesmith (33/56 games)",
+    "Indiana Pacers struggling (3-7 L10)",
+    "Indiana Pacers poor on road (3-21)",
+    "Toronto Raptors significantly better net rating (+9.2)",
+    "Toronto Raptors 5-1 in recent H2H",
+    "Toronto Raptors won 4+ of last 5 H2H meetings",
+    "High-scoring matchup (70% H2H games over 220)",
+    "High-variance H2H (\u00b123.8 pts std dev in totals)",
+    "Toronto Raptors FG% elevated vs Indiana Pacers: 57.5% H2H vs 46.9% season",
+    "Indiana Pacers FG% elevated vs Toronto Raptors: 57.0% H2H vs 44.8% season",
+    "Toronto Raptors more careless vs Indiana Pacers: 16.5 H2H vs 14.1 season TOV",
+    "Indiana Pacers struggles on boards vs Toronto Raptors: 39.3 H2H vs 42.9 season"
+  ],
+  "api_game_id": 16287,
+  "odds": {
+    "spread": {
+      "home": {
+        "line": -8.5,
+        "price": -114
+      },
+      "away": {
+        "line": 8.5,
+        "price": -106
+      }
+    },
+    "total": {
+      "line": 225.5,
+      "over": -106,
+      "under": -114
+    },
+    "moneyline": {
+      "home": -355,
+      "away": 285
+    },
+    "alternate_spreads": [
+      {
+        "line": -9.5,
+        "price": -102
+      },
+      {
+        "line": -10.5,
+        "price": 112
+      },
+      {
+        "line": -7.5,
+        "price": -132
+      },
+      {
+        "line": -6.5,
+        "price": -150
+      }
+    ],
+    "alternate_totals": [
+      {
+        "line": 224.5,
+        "price": -118
+      },
+      {
+        "line": 223.5,
+        "price": -128
+      },
+      {
+        "line": 226.5,
+        "price": 104
+      },
+      {
+        "line": 227.5,
+        "price": 112
+      }
+    ]
+  },
+  "search_context": "### Injury Report\n**Pacers:**\n- Kobe Brown (not with team) - OUT[1][2][7]\n- Tyrese Haliburton (Achilles/right Achilles tendon tear) - OUT[1][2][3][5][7]\n- Quenton Jackson (two-way/G League - Two-Way) - QUESTIONABLE[1][7]\n- Aaron Nesmith (elbow/left elbow sprain) - QUESTIONABLE[1][2][5]\n- Taelon Peter (two-way) - DOUBTFUL[1]\n- Micah Potter (hip/left hip contusion) - QUESTIONABLE[1][2][7]\n- Ethan Thompson (two-way/G League - Two-Way/thumb) - DOUBTFUL[1][3][7]\n- Obi Toppin (foot/right foot stress fracture) - OUT[1][2][3][4][7]\n- Ivica Zubac (not with team/ankle) - OUT[1][2][3][4][7]\n\n**Raptors:**\n- Chucky Hepburn (two-way/G League - Two-Way/knee) - OUT[1][2][3][7]\n- Chris Paul (not with team) - OUT[1][2][7]\n- Jakob Poeltl (return to competition reconditioning/back/lower back injury) - QUESTIONABLE[1][2][3][4][5][7][9]\n- Immanuel Quickley (ankle/right ankle sprain) - QUESTIONABLE[1][2][3][4][5][7]\n\n### Betting Lines\nNo current consensus spread, moneyline odds, or over/under total available in search results.\n\n### Line Movement\nNo information on opening lines or notable moves available in search results.\n\n### Recent News\nPacers acquired Kobe Brown and Ivica Zubac from the Clippers at the trade deadline; neither will debut.[1][2]\nPacers lost 105-99 to Milwaukee Bucks on Friday, marking three straight losses.[1]\nRaptors defeated Chicago Bulls 123-107 on Thursday but lost three of last five.[1]\nChris Paul acquired from Clippers but not expected to report and likely to be waived.[1]\nZubac has ongoing ankle issue and will not play until fully ready.[1]\nPoeltl participated in practices; minutes restriction if he plays.[1]\nQuickley averaged 19.4 points, 5.3 rebounds, 6 assists, 1.7 steals over last 10 games, including 40-point, 10-assist game vs. Warriors on Jan. 20.[1]\n\n### Additional Context\n# Indiana Pacers @ Toronto Raptors - Betting Analysis Research\n\n## Pacers Backcourt Scoring Impact from Haliburton's Absence\n\n**Tyrese Haliburton Status:** Haliburton remains **out for the 2025-26 season** after tearing his right Achilles tendon in Game 7 of the 2025 NBA Finals.[1] The Pacers ruled him out in July 2025, and as of late January 2026, he is progressing through rehabilitation with 3-on-3 and 4-on-4 work, but has not returned to game action.[1][3]\n\n**Available Backcourt Performance:** Andrew Nembhard has emerged as the primary scoring option in Haliburton's absence. In a February 1 game against Atlanta, Nembhard scored 26 points as the Pacers won 129-124.[1] However, the search results do not provide comprehensive backcourt scoring statistics across the season or specific data on how scoring has declined compared to when Haliburton was active.\n\n**Three-Game Losing Streak Context:** The Pacers entered a matchup against Toronto after losing three consecutive games.[1] The search results do not provide detailed lineup combination analysis or specific reasons correlating the losing streak to particular backcourt configurations.\n\n## Toronto Raptors - Quickley Status and Scoring\n\n**Quickley Information Not Available:** The search results provided do not contain any information about Toronto Raptors guard Quickley, his injury status, minutes restrictions, or his 19.4 PPG average. This critical information for your betting analysis is not covered in the available sources.\n\n## Additional Context\n\n**Pacers' Broader Roster Changes:** Indiana recently acquired center Ivica Zubac and forward/guard Kobe Brown from the Los Angeles Clippers in exchange for Bennedict Mathurin, Isaiah Jackson, and draft picks.[2] Both Zubac and Brown are currently out due to injury\u2014Zubac with an ankle injury and Brown ruled out through at least Sunday's game against Toronto.[3] These roster moves suggest the Pacers are positioning for the 2026-27 season when Haliburton returns, but the current roster composition remains incomplete.\n\n**Pacers' Record:** Indiana holds a 13-39 record and ranks 5th in the Central Division.[3]\n\n---\n\n**Research Limitations:** The search results do not provide the specific backcourt scoring trends, detailed lineup combination analysis, or Toronto Raptors injury information needed for a complete betting analysis. Additional sources focusing on season-long backcourt statistics and current Raptors roster status would be necessary to fully address your research questions."
+}

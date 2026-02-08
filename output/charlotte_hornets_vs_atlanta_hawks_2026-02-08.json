@@ -1,0 +1,394 @@
+{
+  "matchup": {
+    "team1": "Atlanta Hawks",
+    "team2": "Charlotte Hornets",
+    "home_team": "Atlanta Hawks"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Atlanta Hawks",
+      "record": "26-27",
+      "conf_rank": 9,
+      "games": 58,
+      "ppg": 117.5,
+      "opp_ppg": 118.8,
+      "ortg": 111.4,
+      "drtg": 112.6,
+      "apg": 30.6,
+      "rpg": 42.6,
+      "topg": 14.5,
+      "net_rating": -1.19,
+      "fgp": 47.2,
+      "tpp": 36.4,
+      "last_ten": "6-4",
+      "last_ten_pct": 0.6,
+      "home_record": "10-14",
+      "away_record": "16-13",
+      "home_win_pct": 0.417,
+      "away_win_pct": 0.552,
+      "pace": 105.5
+    },
+    "team2": {
+      "name": "Charlotte Hornets",
+      "record": "24-28",
+      "conf_rank": 10,
+      "games": 58,
+      "ppg": 116.4,
+      "opp_ppg": 114.3,
+      "ortg": 112.9,
+      "drtg": 111.1,
+      "apg": 26.6,
+      "rpg": 46.4,
+      "topg": 16.1,
+      "net_rating": 1.86,
+      "fgp": 46.2,
+      "tpp": 37.2,
+      "last_ten": "9-1",
+      "last_ten_pct": 0.9,
+      "home_record": "11-13",
+      "away_record": "13-15",
+      "home_win_pct": 0.458,
+      "away_win_pct": 0.464,
+      "pace": 102.9
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "L1",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.43,
+      "quality_wins": 1,
+      "quality_losses": 1
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "W5",
+      "games_last_7_days": 3,
+      "recent_opponent_avg_win_pct": 0.486,
+      "quality_wins": 2,
+      "quality_losses": 0
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Charlotte Hornets",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "L",
+        "score": "119-126",
+        "home": true,
+        "margin": -7,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "16-36",
+        "vs_win_pct": 0.308,
+        "result": "W",
+        "score": "121-119",
+        "home": true,
+        "margin": 2,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Miami Heat",
+        "vs_record": "27-26",
+        "vs_win_pct": 0.509,
+        "result": "W",
+        "score": "127-115",
+        "home": false,
+        "margin": 12,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Indiana Pacers",
+        "vs_record": "13-39",
+        "vs_win_pct": 0.25,
+        "result": "L",
+        "score": "124-129",
+        "home": false,
+        "margin": -5,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "L",
+        "score": "86-104",
+        "home": true,
+        "margin": -18,
+        "date": "2026-01-30"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-27",
+        "vs_win_pct": 0.491,
+        "result": "W",
+        "score": "126-119",
+        "home": false,
+        "margin": 7,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "W",
+        "score": "109-99",
+        "home": false,
+        "margin": 10,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "New Orleans Pelicans",
+        "vs_record": "14-40",
+        "vs_win_pct": 0.259,
+        "result": "W",
+        "score": "102-95",
+        "home": true,
+        "margin": 7,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "San Antonio Spurs",
+        "vs_record": "35-16",
+        "vs_win_pct": 0.686,
+        "result": "W",
+        "score": "111-106",
+        "home": true,
+        "margin": 5,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-32",
+        "vs_win_pct": 0.373,
+        "result": "W",
+        "score": "123-121",
+        "home": false,
+        "margin": 2,
+        "date": "2026-01-30"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Jalen Johnson",
+          "ppg": 23.1,
+          "plus_minus": 0.6,
+          "games": 51
+        },
+        {
+          "name": "Dyson Daniels",
+          "ppg": 11.3,
+          "plus_minus": 0.7,
+          "games": 54
+        },
+        {
+          "name": "Nickeil Alexander-Walker",
+          "ppg": 20.0,
+          "plus_minus": -0.7,
+          "games": 54
+        },
+        {
+          "name": "Onyeka Okongwu",
+          "ppg": 15.8,
+          "plus_minus": -2.5,
+          "games": 51
+        },
+        {
+          "name": "CJ McCollum",
+          "ppg": 17.4,
+          "plus_minus": 2.4,
+          "games": 14
+        },
+        {
+          "name": "Trae Young",
+          "ppg": 17.3,
+          "plus_minus": -4.1,
+          "games": 13
+        }
+      ],
+      "availability_concerns": [
+        "CJ McCollum (14/58 games)",
+        "Trae Young (13/58 games)",
+        "Kristaps Porzingis (20/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Johnson 23.1, Alexander-Walker 20.0, McCollum 17.4",
+      "playmaker": "Trae Young 8.8 APG (limited: 13 games)",
+      "hot_hand": "McCollum +2.4 (limited: 14 games)",
+      "star_dependency": 19.7,
+      "depth_rating": "balanced (4.0 MPG std dev)",
+      "bench_scoring": 45.2,
+      "injuries": []
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Miles Bridges",
+          "ppg": 18.3,
+          "plus_minus": 0.1,
+          "games": 57
+        },
+        {
+          "name": "K. Knueppel",
+          "ppg": 18.3,
+          "plus_minus": 1.6,
+          "games": 57
+        },
+        {
+          "name": "Brandon Miller",
+          "ppg": 19.7,
+          "plus_minus": 4.5,
+          "games": 40
+        },
+        {
+          "name": "LaMelo Ball",
+          "ppg": 19.0,
+          "plus_minus": 4.7,
+          "games": 47
+        },
+        {
+          "name": "Moussa Diabate",
+          "ppg": 8.6,
+          "plus_minus": 3.2,
+          "games": 54
+        },
+        {
+          "name": "S. James",
+          "ppg": 5.4,
+          "plus_minus": -0.9,
+          "games": 56
+        }
+      ],
+      "availability_concerns": [
+        "Brandon Miller (40/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Miller 19.7, Ball 19.0, Bridges 18.3",
+      "playmaker": "LaMelo Ball 7.3 APG",
+      "hot_hand": "Ball +4.7",
+      "star_dependency": 16.9,
+      "depth_rating": "balanced (3.7 MPG std dev)",
+      "bench_scoring": 28.1,
+      "injuries": []
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 11,
+      "team1_wins_all_time": 6,
+      "team2_wins_all_time": 5,
+      "team1_win_pct": 0.545,
+      "team1_home_wins": 4,
+      "team1_home_losses": 2,
+      "team1_away_wins": 2,
+      "team1_away_losses": 3,
+      "avg_point_diff": 4.8,
+      "team1_avg_points": 118.4,
+      "team2_avg_points": 113.5,
+      "last_5_games": [
+        "Atlanta Hawks",
+        "Charlotte Hornets",
+        "Charlotte Hornets",
+        "Atlanta Hawks",
+        "Atlanta Hawks"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 4,
+      "blowouts": 3
+    },
+    "patterns": {
+      "avg_total": 231.9,
+      "home_win_pct": 0.636,
+      "high_scoring_pct": 0.91,
+      "close_game_pct": 0.36
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 5,
+      "team2_wins_last_2_seasons": 2,
+      "last_winner": "Atlanta Hawks",
+      "home_team_home_record": "3-1",
+      "games_last_2_seasons": 7
+    },
+    "quarters": {
+      "avg_q1_total": 58.8,
+      "avg_q2_total": 57.5,
+      "avg_q3_total": 58.1,
+      "avg_q4_total": 57.5,
+      "avg_first_half": 116.3,
+      "avg_second_half": 115.6,
+      "team1_q1_avg": 30.8,
+      "team2_q1_avg": 28.0,
+      "team1_q4_avg": 29.2,
+      "team2_q4_avg": 28.4,
+      "halftime_leader_wins_pct": 0.73
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 61.5,
+        "avg_tpp": 36.6,
+        "avg_rebounds": 40.6,
+        "avg_assists": 29.1,
+        "avg_turnovers": 13.6,
+        "avg_disruption": 14.1
+      },
+      "team2": {
+        "avg_fgp": 59.4,
+        "avg_tpp": 37.8,
+        "avg_rebounds": 43.8,
+        "avg_assists": 27.8,
+        "avg_turnovers": 16.4,
+        "avg_disruption": 11.8
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 233.1,
+    "total_diff_from_h2h": 2.0,
+    "team1_h2h_scoring_diff": -0.9,
+    "team2_h2h_scoring_diff": 2.9,
+    "margin_volatility": 12.7,
+    "h2h_total_variance": 13.0,
+    "pace_adjusted_total": 116.9,
+    "defense_factor": 111.8,
+    "recent_scoring_trend": -5.4
+  },
+  "comparison": {
+    "ppg": 1.1,
+    "net_rating": -3.05,
+    "form": -0.3,
+    "turnovers": 1.6,
+    "rebounds": -3.8,
+    "fgp": 1.0,
+    "three_pt_pct": -0.8,
+    "pace": 2.6,
+    "combined_pace": 104.2
+  },
+  "signals": [
+    "Atlanta Hawks playing second game today (fatigue factor)",
+    "Charlotte Hornets playing second game today (fatigue factor)",
+    "Charlotte Hornets won 5 straight",
+    "Atlanta Hawks starts faster (+2.8 Q1 avg in H2H)",
+    "Halftime leader wins 73% in this matchup",
+    "Atlanta Hawks injury concerns: CJ McCollum (14/58 games), Trae Young (13/58 games)",
+    "Charlotte Hornets injury concerns: Brandon Miller (40/58 games)",
+    "Charlotte Hornets hot form (9-1 L10)",
+    "Charlotte Hornets significantly better net rating (-3.0)",
+    "Atlanta Hawks 5-2 in recent H2H",
+    "High-scoring matchup (91% H2H games over 220)",
+    "Both teams scoring below season avg in recent games (-5.4 combined)",
+    "Atlanta Hawks FG% elevated vs Charlotte Hornets: 61.5% H2H vs 47.2% season",
+    "Charlotte Hornets FG% elevated vs Atlanta Hawks: 59.4% H2H vs 46.2% season"
+  ],
+  "api_game_id": 16279,
+  "search_context": "### Injury Report\n**Atlanta Hawks:** Onyeka Okongwu (out, dental fracture), Jonathan Kuminga (out, left knee bone bruise; trade pending), Buddy Hield (questionable, trade pending), Gabe Vincent (questionable), RayJ Dennis (doubtful, G-League two-way), Nikola Djurisic (doubtful, assignment), Caleb Houstan (doubtful, G-League two-way).[1][2]\n\n**Charlotte Hornets:** Malaki Branham (out, not with team), Coby White (out, left calf strain), Xavier Tillman (out, not injury related), Tidjane Salaun (questionable/out, illness), Tosan Evbuomwan (out, G-League assignment), P.J. Hall (out, G-League assignment), Liam McNeeley (out, G-League assignment), Antonio Reeves (out, G-League assignment).[1][2][5][7]\n\n### Betting Lines\nNo current consensus spread, moneyline odds, or over/under total available in search results.\n\n### Line Movement\nNo information on opening lines or notable moves available in search results.\n\n### Recent News\nCharlotte Hornets defeated Atlanta Hawks 126-119 on February 7, 2026, extending their winning streak to nine games; Miles Bridges scored 26 points, Kon Knueppel 23, LaMelo Ball 19 points and nine assists, Brandon Miller 16, Moussa Diabate 11 points and 15 rebounds; Hornets dominated rebounding 49-30.[3][6]\n\nAtlanta Hawks: Jalen Johnson scored 31 points, nine rebounds, eight assists; Zaccharie Risacher 18 points, Onyeka Okungwu 16 points (played despite injury listing).[3]\n\nHawks traded Vit Krejci for bench scoring from Corey Kispert or CJ McCollum; Kispert scored 20 points off bench vs. Jazz; Jock Landale debuted with 26 points, 11 rebounds, five assists.[1]\n\nProjected starting lineups: Hawks - Nickeil Alexander-Walker, Dyson Daniels, Corey Kispert, Jalen Johnson, Christian Koloko; Hornets - LaMelo Ball, Kon Knueppel, Miles Bridges, Brandon Miller, Moussa Diabate.[1]\n\n### Additional Context\n# Charlotte Hornets @ Atlanta Hawks: Rebounding and Interior Defense Analysis\n\n## Recent Matchup Results (February 7, 2026)\n\nThe **Charlotte Hornets defeated the Atlanta Hawks 126-119** on Saturday night.[3][5] Charlotte dominated the glass with a **49-30 rebounding advantage**, led by Moussa Diabate's 15 rebounds.[3][5] The Hornets grabbed **39% of offensive rebounds compared to the Hawks' 13.2%**, generating significant second-chance opportunities.[7]\n\nThis victory extended Charlotte's winning streak to **nine consecutive games**, the longest active streak in the NBA.[3][5]\n\n## Charlotte's Rebounding Dominance\n\n**Season-to-date metrics:**\n- Charlotte averages **12.8 offensive rebounds per game** (ranked #10 in the NBA)[2]\n- Charlotte's **offensive rebound percentage is 30.1%** (ranked #6)[2]\n- Defensive rebounding: **32.8 per game** (ranked #13)[2]\n\n**Key contributor:** Moussa Diabate has been instrumental, recording 15 rebounds in the February 7 matchup and averaging 7.8 rebounds per game.[4] In the recent game, he finished with 11 points and 15 rebounds.[3][5]\n\n## Atlanta's Rebounding Struggles\n\n**Season-to-date metrics:**\n- Atlanta averages only **9.6 offensive rebounds per game** (ranked #28 in the NBA)[2]\n- Atlanta's **offensive rebound percentage is 22.6%** (ranked #25)[2]\n- Defensive rebounding: **31.8 per game** (ranked #19)[2]\n\n**Game-specific issues:** In the February 7 loss, the Hawks were outrebounded 49-30 and struggled particularly on the offensive glass with just four offensive rebounds.[1] The search results note that \"they were never going to beat the Hornets on the boards.\"[1]\n\n## Roster Changes and Interior Defense\n\nThe search results do not contain specific information about Jock Landale's debut, Kispert's acquisition, or how these roster moves have affected Atlanta's rebounding metrics and interior defense efficiency in games since the trade. The available data shows Atlanta's season-long rebounding rankings and their performance in the February 7 matchup, but does not isolate performance changes tied to specific roster transactions or their timeframes.\n\n## Impact on Pace and Second-Chance Scoring\n\nCharlotte's **39% offensive rebound rate** in the recent matchup directly translated to second-chance opportunities, while Atlanta's **13.2% offensive rebound rate** limited their ability to generate additional possessions.[7] This rebounding disparity contributed to Charlotte's ability to control game flow and maintain their nine-game winning streak."
+}

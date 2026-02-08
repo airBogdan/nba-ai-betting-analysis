@@ -46,5 +46,53 @@
     "created_at": "2026-02-07T13:12:28.943122+00:00",
     "amount": 40.0,
     "odds_price": -110
+  },
+  {
+    "id": "977f63e1-5606-4d20-ac25-2611508f8164",
+    "game_id": "16284",
+    "matchup": "Cleveland Cavaliers @ Sacramento Kings",
+    "bet_type": "moneyline",
+    "pick": "Cleveland Cavaliers",
+    "line": null,
+    "confidence": "high",
+    "units": 2.0,
+    "reasoning": "Elite team (31-21, +12.7 net rating) vs league's worst team (12-41) on 11-game losing streak. Kings missing 4 starters (Sabonis, LaVine, Murray, Hunter) - essentially fielding a G-League lineup. Cleveland 8-2 L10 with Mitchell healthy and dominant. Even without Mobley, the talent gap is massive. Our ratings_edge bets are 6-1 (85.7%).",
+    "primary_edge": "ratings_edge",
+    "date": "2026-02-08",
+    "created_at": "2026-02-08T12:36:24.716571+00:00",
+    "amount": 50.0,
+    "odds_price": -110
+  },
+  {
+    "id": "a77d6f94-307e-442d-bf87-fe5656c547ec",
+    "game_id": "16288",
+    "matchup": "LA Clippers @ Minnesota Timberwolves",
+    "bet_type": "spread",
+    "pick": "Minnesota Timberwolves",
+    "line": -8.5,
+    "confidence": "medium",
+    "units": 1.0,
+    "reasoning": "Clippers gutted by trades (lost Harden, Zubac) and injuries (Beal hip fracture, Garland toe out). Minnesota dominates H2H 7-1 all-time, 4-0 recent with +9.5 avg margin. Wolves +4.4 net rating edge, 17-9 at home vs Clippers 11-16 road and 9-20 vs .500+ teams.",
+    "primary_edge": "injury_edge",
+    "date": "2026-02-08",
+    "created_at": "2026-02-08T12:36:24.716603+00:00",
+    "amount": 30.0,
+    "odds_price": -110
+  },
+  {
+    "id": "a2d83b3d-3bd6-4866-b013-8632474d0f21",
+    "game_id": "16288",
+    "matchup": "LA Clippers @ Minnesota Timberwolves",
+    "bet_type": "total",
+    "pick": "under",
+    "line": 223.5,
+    "confidence": "medium",
+    "units": 1.0,
+    "reasoning": "H2H average total only 204.0 with just 12% of games going over 220. Clippers lost Harden/Zubac in trade and missing Beal/Garland - their offense is severely depleted. Combined pace projects to ~101.2, below league average. Our totals are 3-0 (100%).",
+    "primary_edge": "injury_edge",
+    "date": "2026-02-08",
+    "created_at": "2026-02-08T12:36:24.716618+00:00",
+    "amount": 35.0,
+    "odds_price": -110
   }
 ]

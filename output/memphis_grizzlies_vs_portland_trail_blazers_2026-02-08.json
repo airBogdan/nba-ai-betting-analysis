@@ -1,0 +1,393 @@
+{
+  "matchup": {
+    "team1": "Portland Trail Blazers",
+    "team2": "Memphis Grizzlies",
+    "home_team": "Portland Trail Blazers"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Portland Trail Blazers",
+      "record": "24-28",
+      "conf_rank": 10,
+      "games": 57,
+      "ppg": 116.2,
+      "opp_ppg": 119.4,
+      "ortg": 110.8,
+      "drtg": 113.2,
+      "apg": 24.4,
+      "rpg": 46.2,
+      "topg": 17.2,
+      "net_rating": -2.35,
+      "fgp": 44.9,
+      "tpp": 33.5,
+      "last_ten": "4-6",
+      "last_ten_pct": 0.4,
+      "home_record": "14-13",
+      "away_record": "10-15",
+      "home_win_pct": 0.519,
+      "away_win_pct": 0.4,
+      "pace": 105.5
+    },
+    "team2": {
+      "name": "Memphis Grizzlies",
+      "record": "20-30",
+      "conf_rank": 11,
+      "games": 56,
+      "ppg": 115.5,
+      "opp_ppg": 119.1,
+      "ortg": 110.5,
+      "drtg": 113.5,
+      "apg": 28.4,
+      "rpg": 45.3,
+      "topg": 15.5,
+      "net_rating": -2.91,
+      "fgp": 45.6,
+      "tpp": 35.1,
+      "last_ten": "3-7",
+      "last_ten_pct": 0.3,
+      "home_record": "10-15",
+      "away_record": "9-14",
+      "home_win_pct": 0.4,
+      "away_win_pct": 0.391,
+      "pace": 104.9
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "W2",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.525,
+      "quality_wins": 0,
+      "quality_losses": 3
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "L2",
+      "games_last_7_days": 5,
+      "recent_opponent_avg_win_pct": 0.472,
+      "quality_wins": 1,
+      "quality_losses": 1
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Memphis Grizzlies",
+        "vs_record": "20-30",
+        "vs_win_pct": 0.4,
+        "result": "W",
+        "score": "122-115",
+        "home": true,
+        "margin": 7,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Memphis Grizzlies",
+        "vs_record": "20-30",
+        "vs_win_pct": 0.4,
+        "result": "W",
+        "score": "135-115",
+        "home": true,
+        "margin": 20,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Phoenix Suns",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "L",
+        "score": "125-130",
+        "home": true,
+        "margin": -5,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Cleveland Cavaliers",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "L",
+        "score": "111-130",
+        "home": true,
+        "margin": -19,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "New York Knicks",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "97-127",
+        "home": false,
+        "margin": -30,
+        "date": "2026-01-31"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Portland Trail Blazers",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "L",
+        "score": "115-122",
+        "home": false,
+        "margin": -7,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Portland Trail Blazers",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "L",
+        "score": "115-135",
+        "home": false,
+        "margin": -20,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-41",
+        "vs_win_pct": 0.226,
+        "result": "W",
+        "score": "129-125",
+        "home": false,
+        "margin": 4,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Minnesota Timberwolves",
+        "vs_record": "32-21",
+        "vs_win_pct": 0.604,
+        "result": "W",
+        "score": "137-128",
+        "home": true,
+        "margin": 9,
+        "date": "2026-02-03"
+      },
+      {
+        "vs": "Minnesota Timberwolves",
+        "vs_record": "32-21",
+        "vs_win_pct": 0.604,
+        "result": "L",
+        "score": "114-131",
+        "home": true,
+        "margin": -17,
+        "date": "2026-02-01"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Deni Avdija",
+          "ppg": 24.4,
+          "plus_minus": 0.1,
+          "games": 48
+        },
+        {
+          "name": "Toumani Camara",
+          "ppg": 12.7,
+          "plus_minus": -1.0,
+          "games": 55
+        },
+        {
+          "name": "Shaedon Sharpe",
+          "ppg": 21.2,
+          "plus_minus": -0.7,
+          "games": 52
+        },
+        {
+          "name": "Jerami Grant",
+          "ppg": 19.0,
+          "plus_minus": -0.6,
+          "games": 41
+        },
+        {
+          "name": "Jrue Holiday",
+          "ppg": 14.6,
+          "plus_minus": 2.0,
+          "games": 28
+        },
+        {
+          "name": "Donovan Clingan",
+          "ppg": 11.1,
+          "plus_minus": -0.6,
+          "games": 53
+        }
+      ],
+      "availability_concerns": [
+        "Jrue Holiday (28/57 games)",
+        "Kris Murray (38/57 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Avdija 24.4, Sharpe 21.2, Grant 19.0",
+      "playmaker": "Deni Avdija 6.4 APG",
+      "hot_hand": "Holiday +2.0 (limited: 28 games)",
+      "star_dependency": 21.0,
+      "depth_rating": "balanced (3.6 MPG std dev)",
+      "bench_scoring": 28.7,
+      "injuries": []
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Jaren Jackson Jr.",
+          "ppg": 19.1,
+          "plus_minus": -2.7,
+          "games": 47
+        },
+        {
+          "name": "Ja Morant",
+          "ppg": 19.4,
+          "plus_minus": -2.5,
+          "games": 20
+        },
+        {
+          "name": "Santi Aldama",
+          "ppg": 13.5,
+          "plus_minus": -1.7,
+          "games": 48
+        },
+        {
+          "name": "Jaylen Wells",
+          "ppg": 12.4,
+          "plus_minus": -2.4,
+          "games": 55
+        },
+        {
+          "name": "C. Coward",
+          "ppg": 13.2,
+          "plus_minus": -0.6,
+          "games": 52
+        },
+        {
+          "name": "Zach Edey",
+          "ppg": 13.6,
+          "plus_minus": 10.3,
+          "games": 11
+        }
+      ],
+      "availability_concerns": [
+        "Ja Morant (20/56 games)",
+        "Zach Edey (11/56 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Morant 19.4, Jr. 19.1, Edey 13.6",
+      "playmaker": "Ja Morant 8.1 APG (limited: 20 games)",
+      "hot_hand": "Edey +10.3 (limited: 11 games)",
+      "star_dependency": 16.8,
+      "depth_rating": "balanced (2.2 MPG std dev)",
+      "bench_scoring": 36.6,
+      "injuries": []
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 10,
+      "team1_wins_all_time": 6,
+      "team2_wins_all_time": 4,
+      "team1_win_pct": 0.6,
+      "team1_home_wins": 4,
+      "team1_home_losses": 2,
+      "team1_away_wins": 2,
+      "team1_away_losses": 2,
+      "avg_point_diff": -2.3,
+      "team1_avg_points": 109.9,
+      "team2_avg_points": 112.2,
+      "last_5_games": [
+        "Portland Trail Blazers",
+        "Portland Trail Blazers",
+        "Memphis Grizzlies",
+        "Memphis Grizzlies",
+        "Portland Trail Blazers"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 1,
+      "blowouts": 6
+    },
+    "patterns": {
+      "avg_total": 222.1,
+      "home_win_pct": 0.6,
+      "high_scoring_pct": 0.5,
+      "close_game_pct": 0.1
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 3,
+      "team2_wins_last_2_seasons": 3,
+      "last_winner": "Memphis Grizzlies",
+      "home_team_home_record": "3-1",
+      "games_last_2_seasons": 6
+    },
+    "quarters": {
+      "avg_q1_total": 56.1,
+      "avg_q2_total": 58.4,
+      "avg_q3_total": 55.1,
+      "avg_q4_total": 48.4,
+      "avg_first_half": 114.5,
+      "avg_second_half": 103.5,
+      "team1_q1_avg": 26.2,
+      "team2_q1_avg": 29.9,
+      "team1_q4_avg": 24.9,
+      "team2_q4_avg": 23.5,
+      "halftime_leader_wins_pct": 0.8
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 50.6,
+        "avg_tpp": 31.4,
+        "avg_rebounds": 47.9,
+        "avg_assists": 24.3,
+        "avg_turnovers": 17.8,
+        "avg_disruption": 14.6
+      },
+      "team2": {
+        "avg_fgp": 59.3,
+        "avg_tpp": 35.9,
+        "avg_rebounds": 44.7,
+        "avg_assists": 25.7,
+        "avg_turnovers": 18.7,
+        "avg_disruption": 18.9
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 227.9,
+    "total_diff_from_h2h": 9.6,
+    "team1_h2h_scoring_diff": 6.3,
+    "team2_h2h_scoring_diff": 3.3,
+    "margin_volatility": 12.2,
+    "h2h_total_variance": 12.4,
+    "pace_adjusted_total": 116.4,
+    "defense_factor": 113.3,
+    "recent_scoring_trend": 10.7
+  },
+  "comparison": {
+    "ppg": 0.7,
+    "net_rating": 0.56,
+    "form": 0.1,
+    "turnovers": -1.7,
+    "rebounds": 0.9,
+    "fgp": -0.7,
+    "three_pt_pct": -1.6,
+    "pace": 0.6,
+    "combined_pace": 105.2
+  },
+  "signals": [
+    "Portland Trail Blazers playing second game today (fatigue factor)",
+    "Memphis Grizzlies playing second game today (fatigue factor)",
+    "Memphis Grizzlies starts faster (+3.7 Q1 avg in H2H)",
+    "Halftime leader wins 80% in this matchup",
+    "H2H games front-loaded (1H avg 114.5 vs 2H avg 103.5)",
+    "Portland Trail Blazers injury concerns: Jrue Holiday (28/57 games), Kris Murray (38/57 games)",
+    "Memphis Grizzlies injury concerns: Ja Morant (20/56 games), Zach Edey (11/56 games)",
+    "Memphis Grizzlies struggling (3-7 L10)",
+    "Fast-paced matchup (avg 105.2 possessions) - lean OVER",
+    "Both teams scoring above season avg in recent games (+10.7 combined)",
+    "Portland Trail Blazers FG% elevated vs Memphis Grizzlies: 50.6% H2H vs 44.9% season",
+    "Memphis Grizzlies FG% elevated vs Portland Trail Blazers: 59.3% H2H vs 45.6% season",
+    "Memphis Grizzlies more careless vs Portland Trail Blazers: 18.7 H2H vs 15.5 season TOV"
+  ],
+  "api_game_id": 16283,
+  "search_context": "I cannot provide a complete pre-game research report as requested because the game you're asking about has already been played or is currently in progress.\n\nAccording to the search results, the Memphis Grizzlies vs. Portland Trail Blazers game was scheduled for **Saturday, February 7, 2026** (listed as \"Saturday night\" in multiple sources, with a 9:00 p.m. CST tipoff)[2]. Since today is Sunday, February 8, 2026, this matchup has already concluded.\n\nThe search results I have access to contain pre-game injury information from February 6-7, 2026, but they do not include:\n\n- **Betting Lines**: No current odds or line information\n- **Line Movement**: No historical line data\n- **Recent News**: No post-game analysis or results from Saturday's game\n\nI can provide the **Injury Report** from the pre-game materials if that would be helpful for historical reference, but for a current pre-game report, you would need to specify an upcoming game with a future date.\n\n### Additional Context\n### Game Details\nMemphis Grizzlies (20-30) visit Portland Trail Blazers (24-28) on February 7, 2026, at Moda Center, airing on KUNP and FDSSE, with tipoff around 3:00 AM UTC.[1][2]\n\n### Current Odds\nPortland Trail Blazers are **8.5- to 9-point favorites** at home. Over/under total ranges from **232.5 to 235.5 points**. Moneyline lists Portland at **-300 to -310** and Memphis at **+245 to +250**.[1][2]\n\n| Source | Spread | Total | Portland ML | Memphis ML |\n|--------|--------|-------|-------------|------------|\n| FOX Sports [1] | POR -8.5 (-114) / MEM +8.5 (-106) | 232.5 (O/U -110) | -300 | +245 |\n| Action Network [2] | POR -9 (-111) / MEM +9 (-109)<br>Open: POR -7.5 / MEM +7.5 | 235.5 (O -107 / U -115)<br>Open: 234.5 | -310 | +250 |\n\nLine movement shows spread tightening from Portland -7.5 open to -8.5/-9 current, and total rising from 234.5 to 235.5, indicating sharper action on Portland cover and higher-scoring game.[2]\n\n### Team Records and ATS Trends\n- **Portland Trail Blazers**: 24-28 overall; 12-13 ATS on road; 1-4 straight up and ATS in last 5 games; 66.7% win rate (12-6) as favorites; covered spread 1/4 times favored by 8.5+; 27-25 O/U overall, overs in 4/5 last games and 16/27 home games.[1][2]\n- **Memphis Grizzlies**: 20-30 overall; 4-6 ATS and 3-7 SU in last 10; 21-29 ATS overall (10-13-1 road); 27.3% win rate (9-24) as underdogs; covered 2/10 as 8.5+ underdogs; 23-27 O/U overall (37.5% overs away).[1][2]\nPortland has covered 56% at home (15-12), while Memphis is 33% on road (8-16); teams split last 2 meetings 1-1 ATS.[1][3]\n\n### Recent Performance Context\n- Grizzlies average 115.3 PPG (2.8 below Portland's 118.1 allowed); 11-8 ATS when scoring >118.1; shoot 45.7% FG (below Portland opponents' 47.3%); better ATS on road as underdogs but worse O/U away.[1]\n- Trail Blazers average 115.6 PPG (1.8 below Memphis' 117.4 allowed); opponents' combined scoring averages 3 points above 232.5 total; 26/50 games hit over.[1]\nLast 10 Grizzlies games averaged 232.6 total (0.1 above current line).[1] Portland 1-4 SU/ATS last 5 impacts favorite status reliability.[2]\n\n### Injury and News Status\nNo specific pre-game injury confirmations or player status updates available in results; player prop projections listed (e.g., Deni Avdija 25.21 pts, Jerami Grant 18.93 pts, Ty Jerome 15.47 pts, Cedric Coward 14.06 pts) imply expected participation.[4]\n\n### Head-to-Head and Advanced Stats\nTeams 1-1 ATS in last 2 meetings; Portland holds rebounding edge (50.3-37.5 projected), Grizzlies lower turnovers (14.2 vs 15.3).[3] AccuScore gives Portland 72.1% win probability; shooting projections: Grizzlies 47.0% FG, Portland 48.2%.[3]"
+}
