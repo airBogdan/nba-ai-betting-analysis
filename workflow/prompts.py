@@ -3,6 +3,8 @@
 import json
 from typing import Any, Dict, List
 
+MIN_ACTIONABLE_SAMPLE = 10
+
 SYSTEM_ANALYST = """You are an expert NBA betting analyst. You analyze matchup data to identify
 betting edges. Focus on statistical edges, situational factors, H2H patterns,
 and injury impact. Be objective and data-driven. Acknowledge uncertainty.
@@ -235,12 +237,12 @@ Respond with JSON:
 }}"""
 
 
-UPDATE_STRATEGY_PROMPT = """Update the betting strategy based on actual results.
+UPDATE_STRATEGY_PROMPT = """Review the betting strategy and propose small, targeted adjustments based on actual results.
 
 ## Current Strategy
 {current_strategy}
 
-## Performance Summary
+## Performance Summary (Record: {wins}-{losses}, ROI: {roi}%)
 {history_summary}
 
 ## Recent Bets (last 20)
@@ -253,36 +255,45 @@ UPDATE_STRATEGY_PROMPT = """Update the betting strategy based on actual results.
 {recent_journals}
 
 ## Instructions
-Analyze the data to find SPECIFIC patterns:
+Propose 0-3 SMALL, SPECIFIC adjustments to the strategy. These will compound over many runs.
 
-1. **Edge Analysis**: Which edge types are actually profitable? (Check by_primary_edge stats)
-   - Are home court edges working? Rest advantages? Ratings edges?
-   - Should we avoid any edge types that have negative ROI?
+**Rules:**
+1. Each adjustment targets ONE specific rule, threshold, or guideline
+2. Each MUST be supported by data from 10+ bets in the relevant category
+3. Ignore any category marked "(small sample — not actionable)"
+4. Do NOT rewrite entire sections — change one thing per adjustment
+5. If data doesn't clearly support a change, propose 0 adjustments
+6. Check the Change Log at the bottom of the strategy to avoid reverting recent changes or flip-flopping
 
-2. **Confidence Calibration**: Are our confidence levels accurate?
-   - Are high confidence bets actually winning at a higher rate?
-   - Should we adjust unit sizing based on actual results?
+**What qualifies as an adjustment:**
+- Adjusting a threshold (e.g., "raise spread edge minimum from 5 to 6 points")
+- Adding ONE specific rule backed by data (e.g., "avoid totals bets on B2B games")
+- Removing a rule that data shows doesn't work
+- Reweighting a factor based on results
 
-3. **Specific Thresholds**: Based on wins vs losses, identify:
-   - What net rating differential actually predicts wins?
-   - How much does rest advantage matter in practice?
-   - Any team-specific patterns?
+**What does NOT qualify:**
+- Rewriting a section's structure or tone
+- Generic advice not tied to specific numbers
+- Changes based on fewer than 10 bets
+- Multiple changes bundled into one adjustment
 
-4. **Process Fixes**: Look at reflections in journal entries AND the reflection patterns above
-   - What factors did we consistently miss?
-   - What should we weight more/less?
-   - Use reflection patterns to identify systemic process issues
-   - If edge validity < 60%, our edge identification is unreliable
-   - Common missed factors should become explicit checklist items
+The `updated_content` field must contain the COMPLETE new content for that section — all lines, including unchanged ones. Do NOT include the ## header line itself.
 
-Write a complete updated strategy.md document with:
-- Core Principles (keep what works, cut what doesn't)
-- Confidence Guidelines (adjusted based on actual calibration)
-- Key Factors to Weight (with specific thresholds from data)
-- What to Avoid (edges that haven't worked)
-- Performance Notes (current record: {wins}-{losses}, ROI: {roi}%)
+Respond with JSON:
+{{
+  "adjustments": [
+    {{
+      "section": "Exact name of the ## section to modify",
+      "updated_content": "Full replacement content for this section",
+      "change_description": "One-line summary of what changed",
+      "reasoning": "Data-backed justification citing actual W-L records or patterns"
+    }}
+  ],
+  "no_change_reasons": ["Why a specific area was left unchanged despite data"],
+  "summary": "1-sentence summary of this update"
+}}
 
-Be SPECIFIC. Use actual numbers from the data. Don't give generic advice."""
+If no changes are warranted, return an empty adjustments array with explanations in no_change_reasons."""
 
 
 EXTRACT_INJURIES_PROMPT = """Extract injured/out players from this pre-game report.
@@ -436,22 +447,28 @@ def format_history_summary(summary: Dict[str, Any]) -> str:
     if summary.get("by_confidence"):
         lines.append("\nBy Confidence:")
         for conf, stats in summary["by_confidence"].items():
+            n = stats["wins"] + stats["losses"] + stats.get("pushes", 0)
+            tag = "" if n >= MIN_ACTIONABLE_SAMPLE else " (small sample — not actionable)"
             lines.append(
-                f"  {conf}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%})"
+                f"  {conf}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%}){tag}"
             )
 
     if summary.get("by_bet_type"):
         lines.append("\nBy Bet Type:")
         for bet_type, stats in summary["by_bet_type"].items():
+            n = stats["wins"] + stats["losses"] + stats.get("pushes", 0)
+            tag = "" if n >= MIN_ACTIONABLE_SAMPLE else " (small sample — not actionable)"
             lines.append(
-                f"  {bet_type}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%})"
+                f"  {bet_type}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%}){tag}"
             )
 
     if summary.get("by_primary_edge"):
         lines.append("\nBy Edge Type:")
         for edge, stats in summary["by_primary_edge"].items():
+            n = stats["wins"] + stats["losses"] + stats.get("pushes", 0)
+            tag = "" if n >= MIN_ACTIONABLE_SAMPLE else " (small sample — not actionable)"
             lines.append(
-                f"  {edge}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%})"
+                f"  {edge}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%}){tag}"
             )
 
     return "\n".join(lines)
