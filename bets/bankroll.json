@@ -1,6 +1,6 @@
 {
   "starting": 1000.0,
-  "current": 734.2727272727274,
+  "current": 778.1818181818182,
   "transactions": [
     {
       "date": "2026-02-05",
@@ -141,6 +141,13 @@
       "amount": -23.0,
       "bet_id": "b491ec5a-a897-4a38-9402-3bfeb281bc2c",
       "description": "Cleveland Cavaliers @ Sacramento Kings - moneyline Cleveland Cavaliers"
+    },
+    {
+      "date": "2026-02-08",
+      "type": "result",
+      "amount": 43.90909090909091,
+      "bet_id": "b491ec5a-a897-4a38-9402-3bfeb281bc2c",
+      "description": "WIN: Cleveland Cavaliers @ Sacramento Kings (+$20.91)"
     }
   ]
 }

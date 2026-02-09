@@ -435,17 +435,86 @@
         "key_lesson": "Injury-depleted teams sometimes play faster/looser rather than slower, which can inflate totals despite lower efficiency.",
         "summary": "The injury edge was real but we underestimated how both teams would respond - Houston found their offense (112 pts) and OKC pushed pace rather than grinding. At 218 vs 212.5, this was a 5.5 point miss that could have easily gone our way with slightly different game flow."
       }
+    },
+    {
+      "id": "3f645a7f-8680-43d2-97f9-4e8d354ae38e",
+      "game_id": "16280",
+      "matchup": "Denver Nuggets @ Chicago Bulls",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 235.5,
+      "confidence": "high",
+      "units": 2.0,
+      "reasoning": "Bulls traded 4 rotation players mid-week (Vucevic, White, Dosunmu, Huerter) creating a completely new lineup with zero chemistry. Denver missing 43+ PPG from Gordon/Watson/Johnson with Jokic questionable. Injury-adjusted projection of 206.9 gives a massive 28+ point edge on the 235.5 line. Both teams on B2B adds fatigue factor.",
+      "primary_edge": "injury_edge",
+      "date": "2026-02-08",
+      "created_at": "2026-02-08T22:40:36.466924+00:00",
+      "odds_price": -110,
+      "amount": 20.0,
+      "result": "loss",
+      "winner": "Denver Nuggets",
+      "final_score": "Denver Nuggets 136 @ Chicago Bulls 120",
+      "actual_total": 256,
+      "actual_margin": -16,
+      "profit_loss": -2.0,
+      "reflection": "Badly misread the trade deadline situation - new players came in motivated to score and prove value, while defensive assignments were a mess on both sides. The 256 total (20+ over the line) shows we had the direction completely wrong, not just variance.",
+      "structured_reflection": {
+        "edge_valid": false,
+        "missed_factors": [
+          "New Bulls players (Markkanen, Poole, etc.) brought immediate offensive firepower",
+          "Denver's remaining players stepped up massively without injured starters",
+          "Pace increase from new Bulls lineup - they pushed tempo",
+          "Jokic played and dominated (likely triple-double)",
+          "Trade deadline chaos often creates high-scoring games as defenses aren't set"
+        ],
+        "process_assessment": "flawed",
+        "key_lesson": "Trade deadline games often produce HIGHER totals as new players try to prove themselves and defensive schemes are non-existent - don't assume chaos means low scoring.",
+        "summary": "Badly misread the trade deadline situation - new players came in motivated to score and prove value, while defensive assignments were a mess on both sides. The 256 total (20+ over the line) shows we had the direction completely wrong, not just variance."
+      }
+    },
+    {
+      "id": "b491ec5a-a897-4a38-9402-3bfeb281bc2c",
+      "game_id": "16284",
+      "matchup": "Cleveland Cavaliers @ Sacramento Kings",
+      "bet_type": "moneyline",
+      "pick": "Cleveland Cavaliers",
+      "line": null,
+      "confidence": "high",
+      "units": 2.0,
+      "reasoning": "Cleveland has a massive +12.7 net rating advantage and is 8-2 L10 vs Kings' 0-10 L10 and 11-game losing streak. Sacramento is missing Sabonis, LaVine, Murray, and Hunter - essentially a gutted roster. Even on B2B, Cleveland's superior depth and form should dominate a demoralized Kings team.",
+      "primary_edge": "ratings_edge",
+      "date": "2026-02-08",
+      "created_at": "2026-02-08T22:40:36.467019+00:00",
+      "odds_price": -110,
+      "amount": 23.0,
+      "result": "win",
+      "winner": "Cleveland Cavaliers",
+      "final_score": "Cleveland Cavaliers 132 @ Sacramento Kings 126",
+      "actual_total": 258,
+      "actual_margin": -6,
+      "profit_loss": 2.0,
+      "reflection": "The ratings edge and injury analysis were spot-on for the win, though Sacramento's 126 points shows even depleted teams can score in today's NBA. Process was solid - would make this bet again.",
+      "structured_reflection": {
+        "edge_valid": true,
+        "missed_factors": [
+          "Sacramento's offensive output was higher than expected despite injuries",
+          "Game was closer than anticipated given the massive roster disadvantage"
+        ],
+        "process_assessment": "sound",
+        "key_lesson": "Even gutted rosters can keep games competitive at home, but the edge identification was correct - trust large net rating differentials combined with injury advantages.",
+        "summary": "The ratings edge and injury analysis were spot-on for the win, though Sacramento's 126 points shows even depleted teams can score in today's NBA. Process was solid - would make this bet again."
+      }
     }
   ],
   "summary": {
-    "total_bets": 19,
-    "wins": 14,
-    "losses": 5,
+    "total_bets": 21,
+    "wins": 15,
+    "losses": 6,
     "pushes": 0,
-    "win_rate": 0.737,
-    "total_units_wagered": 24.5,
+    "win_rate": 0.714,
+    "total_units_wagered": 28.5,
     "net_units": 12.5,
-    "roi": 0.51,
+    "roi": 0.439,
     "by_confidence": {
       "medium": {
         "wins": 8,
@@ -458,9 +527,9 @@
         "win_rate": 1.0
       },
       "high": {
-        "wins": 5,
-        "losses": 1,
-        "win_rate": 0.833
+        "wins": 6,
+        "losses": 2,
+        "win_rate": 0.75
       }
     },
     "by_primary_edge": {
@@ -470,9 +539,9 @@
         "win_rate": 0.5
       },
       "ratings_edge": {
-        "wins": 6,
+        "wins": 7,
         "losses": 1,
-        "win_rate": 0.857
+        "win_rate": 0.875
       },
       "rest_advantage": {
         "wins": 1,
@@ -481,15 +550,15 @@
       },
       "injury_edge": {
         "wins": 6,
-        "losses": 3,
-        "win_rate": 0.667
+        "losses": 4,
+        "win_rate": 0.6
       }
     },
     "by_bet_type": {
       "moneyline": {
-        "wins": 8,
+        "wins": 9,
         "losses": 2,
-        "win_rate": 0.8
+        "win_rate": 0.818
       },
       "spread": {
         "wins": 3,
@@ -498,10 +567,10 @@
       },
       "total": {
         "wins": 3,
-        "losses": 1,
-        "win_rate": 0.75
+        "losses": 2,
+        "win_rate": 0.6
       }
     },
-    "current_streak": "L1"
+    "current_streak": "W1"
   }
 }
