@@ -1,0 +1,549 @@
+{
+  "matchup": {
+    "team1": "Minnesota Timberwolves",
+    "team2": "LA Clippers",
+    "home_team": "Minnesota Timberwolves"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Minnesota Timberwolves",
+      "record": "32-21",
+      "conf_rank": 6,
+      "games": 58,
+      "ppg": 119.3,
+      "opp_ppg": 114.3,
+      "ortg": 114.2,
+      "drtg": 110.2,
+      "apg": 26.5,
+      "rpg": 44.9,
+      "topg": 14.8,
+      "net_rating": 3.98,
+      "fgp": 48.1,
+      "tpp": 38.1,
+      "last_ten": "5-5",
+      "last_ten_pct": 0.5,
+      "home_record": "17-9",
+      "away_record": "15-12",
+      "home_win_pct": 0.654,
+      "away_win_pct": 0.556,
+      "pace": 103.7,
+      "recent_ppg": 114.8,
+      "recent_margin": -2.6,
+      "sos": 0.479,
+      "sos_adjusted_net_rating": 3.77
+    },
+    "team2": {
+      "name": "LA Clippers",
+      "record": "24-27",
+      "conf_rank": 9,
+      "games": 54,
+      "ppg": 111.8,
+      "opp_ppg": 111.1,
+      "ortg": 112.0,
+      "drtg": 112.4,
+      "apg": 23.7,
+      "rpg": 41.0,
+      "topg": 15.0,
+      "net_rating": -0.46,
+      "fgp": 48.0,
+      "tpp": 35.9,
+      "last_ten": "6-4",
+      "last_ten_pct": 0.6,
+      "home_record": "13-11",
+      "away_record": "11-16",
+      "home_win_pct": 0.542,
+      "away_win_pct": 0.407,
+      "pace": 98.8,
+      "recent_ppg": 111.1,
+      "recent_margin": 1.5,
+      "sos": 0.489,
+      "sos_adjusted_net_rating": -0.57
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "L2",
+      "games_last_7_days": 5,
+      "recent_opponent_avg_win_pct": 0.479,
+      "quality_wins": 3,
+      "quality_losses": 1
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "W2",
+      "games_last_7_days": 5,
+      "recent_opponent_avg_win_pct": 0.489,
+      "quality_wins": 3,
+      "quality_losses": 3
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "LA Clippers",
+        "vs_record": "24-27",
+        "vs_win_pct": 0.471,
+        "result": "L",
+        "score": "96-115",
+        "home": true,
+        "margin": -19,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "New Orleans Pelicans",
+        "vs_record": "14-40",
+        "vs_win_pct": 0.259,
+        "result": "L",
+        "score": "115-119",
+        "home": true,
+        "margin": -4,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Toronto Raptors",
+        "vs_record": "31-22",
+        "vs_win_pct": 0.585,
+        "result": "W",
+        "score": "128-126",
+        "home": false,
+        "margin": 2,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Memphis Grizzlies",
+        "vs_record": "20-30",
+        "vs_win_pct": 0.4,
+        "result": "L",
+        "score": "128-137",
+        "home": false,
+        "margin": -9,
+        "date": "2026-02-03"
+      },
+      {
+        "vs": "Memphis Grizzlies",
+        "vs_record": "20-30",
+        "vs_win_pct": 0.4,
+        "result": "W",
+        "score": "131-114",
+        "home": false,
+        "margin": 17,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Oklahoma City Thunder",
+        "vs_record": "40-12",
+        "vs_win_pct": 0.769,
+        "result": "W",
+        "score": "123-111",
+        "home": true,
+        "margin": 12,
+        "date": "2026-01-30"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-32",
+        "vs_win_pct": 0.373,
+        "result": "W",
+        "score": "118-105",
+        "home": false,
+        "margin": 13,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Golden State Warriors",
+        "vs_record": "28-24",
+        "vs_win_pct": 0.538,
+        "result": "W",
+        "score": "108-83",
+        "home": true,
+        "margin": 25,
+        "date": "2026-01-27"
+      },
+      {
+        "vs": "Golden State Warriors",
+        "vs_record": "28-24",
+        "vs_win_pct": 0.538,
+        "result": "L",
+        "score": "85-111",
+        "home": true,
+        "margin": -26,
+        "date": "2026-01-25"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "L",
+        "score": "115-120",
+        "home": true,
+        "margin": -5,
+        "date": "2026-01-23"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Minnesota Timberwolves",
+        "vs_record": "32-21",
+        "vs_win_pct": 0.604,
+        "result": "W",
+        "score": "115-96",
+        "home": false,
+        "margin": 19,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-41",
+        "vs_win_pct": 0.226,
+        "result": "W",
+        "score": "114-111",
+        "home": false,
+        "margin": 3,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Cleveland Cavaliers",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "L",
+        "score": "91-124",
+        "home": true,
+        "margin": -33,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "29-22",
+        "vs_win_pct": 0.569,
+        "result": "L",
+        "score": "113-128",
+        "home": true,
+        "margin": -15,
+        "date": "2026-02-03"
+      },
+      {
+        "vs": "Phoenix Suns",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "W",
+        "score": "117-93",
+        "home": false,
+        "margin": 24,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Denver Nuggets",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "109-122",
+        "home": false,
+        "margin": -13,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "16-36",
+        "vs_win_pct": 0.308,
+        "result": "W",
+        "score": "115-103",
+        "home": false,
+        "margin": 12,
+        "date": "2026-01-28"
+      },
+      {
+        "vs": "Brooklyn Nets",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "W",
+        "score": "126-89",
+        "home": true,
+        "margin": 37,
+        "date": "2026-01-26"
+      },
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "W",
+        "score": "112-104",
+        "home": true,
+        "margin": 8,
+        "date": "2026-01-23"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "L",
+        "score": "110-138",
+        "home": false,
+        "margin": -28,
+        "date": "2026-01-21"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Anthony Edwards",
+          "ppg": 29.0,
+          "plus_minus": 2.3,
+          "games": 47
+        },
+        {
+          "name": "Julius Randle",
+          "ppg": 21.8,
+          "plus_minus": 3.1,
+          "games": 57
+        },
+        {
+          "name": "Jaden McDaniels",
+          "ppg": 14.4,
+          "plus_minus": 3.5,
+          "games": 55
+        },
+        {
+          "name": "Rudy Gobert",
+          "ppg": 10.5,
+          "plus_minus": 3.9,
+          "games": 56
+        },
+        {
+          "name": "Donte DiVincenzo",
+          "ppg": 12.5,
+          "plus_minus": 5.1,
+          "games": 58
+        },
+        {
+          "name": "Naz Reid",
+          "ppg": 14.1,
+          "plus_minus": 2.7,
+          "games": 57
+        }
+      ],
+      "availability_concerns": [
+        "Terrence Jr. Shannon (26/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Edwards 29.0, Randle 21.8, McDaniels 14.4",
+      "playmaker": "Julius Randle 5.2 APG",
+      "hot_hand": "DiVincenzo +5.1",
+      "star_dependency": 24.3,
+      "depth_rating": "star-dependent (8.0 MPG std dev)",
+      "bench_scoring": 35.4
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "James Harden",
+          "ppg": 24.6,
+          "plus_minus": 0.5,
+          "games": 46
+        },
+        {
+          "name": "Kawhi Leonard",
+          "ppg": 27.4,
+          "plus_minus": 3.8,
+          "games": 41
+        },
+        {
+          "name": "Ivica Zubac",
+          "ppg": 13.8,
+          "plus_minus": -0.1,
+          "games": 46
+        },
+        {
+          "name": "John Collins",
+          "ppg": 13.7,
+          "plus_minus": 0.8,
+          "games": 52
+        },
+        {
+          "name": "Kris Dunn",
+          "ppg": 7.6,
+          "plus_minus": 0.1,
+          "games": 55
+        },
+        {
+          "name": "Derrick Jones Jr.",
+          "ppg": 10.0,
+          "plus_minus": 0.4,
+          "games": 23
+        }
+      ],
+      "availability_concerns": [
+        "Derrick Jones Jr. (23/54 games)",
+        "Bogdan Bogdanovic (18/54 games)",
+        "Jordan Miller (34/54 games)",
+        "Bradley Beal (7/54 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Leonard 27.4, Harden 24.6, Zubac 13.8",
+      "playmaker": "James Harden 8.1 APG",
+      "hot_hand": "Leonard +3.8",
+      "star_dependency": 24.5,
+      "depth_rating": "star-dependent (5.2 MPG std dev)",
+      "bench_scoring": 42.5
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 9,
+      "team1_wins_all_time": 7,
+      "team2_wins_all_time": 2,
+      "team1_win_pct": 0.778,
+      "team1_home_wins": 4,
+      "team1_home_losses": 2,
+      "team1_away_wins": 3,
+      "team1_away_losses": 0,
+      "avg_point_diff": 0.7,
+      "team1_avg_points": 103.7,
+      "team2_avg_points": 103.0,
+      "last_5_games": [
+        "Minnesota Timberwolves",
+        "LA Clippers",
+        "Minnesota Timberwolves",
+        "Minnesota Timberwolves",
+        "Minnesota Timberwolves"
+      ],
+      "recent_trend": "team1_hot",
+      "close_games": 5,
+      "blowouts": 4
+    },
+    "patterns": {
+      "avg_total": 206.7,
+      "home_win_pct": 0.513,
+      "high_scoring_pct": 0.04,
+      "close_game_pct": 0.55
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 4,
+      "team2_wins_last_2_seasons": 1,
+      "last_winner": "Minnesota Timberwolves",
+      "home_team_home_record": "3-1",
+      "games_last_2_seasons": 5
+    },
+    "quarters": {
+      "avg_q1_total": 48.6,
+      "avg_q2_total": 49.0,
+      "avg_q3_total": 47.6,
+      "avg_q4_total": 61.5,
+      "avg_first_half": 97.6,
+      "avg_second_half": 109.1,
+      "team1_q1_avg": 22.9,
+      "team2_q1_avg": 25.7,
+      "team1_q4_avg": 31.8,
+      "team2_q4_avg": 29.7,
+      "halftime_leader_wins_pct": 0.56
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 46.9,
+        "avg_tpp": 35.9,
+        "avg_rebounds": 43.4,
+        "avg_assists": 23.2,
+        "avg_turnovers": 17.0,
+        "avg_disruption": 12.4
+      },
+      "team2": {
+        "avg_fgp": 45.1,
+        "avg_tpp": 37.3,
+        "avg_rebounds": 38.7,
+        "avg_assists": 20.1,
+        "avg_turnovers": 14.2,
+        "avg_disruption": 14.2
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 222.3,
+    "total_diff_from_h2h": 24.4,
+    "team1_h2h_scoring_diff": 15.6,
+    "team2_h2h_scoring_diff": 8.8,
+    "margin_volatility": 10.6,
+    "h2h_total_variance": 16.6,
+    "pace_adjusted_total": 229.0,
+    "defense_factor": 111.3,
+    "recent_scoring_trend": -4.2
+  },
+  "comparison": {
+    "ppg": 7.5,
+    "net_rating": 4.44,
+    "form": -0.1,
+    "turnovers": 0.2,
+    "rebounds": 3.9,
+    "fgp": 0.1,
+    "three_pt_pct": 2.2,
+    "pace": 4.9,
+    "combined_pace": 101.2,
+    "weighted_form": -4.1,
+    "adjusted_net_rating": 4.34
+  },
+  "signals": [
+    "Minnesota Timberwolves playing second game today (fatigue factor)",
+    "LA Clippers playing second game today (fatigue factor)",
+    "Minnesota Timberwolves missing 24% of offense with key players limited",
+    "LA Clippers missing 24% of offense with key players limited",
+    "LA Clippers starts faster (+2.8 Q1 avg in H2H)",
+    "Minnesota Timberwolves stronger closer (+2.1 Q4 avg in H2H)",
+    "H2H games back-loaded (2H avg 109.1 vs 1H avg 97.6)",
+    "Minnesota Timberwolves injury concerns: Terrence Jr. Shannon (26/58 games)",
+    "LA Clippers injury concerns: Derrick Jones Jr. (23/54 games), Bogdan Bogdanovic (18/54 games)",
+    "Minnesota Timberwolves strong at home (17-9)",
+    "Minnesota Timberwolves +7.5 PPG edge",
+    "Minnesota Timberwolves significantly better net rating (+4.4)",
+    "Minnesota Timberwolves 4-1 in recent H2H",
+    "Minnesota Timberwolves won 4+ of last 5 H2H meetings",
+    "Lower-scoring matchup (only 4% H2H games over 220)",
+    "Competitive series (55% decided by 5 or less)",
+    "High-variance H2H (\u00b116.6 pts std dev in totals)",
+    "Minnesota Timberwolves more careless vs LA Clippers: 17.0 H2H vs 14.8 season TOV"
+  ],
+  "api_game_id": 16288,
+  "odds": {
+    "spread": {
+      "home": {
+        "line": 23.5,
+        "price": -110
+      },
+      "away": {
+        "line": -23.5,
+        "price": -120
+      }
+    },
+    "total": {
+      "line": 211.5,
+      "over": -102,
+      "under": -130
+    },
+    "moneyline": null,
+    "alternate_spreads": [
+      {
+        "line": 16.5,
+        "price": 2000
+      }
+    ],
+    "alternate_totals": [
+      {
+        "line": 210.5,
+        "price": 200
+      },
+      {
+        "line": 209.5,
+        "price": 148
+      },
+      {
+        "line": 212.5,
+        "price": 390
+      },
+      {
+        "line": 213.5,
+        "price": 600
+      }
+    ]
+  },
+  "search_context": "### Injury Report\n**LA Clippers:**\n- Bradley Beal (SG): Out, left hip fracture.[2][5][6]\n- Darius Garland (PG): Out/Questionable, right toe sprain.[2][4][5][7]\n- Yanic Konan Niederhauser (C): Questionable, illness.[2]\n- Ivica Zubac (C): Questionable, personal matter.[2]\n- Isaiah Jackson (F): Out, trade pending.[4][5][7]\n- Bennedict Mathurin (G): Out, recently traded.[4][5]\n\n**Minnesota Timberwolves:**\n- Julian Phillips (SF): Questionable, wrist/right wrist sprain.[2][4]\n- Ayo Dosunmu (PG): Questionable, quadriceps.[2]\n- Terrence Shannon Jr. (SG): Out, foot/left foot abductor hallucis strain.[2][4][9]\n- Johnny Juzang (G): Out, G League two-way/not with team.[6][9]\n- Rocco Zikarsky: Out, G League two-way.[9]\n\n### Betting Lines\nConsensus spread: Minnesota -8.5.[2]\nTotal points over/under: 222.5.[2]\n\n### Line Movement\nNo information on opening lines or notable moves.\n\n### Recent News\nClippers acquired Darius Garland from Cleveland Cavaliers prior to trade deadline; his debut delayed by toe injury.[4]\nClippers involved in unresolved trade with Indiana Pacers including Ivica Zubac, Bennedict Mathurin, and Isaiah Jackson.[4]\nTimberwolves acquired Julian Phillips from Chicago Bulls ahead of trade deadline.[4]\nClippers recent win over Sacramento Kings: Kawhi Leonard 31 PTS/9 REB/7 AST, John Collins 22 PTS/7 REB.[4]\nTimberwolves recent home loss to New Orleans Pelicans: Anthony Edwards 35 PTS/5 REB/4 AST, Julius Randle 24 PTS/8 REB/7 AST.[4]\nClippers records: 24-27; Timberwolves: 32-21.[4]\n\n### Additional Context\n### Clippers' Offensive Efficiency and Pace with Kawhi Leonard as Primary Ball-Handler\n\nKawhi Leonard has started all 36 games in the 2025-26 season, averaging 27.6 points, 6.1 rebounds, 3.6 assists, and 2.1 steals in 32.9 minutes, with shooting splits of 49.7% FG, 39.1% 3PT, and 91.3% FT.[1] Since Dec. 20 (through early February 2026), he averages 30.2-31.1 points on 50.4% FG and 41.7% 3PT, leading the Clippers to a 17-5 record (highest winning percentage in NBA during span).[1][2][3] Clippers' overall offensive rating ranks second at 120, with net rating fourth at +7.7 over last 22 games.[4] With Leonard on court, Clippers' offensive rating is 121.2 (net rating delta +13.4 vs. team defensive rating 115.4); team offensive rating drops to 118.0 without him.[5][6] No specific pace metrics available in results; Leonard's high usage as scorer (20+ points in 28 consecutive games) drives efficiency amid reported absences of Beal, Garland, Mathurin, positioning him as primary ball-handler.[1][2]\n\n### Comparison to Recent Win Over Sacramento\n\nSearch results lack specific details on Clippers' win over Sacramento, including date, stats, or Leonard's performance; no direct comparison data available to assess sustainability vs. outlier.[1-7] Clippers' 17-5 stretch since Dec. 20 provides broader context of sustained hot streak (22-24 overall record after 6-21 start), with Leonard's efficiency consistent across 25+ game scoring streaks.[1][2][3]\n\n### Timberwolves' Defensive Performance vs. High-Usage Wing Players Without Shannon Jr.\n\nNo search results reference Minnesota Timberwolves' defensive stats, performance against high-usage wings, or Shannon Jr.'s status/injury; no matchup-specific data available.[1-7] Leonard's elite scoring (NBA top-10, leads in steals) and physical play style (limited superstar calls despite contact) could test any wing defense, but lacks Timberwolves context.[1][2]"
+}

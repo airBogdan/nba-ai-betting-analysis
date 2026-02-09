@@ -1,6 +1,6 @@
 {
   "starting": 1000.0,
-  "current": 777.2727272727274,
+  "current": 734.2727272727274,
   "transactions": [
     {
       "date": "2026-02-05",
@@ -127,6 +127,20 @@
       "amount": 85.9090909090909,
       "bet_id": "0b371a93-224a-4554-b40a-4a7658850410",
       "description": "WIN: Houston Rockets @ Oklahoma City Thunder (+$40.91)"
+    },
+    {
+      "date": "2026-02-08",
+      "type": "bet",
+      "amount": -20.0,
+      "bet_id": "3f645a7f-8680-43d2-97f9-4e8d354ae38e",
+      "description": "Denver Nuggets @ Chicago Bulls - total under"
+    },
+    {
+      "date": "2026-02-08",
+      "type": "bet",
+      "amount": -23.0,
+      "bet_id": "b491ec5a-a897-4a38-9402-3bfeb281bc2c",
+      "description": "Cleveland Cavaliers @ Sacramento Kings - moneyline Cleveland Cavaliers"
     }
   ]
 }

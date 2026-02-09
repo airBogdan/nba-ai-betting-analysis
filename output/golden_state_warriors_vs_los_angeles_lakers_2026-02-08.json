@@ -1,0 +1,539 @@
+{
+  "matchup": {
+    "team1": "Los Angeles Lakers",
+    "team2": "Golden State Warriors",
+    "home_team": "Los Angeles Lakers"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Los Angeles Lakers",
+      "record": "31-19",
+      "conf_rank": 5,
+      "games": 57,
+      "ppg": 114.9,
+      "opp_ppg": 113.7,
+      "ortg": 111.8,
+      "drtg": 112.6,
+      "apg": 24.9,
+      "rpg": 41.4,
+      "topg": 15.4,
+      "net_rating": -0.72,
+      "fgp": 49.2,
+      "tpp": 34.9,
+      "last_ten": "7-3",
+      "last_ten_pct": 0.7,
+      "home_record": "13-8",
+      "away_record": "18-11",
+      "home_win_pct": 0.619,
+      "away_win_pct": 0.621,
+      "pace": 101.0,
+      "recent_ppg": 114.9,
+      "recent_margin": 4.5,
+      "sos": 0.483,
+      "sos_adjusted_net_rating": -0.89
+    },
+    "team2": {
+      "name": "Golden State Warriors",
+      "record": "28-24",
+      "conf_rank": 8,
+      "games": 58,
+      "ppg": 115.6,
+      "opp_ppg": 115.1,
+      "ortg": 113.2,
+      "drtg": 111.2,
+      "apg": 28.8,
+      "rpg": 42.7,
+      "topg": 16.1,
+      "net_rating": 2.09,
+      "fgp": 46.1,
+      "tpp": 36.2,
+      "last_ten": "5-5",
+      "last_ten_pct": 0.5,
+      "home_record": "17-9",
+      "away_record": "11-15",
+      "home_win_pct": 0.654,
+      "away_win_pct": 0.423,
+      "pace": 103.5,
+      "recent_ppg": 107.5,
+      "recent_margin": -3.4,
+      "sos": 0.551,
+      "sos_adjusted_net_rating": 2.6
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "W3",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.483,
+      "quality_wins": 3,
+      "quality_losses": 2
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "L1",
+      "games_last_7_days": 3,
+      "recent_opponent_avg_win_pct": 0.551,
+      "quality_wins": 3,
+      "quality_losses": 5
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Golden State Warriors",
+        "vs_record": "28-24",
+        "vs_win_pct": 0.538,
+        "result": "W",
+        "score": "105-99",
+        "home": true,
+        "margin": 6,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "29-22",
+        "vs_win_pct": 0.569,
+        "result": "W",
+        "score": "119-115",
+        "home": true,
+        "margin": 4,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Brooklyn Nets",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "W",
+        "score": "125-109",
+        "home": false,
+        "margin": 16,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "New York Knicks",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "100-112",
+        "home": false,
+        "margin": -12,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Washington Wizards",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "W",
+        "score": "142-111",
+        "home": false,
+        "margin": 31,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Cleveland Cavaliers",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "L",
+        "score": "99-129",
+        "home": false,
+        "margin": -30,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "129-118",
+        "home": false,
+        "margin": 11,
+        "date": "2026-01-27"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-32",
+        "vs_win_pct": 0.373,
+        "result": "W",
+        "score": "116-110",
+        "home": false,
+        "margin": 6,
+        "date": "2026-01-25"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "24-27",
+        "vs_win_pct": 0.471,
+        "result": "L",
+        "score": "104-112",
+        "home": false,
+        "margin": -8,
+        "date": "2026-01-23"
+      },
+      {
+        "vs": "Denver Nuggets",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "W",
+        "score": "115-107",
+        "home": false,
+        "margin": 8,
+        "date": "2026-01-21"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "L",
+        "score": "99-105",
+        "home": false,
+        "margin": -6,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Phoenix Suns",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "W",
+        "score": "101-97",
+        "home": false,
+        "margin": 4,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "29-22",
+        "vs_win_pct": 0.569,
+        "result": "L",
+        "score": "94-113",
+        "home": true,
+        "margin": -19,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Detroit Pistons",
+        "vs_record": "38-13",
+        "vs_win_pct": 0.745,
+        "result": "L",
+        "score": "124-131",
+        "home": true,
+        "margin": -7,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "16-36",
+        "vs_win_pct": 0.308,
+        "result": "W",
+        "score": "140-124",
+        "home": false,
+        "margin": 16,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Minnesota Timberwolves",
+        "vs_record": "32-21",
+        "vs_win_pct": 0.604,
+        "result": "L",
+        "score": "83-108",
+        "home": false,
+        "margin": -25,
+        "date": "2026-01-27"
+      },
+      {
+        "vs": "Minnesota Timberwolves",
+        "vs_record": "32-21",
+        "vs_win_pct": 0.604,
+        "result": "W",
+        "score": "111-85",
+        "home": false,
+        "margin": 26,
+        "date": "2026-01-25"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-32",
+        "vs_win_pct": 0.373,
+        "result": "L",
+        "score": "115-123",
+        "home": false,
+        "margin": -8,
+        "date": "2026-01-23"
+      },
+      {
+        "vs": "Toronto Raptors",
+        "vs_record": "31-22",
+        "vs_win_pct": 0.585,
+        "result": "L",
+        "score": "127-145",
+        "home": true,
+        "margin": -18,
+        "date": "2026-01-21"
+      },
+      {
+        "vs": "Miami Heat",
+        "vs_record": "27-26",
+        "vs_win_pct": 0.509,
+        "result": "W",
+        "score": "135-112",
+        "home": true,
+        "margin": 23,
+        "date": "2026-01-20"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Luka Doncic",
+          "ppg": 32.6,
+          "plus_minus": 1.0,
+          "games": 44
+        },
+        {
+          "name": "LeBron James",
+          "ppg": 21.8,
+          "plus_minus": -0.6,
+          "games": 34
+        },
+        {
+          "name": "Austin Reaves",
+          "ppg": 25.1,
+          "plus_minus": 2.3,
+          "games": 30
+        },
+        {
+          "name": "Rui Hachimura",
+          "ppg": 12.2,
+          "plus_minus": 0.4,
+          "games": 46
+        },
+        {
+          "name": "Marcus Smart",
+          "ppg": 9.5,
+          "plus_minus": 1.8,
+          "games": 44
+        },
+        {
+          "name": "Deandre Ayton",
+          "ppg": 12.9,
+          "plus_minus": -0.7,
+          "games": 50
+        }
+      ],
+      "availability_concerns": [
+        "LeBron James (34/57 games)",
+        "Austin Reaves (30/57 games)",
+        "Gabe Vincent (33/57 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Doncic 32.6, Reaves 25.1, James 21.8",
+      "playmaker": "Luka Doncic 8.5 APG",
+      "hot_hand": "Reaves +2.3 (limited: 30 games)",
+      "star_dependency": 28.4,
+      "depth_rating": "star-dependent (6.0 MPG std dev)",
+      "bench_scoring": 39.8
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Stephen Curry",
+          "ppg": 26.4,
+          "plus_minus": 1.9,
+          "games": 43
+        },
+        {
+          "name": "Jimmy Butler",
+          "ppg": 19.5,
+          "plus_minus": 4.8,
+          "games": 40
+        },
+        {
+          "name": "Brandin Podziemski",
+          "ppg": 11.6,
+          "plus_minus": 1.4,
+          "games": 58
+        },
+        {
+          "name": "Draymond Green",
+          "ppg": 8.1,
+          "plus_minus": 0.7,
+          "games": 48
+        },
+        {
+          "name": "Moses Moody",
+          "ppg": 11.5,
+          "plus_minus": 2.3,
+          "games": 53
+        },
+        {
+          "name": "Jonathan Kuminga",
+          "ppg": 11.2,
+          "plus_minus": -2.0,
+          "games": 24
+        }
+      ],
+      "availability_concerns": [
+        "Jimmy Butler (40/58 games)",
+        "Jonathan Kuminga (24/58 games)",
+        "De'Anthony Melton (26/58 games)",
+        "Al Horford (36/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Curry 26.4, Butler 19.5, Podziemski 11.6",
+      "playmaker": "Draymond Green 5.0 APG",
+      "hot_hand": "Melton +8.0 (limited: 26 games)",
+      "star_dependency": 22.8,
+      "depth_rating": "balanced (4.2 MPG std dev)",
+      "bench_scoring": 44.8
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 16,
+      "team1_wins_all_time": 6,
+      "team2_wins_all_time": 10,
+      "team1_win_pct": 0.375,
+      "team1_home_wins": 3,
+      "team1_home_losses": 6,
+      "team1_away_wins": 3,
+      "team1_away_losses": 4,
+      "avg_point_diff": -4.9,
+      "team1_avg_points": 111.2,
+      "team2_avg_points": 116.1,
+      "last_5_games": [
+        "Los Angeles Lakers",
+        "Golden State Warriors",
+        "Los Angeles Lakers",
+        "Golden State Warriors",
+        "Golden State Warriors"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 3,
+      "blowouts": 3
+    },
+    "patterns": {
+      "avg_total": 227.2,
+      "home_win_pct": 0.553,
+      "high_scoring_pct": 0.63,
+      "close_game_pct": 0.11
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 5,
+      "team2_wins_last_2_seasons": 5,
+      "last_winner": "Los Angeles Lakers",
+      "home_team_home_record": "3-3",
+      "games_last_2_seasons": 10
+    },
+    "quarters": {
+      "avg_q1_total": 53.8,
+      "avg_q2_total": 56.3,
+      "avg_q3_total": 60.6,
+      "avg_q4_total": 55.1,
+      "avg_first_half": 110.1,
+      "avg_second_half": 115.7,
+      "team1_q1_avg": 26.4,
+      "team2_q1_avg": 27.4,
+      "team1_q4_avg": 28.3,
+      "team2_q4_avg": 26.8,
+      "halftime_leader_wins_pct": 0.88
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 46.3,
+        "avg_tpp": 33.5,
+        "avg_rebounds": 42.4,
+        "avg_assists": 25.2,
+        "avg_turnovers": 17.6,
+        "avg_disruption": 12.2
+      },
+      "team2": {
+        "avg_fgp": 47.1,
+        "avg_tpp": 37.8,
+        "avg_rebounds": 42.9,
+        "avg_assists": 30.9,
+        "avg_turnovers": 15.6,
+        "avg_disruption": 14.9
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 229.3,
+    "total_diff_from_h2h": 3.3,
+    "team1_h2h_scoring_diff": 3.7,
+    "team2_h2h_scoring_diff": -0.5,
+    "margin_volatility": 13.2,
+    "h2h_total_variance": 21.7,
+    "pace_adjusted_total": 230.1,
+    "defense_factor": 111.9,
+    "recent_scoring_trend": -2.2,
+    "injury_adjusted_total": 193.9
+  },
+  "comparison": {
+    "ppg": -0.7,
+    "net_rating": -2.81,
+    "form": 0.2,
+    "turnovers": 0.7,
+    "rebounds": -1.3,
+    "fgp": 3.1,
+    "three_pt_pct": -1.3,
+    "pace": -2.5,
+    "combined_pace": 102.2,
+    "weighted_form": 7.9,
+    "adjusted_net_rating": -3.49
+  },
+  "signals": [
+    "Los Angeles Lakers playing second game today (fatigue factor)",
+    "Golden State Warriors playing second game today (fatigue factor)",
+    "Los Angeles Lakers missing 28% of offense with key players limited",
+    "Golden State Warriors missing 23% of offense with key players limited",
+    "Los Angeles Lakers won 3 straight",
+    "Halftime leader wins 88% in this matchup",
+    "H2H games back-loaded (2H avg 115.7 vs 1H avg 110.1)",
+    "Los Angeles Lakers injury concerns: LeBron James (34/57 games), Austin Reaves (30/57 games)",
+    "Golden State Warriors injury concerns: Jimmy Butler (40/58 games), Jonathan Kuminga (24/58 games)",
+    "Los Angeles Lakers hot form (7-3 L10)",
+    "Los Angeles Lakers strong at home (13-8)",
+    "Golden State Warriors faced tougher schedule (SOS: 0.551 vs 0.483)",
+    "High-scoring matchup (63% H2H games over 220)",
+    "High-variance H2H (\u00b121.7 pts std dev in totals)",
+    "Los Angeles Lakers more careless vs Golden State Warriors: 17.6 H2H vs 15.4 season TOV",
+    "Golden State Warriors scoring -8.1 PPG below season avg recently \u2014 bounce-back likely"
+  ],
+  "api_game_id": 16281,
+  "search_context": "### Injury Report\n**Golden State Warriors:**\n- Stephen Curry (PG): OUT (knee soreness)[1][2][3]\n- Seth Curry (PG/SG): OUT (sciatic-nerve issue/thigh/right toe soreness)[1][2][3]\n- L.J. Cryer (PG): OUT/QUESTIONABLE (hamstring strain)[1][2][3]\n- Jimmy Butler III (SF/PF): OUT (torn right ACL, season-ending)[1][2][3]\n- Kristaps Porzingis (C/PF): OUT (Achilles-related issue)[1][2][3]\n- Brandin Podziemski (PG/SG): PROBABLE/DAY-TO-DAY (illness)[1][2][3]\n\n**Los Angeles Lakers:**\n- Luka Doncic (PG/SF): OUT (hamstring strain, out through at least February 9)[1][2][3][5]\n- Adou Thiero (SF/SG): OUT (right knee/MCL sprain)[1][2]\n- Luke Kennard (SG): QUESTIONABLE/PROBABLE (pending trade/illness)[1][2]\n- Jaxson Hayes (C): QUESTIONABLE (suspension for pushing mascot)[2]\n- Deandre Ayton (C): Available/day-to-day (knee pain, not severe; played in prior game vs. Warriors)[4][6]\n\n### Betting Lines\nLakers favored by **2.5 points**. Projected over/under total between **222.5 and 223.5**[1].\n\n### Line Movement\nNo relevant information on opening lines or notable moves.\n\n### Recent News\nLakers defeated Warriors 105-99 on February 7, 2026, without Curry or Doncic; Reaves had 7 first-half assists amid defensive attention[4][5]. Deandre Ayton scratched late for February 7 game due to knee pain but deemed day-to-day and not severe; Lakers coach JJ Redick not concerned[4]. Official NBA injury report on February 8 lists Ayton available; Lakers not yet submitted full report for OKC@LAL[6]. Play-by-in-progress notes from February 8 game show active players including Moody, Green, Hayes, Kennard, Podziemski, LaRavia[7].\n\n### Additional Context\n### Injury Statuses\n\n**Golden State Warriors:**\n- Stephen Curry (PG): OUT (knee soreness; no confirmed return date)[1][2][3].\n- Seth Curry (PG/SG): OUT (left sciatic-nerve issue/thigh/right toe soreness)[1][2][3].\n- Jimmy Butler III (SF/PF): OUT for season (torn right ACL, injured 1/20/26)[1][2][3].\n- Kristaps Porzingis (C/PF): OUT (Achilles-related issue)[1][2][3].\n- L.J. Cryer (PG): OUT (hamstring strain, updated 2/6/26) or QUESTIONABLE (hamstring, updated 2/6/26)[1][2].\n- Brandin Podziemski (PG/SG): **PROBABLE** (illness; projected to play and expected in starting lineup at PG, updated 12:21p 2/7/26)[1][2][3].\nThese absences force reliance on Draymond Green (PF, facilitating), Moses Moody (SG), Al Horford (C), and Gui Santos (SF) in expected lineup, emphasizing half-court offense without Curry's scoring/playmaking (19.9 PPG, 4.6 APG, 3.3 3PM)[1][6].\n\n**Los Angeles Lakers:**\n- Luka Doncic (PG/SF): OUT (hamstring strain; out through at least 2/9/26, updated 2/6/26)[1][2][5].\n- Adou Thiero (SF/SG): OUT (right knee/MCL sprain, no timetable; out since 2/2/26)[1][2].\n- Luke Kennard (SG): QUESTIONABLE/PROBABLE (pending trade/illness, updated 12:20p 2/7/26)[1][2].\n- Jaxson Hayes (C): QUESTIONABLE (one-game suspension for pushing mascot, updated 2/5/26)[2].\n- Deandre Ayton (C): Available (per 2/8/26 10AM official report)[4].\nLakers lean on LeBron James (point-forward, 21.7 PPG, 6.4 APG), Austin Reaves (PG), Marcus Smart (SG, 9.2 PPG), Rui Hachimura (PF), and Jake LaRavia (SF, 10.6 PPG) in expected lineup; Ayton anchors paint defense/rebounding (10.9 PPG, 7.5 RPG)[1][4][6].\n\nWarriors' four simultaneous star-level outs (Curry, Seth Curry, Butler, Porzingis) exceed Lakers' absences in severity/scope, thinning guard depth and frontcourt[1][3].\n\n### Betting Line and Adjustments\n\nLakers are **2.5-point home favorites**; total at **222.5-223.5** (or 221.5 per one source)[1][2].  \n- Warriors lead H2H 1-0 (119-109 Opening Night 2025); 5-4 over last three seasons[1].  \n- Team stats (entering 2/7/26): Warriors 28-24 (~116.2 PPG, 113.6 PAPG, 46.1% FG); Lakers 31-19 (~116.3 PPG, 116.1 PAPG, 49.8% FG)[1].  \nNo sources detail sharp money movements or line adjustments; Lakers' recent 105-99 win over Warriors (2/7/26, both missing Curry/Doncic) occurred with sluggish pace/low output, highlighting injury impacts on scoring[5].\n\n### Warriors' Backup Ball-Handling and Offensive Efficiency\n\nPodziemski (**PROBABLE**) is primary backup handler (10.9 PPG, 3.9 APG, 4.6 RPG, 1.3 3PM); expected to start at PG with Green facilitating[1][6].  \nOther options: De'Anthony Melton (11.8 PPG, 2 APG), Moody; no data on sustained efficiency without Curry (team ~116.2 PPG relies on his 19.9 PPG/3.3 3PM)[1][6].  \nAbsences drop pace to structured half-court sets, risking lower totals vs. 222.5-223.5 (Lakers shoot 49.8% FG efficiently inside)[1]. Official 2/8/26 10AM report unsubmitted for Warriors/Lakers[4].",
+  "injury_impact": {
+    "team1": {
+      "out_players": [
+        {
+          "name": "Luka Doncic",
+          "ppg": 32.6,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 32.6,
+      "adjusted_ppg_loss": 14.7
+    },
+    "team2": {
+      "out_players": [
+        {
+          "name": "Stephen Curry",
+          "ppg": 26.4,
+          "status": "Out"
+        },
+        {
+          "name": "Jimmy Butler",
+          "ppg": 19.5,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 45.9,
+      "adjusted_ppg_loss": 20.7
+    },
+    "total_reduction": 35.4,
+    "missing_ppg_diff": 6.0
+  }
+}

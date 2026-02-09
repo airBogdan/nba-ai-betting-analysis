@@ -1,0 +1,549 @@
+{
+  "matchup": {
+    "team1": "Sacramento Kings",
+    "team2": "Cleveland Cavaliers",
+    "home_team": "Sacramento Kings"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Sacramento Kings",
+      "record": "12-41",
+      "conf_rank": 15,
+      "games": 58,
+      "ppg": 110.9,
+      "opp_ppg": 119.8,
+      "ortg": 107.4,
+      "drtg": 117.0,
+      "apg": 24.9,
+      "rpg": 41.2,
+      "topg": 14.7,
+      "net_rating": -9.64,
+      "fgp": 46.8,
+      "tpp": 34.7,
+      "last_ten": "0-10",
+      "last_ten_pct": 0.0,
+      "home_record": "9-18",
+      "away_record": "3-23",
+      "home_win_pct": 0.333,
+      "away_win_pct": 0.115,
+      "pace": 102.4,
+      "recent_ppg": 114.0,
+      "recent_margin": -7.3,
+      "sos": 0.553,
+      "sos_adjusted_net_rating": -9.11
+    },
+    "team2": {
+      "name": "Cleveland Cavaliers",
+      "record": "31-21",
+      "conf_rank": 4,
+      "games": 57,
+      "ppg": 119.2,
+      "opp_ppg": 115.7,
+      "ortg": 113.7,
+      "drtg": 110.7,
+      "apg": 28.6,
+      "rpg": 44.4,
+      "topg": 14.6,
+      "net_rating": 3.09,
+      "fgp": 47.3,
+      "tpp": 35.8,
+      "last_ten": "8-2",
+      "last_ten_pct": 0.8,
+      "home_record": "17-11",
+      "away_record": "14-10",
+      "home_win_pct": 0.607,
+      "away_win_pct": 0.583,
+      "pace": 104.5,
+      "recent_ppg": 123.2,
+      "recent_margin": 12.9,
+      "sos": 0.487,
+      "sos_adjusted_net_rating": 2.96
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "L10",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.553,
+      "quality_wins": 0,
+      "quality_losses": 7
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "W3",
+      "games_last_7_days": 3,
+      "recent_opponent_avg_win_pct": 0.487,
+      "quality_wins": 3,
+      "quality_losses": 2
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Cleveland Cavaliers",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "L",
+        "score": "126-132",
+        "home": true,
+        "margin": -6,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "24-27",
+        "vs_win_pct": 0.471,
+        "result": "L",
+        "score": "111-114",
+        "home": true,
+        "margin": -3,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Memphis Grizzlies",
+        "vs_record": "20-30",
+        "vs_win_pct": 0.4,
+        "result": "L",
+        "score": "125-129",
+        "home": true,
+        "margin": -4,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Washington Wizards",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "L",
+        "score": "112-116",
+        "home": false,
+        "margin": -4,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Boston Celtics",
+        "vs_record": "34-18",
+        "vs_win_pct": 0.654,
+        "result": "L",
+        "score": "93-112",
+        "home": false,
+        "margin": -19,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "29-22",
+        "vs_win_pct": 0.569,
+        "result": "L",
+        "score": "111-113",
+        "home": false,
+        "margin": -2,
+        "date": "2026-01-30"
+      },
+      {
+        "vs": "New York Knicks",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "87-103",
+        "home": false,
+        "margin": -16,
+        "date": "2026-01-28"
+      },
+      {
+        "vs": "Detroit Pistons",
+        "vs_record": "38-13",
+        "vs_win_pct": 0.745,
+        "result": "L",
+        "score": "116-139",
+        "home": false,
+        "margin": -23,
+        "date": "2026-01-25"
+      },
+      {
+        "vs": "Cleveland Cavaliers",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "L",
+        "score": "118-123",
+        "home": false,
+        "margin": -5,
+        "date": "2026-01-24"
+      },
+      {
+        "vs": "Toronto Raptors",
+        "vs_record": "31-22",
+        "vs_win_pct": 0.585,
+        "result": "L",
+        "score": "109-122",
+        "home": true,
+        "margin": -13,
+        "date": "2026-01-22"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-41",
+        "vs_win_pct": 0.226,
+        "result": "W",
+        "score": "132-126",
+        "home": false,
+        "margin": 6,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "24-27",
+        "vs_win_pct": 0.471,
+        "result": "W",
+        "score": "124-91",
+        "home": false,
+        "margin": 33,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Portland Trail Blazers",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "130-111",
+        "home": false,
+        "margin": 19,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Phoenix Suns",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "L",
+        "score": "113-126",
+        "home": false,
+        "margin": -13,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "W",
+        "score": "129-99",
+        "home": true,
+        "margin": 30,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Orlando Magic",
+        "vs_record": "26-24",
+        "vs_win_pct": 0.52,
+        "result": "W",
+        "score": "114-98",
+        "home": true,
+        "margin": 16,
+        "date": "2026-01-27"
+      },
+      {
+        "vs": "Orlando Magic",
+        "vs_record": "26-24",
+        "vs_win_pct": 0.52,
+        "result": "W",
+        "score": "119-105",
+        "home": false,
+        "margin": 14,
+        "date": "2026-01-25"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-41",
+        "vs_win_pct": 0.226,
+        "result": "W",
+        "score": "123-118",
+        "home": true,
+        "margin": 5,
+        "date": "2026-01-24"
+      },
+      {
+        "vs": "Charlotte Hornets",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "94-87",
+        "home": false,
+        "margin": 7,
+        "date": "2026-01-22"
+      },
+      {
+        "vs": "Oklahoma City Thunder",
+        "vs_record": "40-12",
+        "vs_win_pct": 0.769,
+        "result": "L",
+        "score": "104-136",
+        "home": true,
+        "margin": -32,
+        "date": "2026-01-19"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Keegan Murray",
+          "ppg": 13.9,
+          "plus_minus": -6.0,
+          "games": 21
+        },
+        {
+          "name": "DeMar DeRozan",
+          "ppg": 18.3,
+          "plus_minus": -8.1,
+          "games": 57
+        },
+        {
+          "name": "Zach LaVine",
+          "ppg": 18.9,
+          "plus_minus": -7.1,
+          "games": 43
+        },
+        {
+          "name": "Russell Westbrook",
+          "ppg": 15.3,
+          "plus_minus": -7.2,
+          "games": 51
+        },
+        {
+          "name": "Domantas Sabonis",
+          "ppg": 15.6,
+          "plus_minus": -9.5,
+          "games": 22
+        },
+        {
+          "name": "Dennis Schroder",
+          "ppg": 12.5,
+          "plus_minus": -6.4,
+          "games": 44
+        }
+      ],
+      "availability_concerns": [
+        "Keegan Murray (21/58 games)",
+        "Domantas Sabonis (22/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "LaVine 18.9, DeRozan 18.3, Sabonis 15.6",
+      "playmaker": "Russell Westbrook 6.7 APG",
+      "hot_hand": "Monk -2.6",
+      "star_dependency": 17.0,
+      "depth_rating": "balanced (4.8 MPG std dev)",
+      "bench_scoring": 48.3
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Donovan Mitchell",
+          "ppg": 28.1,
+          "plus_minus": 5.6,
+          "games": 52
+        },
+        {
+          "name": "Evan Mobley",
+          "ppg": 17.6,
+          "plus_minus": 3.7,
+          "games": 45
+        },
+        {
+          "name": "Darius Garland",
+          "ppg": 18.0,
+          "plus_minus": -1.5,
+          "games": 26
+        },
+        {
+          "name": "Jaylon Tyson",
+          "ppg": 13.5,
+          "plus_minus": 0.7,
+          "games": 52
+        },
+        {
+          "name": "Jarrett Allen",
+          "ppg": 13.8,
+          "plus_minus": 3.2,
+          "games": 44
+        },
+        {
+          "name": "De'Andre Hunter",
+          "ppg": 14.2,
+          "plus_minus": 0.1,
+          "games": 46
+        }
+      ],
+      "availability_concerns": [
+        "Darius Garland (26/57 games)",
+        "Sam Merrill (30/57 games)",
+        "Lonzo Ball (38/57 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Mitchell 28.1, Garland 18.0, Mobley 17.6",
+      "playmaker": "Darius Garland 6.9 APG (limited: 26 games)",
+      "hot_hand": "Mitchell +5.6",
+      "star_dependency": 23.6,
+      "depth_rating": "balanced (4.7 MPG std dev)",
+      "bench_scoring": 42.7
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 6,
+      "team1_wins_all_time": 3,
+      "team2_wins_all_time": 3,
+      "team1_win_pct": 0.5,
+      "team1_home_wins": 2,
+      "team1_home_losses": 1,
+      "team1_away_wins": 1,
+      "team1_away_losses": 2,
+      "avg_point_diff": -2.3,
+      "team1_avg_points": 121.7,
+      "team2_avg_points": 123.9,
+      "last_5_games": [
+        "Cleveland Cavaliers",
+        "Cleveland Cavaliers",
+        "Sacramento Kings",
+        "Sacramento Kings",
+        "Cleveland Cavaliers"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 2,
+      "blowouts": 1
+    },
+    "patterns": {
+      "avg_total": 245.6,
+      "home_win_pct": 0.579,
+      "high_scoring_pct": 1.0,
+      "close_game_pct": 0.42
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 2,
+      "team2_wins_last_2_seasons": 2,
+      "last_winner": "Sacramento Kings",
+      "home_team_home_record": "1-1",
+      "games_last_2_seasons": 4
+    },
+    "quarters": {
+      "avg_q1_total": 58.5,
+      "avg_q2_total": 62.3,
+      "avg_q3_total": 66.6,
+      "avg_q4_total": 58.3,
+      "avg_first_half": 120.8,
+      "avg_second_half": 124.9,
+      "team1_q1_avg": 29.9,
+      "team2_q1_avg": 28.6,
+      "team1_q4_avg": 27.4,
+      "team2_q4_avg": 30.9,
+      "halftime_leader_wins_pct": 0.5
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 50.6,
+        "avg_tpp": 42.3,
+        "avg_rebounds": 41.1,
+        "avg_assists": 27.8,
+        "avg_turnovers": 13.3,
+        "avg_disruption": 10.2
+      },
+      "team2": {
+        "avg_fgp": 51.2,
+        "avg_tpp": 35.9,
+        "avg_rebounds": 41.3,
+        "avg_assists": 27.4,
+        "avg_turnovers": 11.0,
+        "avg_disruption": 11.6
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 235.8,
+    "total_diff_from_h2h": -15.5,
+    "team1_h2h_scoring_diff": -10.8,
+    "team2_h2h_scoring_diff": -4.7,
+    "margin_volatility": 8.3,
+    "h2h_total_variance": 8.8,
+    "pace_adjusted_total": 228.7,
+    "defense_factor": 113.8,
+    "recent_scoring_trend": -1.1,
+    "injury_adjusted_total": 206.1
+  },
+  "comparison": {
+    "ppg": -8.3,
+    "net_rating": -12.73,
+    "form": -0.8,
+    "turnovers": -0.1,
+    "rebounds": -3.2,
+    "fgp": -0.5,
+    "three_pt_pct": -1.1,
+    "pace": -2.1,
+    "combined_pace": 103.5,
+    "weighted_form": -20.2,
+    "adjusted_net_rating": -12.07
+  },
+  "signals": [
+    "Sacramento Kings playing second game today (fatigue factor)",
+    "Cleveland Cavaliers playing second game today (fatigue factor)",
+    "Cleveland Cavaliers missing 24% of offense with key players limited",
+    "Sacramento Kings lost 10 straight",
+    "Cleveland Cavaliers won 3 straight",
+    "Cleveland Cavaliers stronger closer (+3.5 Q4 avg in H2H)",
+    "H2H games back-loaded (2H avg 124.9 vs 1H avg 120.8)",
+    "Sacramento Kings injury concerns: Keegan Murray (21/58 games), Domantas Sabonis (22/58 games)",
+    "Cleveland Cavaliers injury concerns: Darius Garland (26/57 games), Sam Merrill (30/57 games)",
+    "Sacramento Kings struggling (0-10 L10)",
+    "Cleveland Cavaliers hot form (8-2 L10)",
+    "Sacramento Kings struggling at home (9-18)",
+    "Cleveland Cavaliers solid on road (14-10)",
+    "Cleveland Cavaliers +8.3 PPG edge",
+    "Cleveland Cavaliers significantly better net rating (+12.7)",
+    "Sacramento Kings faced tougher schedule (SOS: 0.553 vs 0.487)",
+    "High-scoring matchup (100% H2H games over 220)",
+    "Competitive series (42% decided by 5 or less)",
+    "Sacramento Kings FG% elevated vs Cleveland Cavaliers: 50.6% H2H vs 46.8% season",
+    "Cleveland Cavaliers FG% elevated vs Sacramento Kings: 51.2% H2H vs 47.3% season",
+    "Sacramento Kings hot from 3 vs Cleveland Cavaliers: 42.3% H2H vs 34.7% season",
+    "Cleveland Cavaliers more careful vs Sacramento Kings: 11.0 H2H vs 14.6 season TOV",
+    "Cleveland Cavaliers struggles on boards vs Sacramento Kings: 41.3 H2H vs 44.4 season"
+  ],
+  "api_game_id": 16284,
+  "search_context": "### Injury Report\n**Cleveland Cavaliers:**\n- James Harden: Questionable (trade pending)[1][2][3][4]; Out (not injury related)[7]\n- Dean Wade: Questionable (left ankle sprain)[1][2][3][4]; Doubtful (left ankle sprain)[2]\n- Evan Mobley: Out (left calf strain)[1][2][3][4][7]\n- Max Strus: Out (left foot surgery)[1][2][3][4][7]\n- Emanuel Miller: Out (G League)[3][4]\n\n**Sacramento Kings:**\n- Domantas Sabonis: Out (lower back soreness)[1][2]\n- Zach LaVine: Out (right 5th finger soreness)[1][2]\n- De'Andre Hunter: Out (left eye iritis)[2]\n- Keegan Murray: Out (left ankle sprain)[1][2][3]\n\n### Betting Lines\nCavs -11.5 spread[3].\n\n### Line Movement\nNo relevant information.\n\n### Recent News\nCavaliers acquired James Harden from Clippers in exchange for Darius Garland prior to trade deadline; Harden has not played since January 30 due to trade-related personal matters[1][2][4]. Kings on 11-game losing streak, record 12-41[1][2]. Cavaliers 31-21, won 9 of last 11[2]. De'Andre Hunter traded to Kings earlier in week, injured in Friday loss to Clippers[2]. Kings on second night of back-to-back[2]. Game tips at 7:00 p.m. PT Saturday[2].\n\n### Additional Context\n### Game Context\nCleveland Cavaliers are on the second night of a back-to-back for this matchup against the Sacramento Kings[1][2]. Teams on back-to-backs face fatigue from one night's rest, leading to underperformance, with fewer such games league-wide (17.8 per team average this season vs. 19.3 prior)[1].\n\n### Cavaliers' Key Absences\nNo specific 2026 injury statuses for Evan Mobley or Max Strus available in results. Absences would alter Cleveland's spacing and shot creation, as both contribute to floor spacing (Strus via shooting) and interior presence (Mobley via defense-to-offense transition), but no quantified efficiency impacts provided here.\n\n### Cavaliers' Offensive Efficiency and Pace Without Key Players\nNo direct data on Cleveland's offensive efficiency or pace splits without Mobley and Strus. General back-to-back trends show offensive declines: efficiency drops 1.9 points per 100 possessions (97.9 non-B2B to 96.0 B2B), driven by lower effective field goal percentage, offensive rebound rate, and assist rate (58.7% to 57.6%)[1]. Pace not significantly affected in analyzed periods[1].\n\n### Kings' Defensive Performance on Back-to-Backs\nSacramento Kings rank 6th in defensive rating on no-rest (back-to-back) games this season, behind Celtics (110.3, 1st), others unspecified[2]. This indicates stronger-than-average defense in fatigue scenarios, contrasting historical poor Kings defense (no specific \"historically poor\" metrics here); back-to-back engagement may stem from reduced offensive opponent efficiency[1][2]. Relevance: Could challenge Cleveland's altered offense amid their own B2B fatigue.",
+  "injury_impact": {
+    "team1": {
+      "out_players": [
+        {
+          "name": "Domantas Sabonis",
+          "ppg": 15.6,
+          "status": "Out"
+        },
+        {
+          "name": "Zach LaVine",
+          "ppg": 18.9,
+          "status": "Out"
+        },
+        {
+          "name": "Keegan Murray",
+          "ppg": 13.9,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 48.4,
+      "adjusted_ppg_loss": 21.8
+    },
+    "team2": {
+      "out_players": [
+        {
+          "name": "Evan Mobley",
+          "ppg": 17.6,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 17.6,
+      "adjusted_ppg_loss": 7.9
+    },
+    "total_reduction": 29.7,
+    "missing_ppg_diff": -13.9
+  }
+}

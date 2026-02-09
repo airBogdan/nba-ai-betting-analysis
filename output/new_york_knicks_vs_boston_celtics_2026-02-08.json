@@ -1,0 +1,537 @@
+{
+  "matchup": {
+    "team1": "Boston Celtics",
+    "team2": "New York Knicks",
+    "home_team": "Boston Celtics"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Boston Celtics",
+      "record": "34-18",
+      "conf_rank": 2,
+      "games": 56,
+      "ppg": 115.8,
+      "opp_ppg": 107.7,
+      "ortg": 116.0,
+      "drtg": 108.4,
+      "apg": 23.9,
+      "rpg": 45.9,
+      "topg": 12.7,
+      "net_rating": 7.59,
+      "fgp": 46.8,
+      "tpp": 36.1,
+      "last_ten": "8-2",
+      "last_ten_pct": 0.8,
+      "home_record": "17-8",
+      "away_record": "17-10",
+      "home_win_pct": 0.68,
+      "away_win_pct": 0.63,
+      "pace": 99.4,
+      "recent_ppg": 103.5,
+      "recent_margin": 3.2,
+      "sos": 0.447,
+      "sos_adjusted_net_rating": 7.06
+    },
+    "team2": {
+      "name": "New York Knicks",
+      "record": "33-19",
+      "conf_rank": 3,
+      "games": 58,
+      "ppg": 116.6,
+      "opp_ppg": 110.5,
+      "ortg": 114.8,
+      "drtg": 109.6,
+      "apg": 26.5,
+      "rpg": 46.5,
+      "topg": 13.8,
+      "net_rating": 5.16,
+      "fgp": 46.5,
+      "tpp": 37.1,
+      "last_ten": "8-2",
+      "last_ten_pct": 0.8,
+      "home_record": "21-6",
+      "away_record": "11-13",
+      "home_win_pct": 0.778,
+      "away_win_pct": 0.458,
+      "pace": 100.8,
+      "recent_ppg": 112.7,
+      "recent_margin": 9.9,
+      "sos": 0.505,
+      "sos_adjusted_net_rating": 5.21
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "L1",
+      "games_last_7_days": 5,
+      "recent_opponent_avg_win_pct": 0.447,
+      "quality_wins": 2,
+      "quality_losses": 1
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "W1",
+      "games_last_7_days": 5,
+      "recent_opponent_avg_win_pct": 0.505,
+      "quality_wins": 5,
+      "quality_losses": 1
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "New York Knicks",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "89-111",
+        "home": true,
+        "margin": -22,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Miami Heat",
+        "vs_record": "27-26",
+        "vs_win_pct": 0.509,
+        "result": "W",
+        "score": "98-96",
+        "home": true,
+        "margin": 2,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "W",
+        "score": "114-93",
+        "home": false,
+        "margin": 21,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-32",
+        "vs_win_pct": 0.373,
+        "result": "W",
+        "score": "110-100",
+        "home": false,
+        "margin": 10,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Milwaukee Bucks",
+        "vs_record": "21-29",
+        "vs_win_pct": 0.42,
+        "result": "W",
+        "score": "107-79",
+        "home": true,
+        "margin": 28,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-41",
+        "vs_win_pct": 0.226,
+        "result": "W",
+        "score": "112-93",
+        "home": true,
+        "margin": 19,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-27",
+        "vs_win_pct": 0.491,
+        "result": "L",
+        "score": "106-117",
+        "home": true,
+        "margin": -11,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Portland Trail Blazers",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "102-94",
+        "home": true,
+        "margin": 8,
+        "date": "2026-01-27"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "L",
+        "score": "111-114",
+        "home": false,
+        "margin": -3,
+        "date": "2026-01-25"
+      },
+      {
+        "vs": "Brooklyn Nets",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "W",
+        "score": "130-126",
+        "home": false,
+        "margin": 4,
+        "date": "2026-01-24"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Boston Celtics",
+        "vs_record": "34-18",
+        "vs_win_pct": 0.654,
+        "result": "W",
+        "score": "111-89",
+        "home": false,
+        "margin": 22,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Detroit Pistons",
+        "vs_record": "38-13",
+        "vs_win_pct": 0.745,
+        "result": "L",
+        "score": "80-118",
+        "home": false,
+        "margin": -38,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Denver Nuggets",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "W",
+        "score": "134-127",
+        "home": true,
+        "margin": 7,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Washington Wizards",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "W",
+        "score": "132-101",
+        "home": false,
+        "margin": 31,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "W",
+        "score": "112-100",
+        "home": true,
+        "margin": 12,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Portland Trail Blazers",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "127-97",
+        "home": true,
+        "margin": 30,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Toronto Raptors",
+        "vs_record": "31-22",
+        "vs_win_pct": 0.585,
+        "result": "W",
+        "score": "119-92",
+        "home": false,
+        "margin": 27,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-41",
+        "vs_win_pct": 0.226,
+        "result": "W",
+        "score": "103-87",
+        "home": true,
+        "margin": 16,
+        "date": "2026-01-28"
+      },
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "29-22",
+        "vs_win_pct": 0.569,
+        "result": "W",
+        "score": "112-109",
+        "home": false,
+        "margin": 3,
+        "date": "2026-01-24"
+      },
+      {
+        "vs": "Brooklyn Nets",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "W",
+        "score": "120-66",
+        "home": true,
+        "margin": 54,
+        "date": "2026-01-22"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Derrick White",
+          "ppg": 17.6,
+          "plus_minus": 7.6,
+          "games": 54
+        },
+        {
+          "name": "Jaylen Brown",
+          "ppg": 28.4,
+          "plus_minus": 3.4,
+          "games": 51
+        },
+        {
+          "name": "Payton Pritchard",
+          "ppg": 16.9,
+          "plus_minus": 4.4,
+          "games": 55
+        },
+        {
+          "name": "Neemias Queta",
+          "ppg": 9.5,
+          "plus_minus": 5.3,
+          "games": 53
+        },
+        {
+          "name": "Anfernee Simons",
+          "ppg": 14.4,
+          "plus_minus": 3.4,
+          "games": 52
+        },
+        {
+          "name": "Sam Hauser",
+          "ppg": 9.1,
+          "plus_minus": 4.0,
+          "games": 52
+        }
+      ],
+      "availability_concerns": [
+        "Nikola Vucevic (3/56 games)",
+        "Josh Minott (37/56 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Brown 28.4, White 17.6, Pritchard 16.9",
+      "playmaker": "Derrick White 5.6 APG",
+      "hot_hand": "White +7.6",
+      "star_dependency": 24.5,
+      "depth_rating": "star-dependent (6.7 MPG std dev)",
+      "bench_scoring": 36.1
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Jalen Brunson",
+          "ppg": 26.2,
+          "plus_minus": 5.2,
+          "games": 53
+        },
+        {
+          "name": "Mikal Bridges",
+          "ppg": 15.4,
+          "plus_minus": 3.7,
+          "games": 58
+        },
+        {
+          "name": "O.G. Anunoby",
+          "ppg": 16.5,
+          "plus_minus": 5.7,
+          "games": 44
+        },
+        {
+          "name": "Karl-Anthony Towns",
+          "ppg": 19.1,
+          "plus_minus": 5.2,
+          "games": 53
+        },
+        {
+          "name": "Josh Hart",
+          "ppg": 12.0,
+          "plus_minus": 3.2,
+          "games": 43
+        },
+        {
+          "name": "Miles McBride",
+          "ppg": 12.5,
+          "plus_minus": 5.8,
+          "games": 40
+        }
+      ],
+      "availability_concerns": [
+        "Miles McBride (40/58 games)",
+        "Landry Shamet (32/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Brunson 26.2, Towns 19.1, Anunoby 16.5",
+      "playmaker": "Jalen Brunson 6.0 APG",
+      "hot_hand": "McBride +5.8 (limited: 40 games)",
+      "star_dependency": 22.5,
+      "depth_rating": "star-dependent (6.9 MPG std dev)",
+      "bench_scoring": 41.0
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 20,
+      "team1_wins_all_time": 12,
+      "team2_wins_all_time": 8,
+      "team1_win_pct": 0.6,
+      "team1_home_wins": 7,
+      "team1_home_losses": 4,
+      "team1_away_wins": 5,
+      "team1_away_losses": 4,
+      "avg_point_diff": -1.7,
+      "team1_avg_points": 107.8,
+      "team2_avg_points": 109.5,
+      "last_5_games": [
+        "New York Knicks",
+        "Boston Celtics",
+        "New York Knicks",
+        "Boston Celtics",
+        "Boston Celtics"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 4,
+      "blowouts": 7
+    },
+    "patterns": {
+      "avg_total": 217.4,
+      "home_win_pct": 0.599,
+      "high_scoring_pct": 0.46,
+      "close_game_pct": 0.12
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 7,
+      "team2_wins_last_2_seasons": 6,
+      "last_winner": "Boston Celtics",
+      "home_team_home_record": "4-3",
+      "games_last_2_seasons": 13
+    },
+    "quarters": {
+      "avg_q1_total": 55.3,
+      "avg_q2_total": 56.1,
+      "avg_q3_total": 51.1,
+      "avg_q4_total": 53.8,
+      "avg_first_half": 111.4,
+      "avg_second_half": 104.8,
+      "team1_q1_avg": 27.9,
+      "team2_q1_avg": 27.4,
+      "team1_q4_avg": 25.9,
+      "team2_q4_avg": 27.8,
+      "halftime_leader_wins_pct": 0.7
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 48.6,
+        "avg_tpp": 35.6,
+        "avg_rebounds": 39.9,
+        "avg_assists": 20.9,
+        "avg_turnovers": 12.8,
+        "avg_disruption": 13.2
+      },
+      "team2": {
+        "avg_fgp": 44.2,
+        "avg_tpp": 37.5,
+        "avg_rebounds": 43.3,
+        "avg_assists": 24.2,
+        "avg_turnovers": 14.7,
+        "avg_disruption": 9.4
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 226.2,
+    "total_diff_from_h2h": 15.0,
+    "team1_h2h_scoring_diff": 8.0,
+    "team2_h2h_scoring_diff": 7.1,
+    "margin_volatility": 9.8,
+    "h2h_total_variance": 18.0,
+    "pace_adjusted_total": 231.0,
+    "defense_factor": 109.0,
+    "recent_scoring_trend": -9.5,
+    "injury_adjusted_total": 209.1
+  },
+  "comparison": {
+    "ppg": -0.8,
+    "net_rating": 2.43,
+    "form": 0.0,
+    "turnovers": 1.1,
+    "rebounds": -0.6,
+    "fgp": 0.3,
+    "three_pt_pct": -1.0,
+    "pace": -1.4,
+    "combined_pace": 100.1,
+    "weighted_form": -6.7,
+    "adjusted_net_rating": 1.85
+  },
+  "signals": [
+    "Boston Celtics playing second game today (fatigue factor)",
+    "New York Knicks playing second game today (fatigue factor)",
+    "Boston Celtics missing 24% of offense with key players limited",
+    "New York Knicks missing 22% of offense with key players limited",
+    "Halftime leader wins 70% in this matchup",
+    "H2H games front-loaded (1H avg 111.4 vs 2H avg 104.8)",
+    "Boston Celtics injury concerns: Nikola Vucevic (3/56 games), Josh Minott (37/56 games)",
+    "New York Knicks injury concerns: Miles McBride (40/58 games), Landry Shamet (32/58 games)",
+    "Boston Celtics hot form (8-2 L10)",
+    "New York Knicks hot form (8-2 L10)",
+    "Boston Celtics strong at home (17-8)",
+    "New York Knicks faced tougher schedule (SOS: 0.505 vs 0.447)",
+    "Both teams scoring below season avg in recent games (-9.5 combined)",
+    "High-variance H2H (\u00b118.0 pts std dev in totals)",
+    "Boston Celtics struggles on boards vs New York Knicks: 39.9 H2H vs 45.9 season",
+    "New York Knicks struggles on boards vs Boston Celtics: 43.3 H2H vs 46.5 season",
+    "Boston Celtics scoring -12.3 PPG below season avg recently \u2014 bounce-back likely"
+  ],
+  "api_game_id": 16285,
+  "search_context": "### Injury Report\n**New York Knicks:**\n- OG Anunoby: Out (Right Toe Soreness)[1][2][5][7]\n- Miles McBride: Out (Left Ankle/Core Muscle)[1][3][5]\n- Karl-Anthony Towns: Available (Right-eye laceration, was questionable)[1][2][5]\n- Josh Hart: Available (Ankle/undisclosed soreness, was questionable)[1][2][5]\n- Mitchell Robinson: Day-to-day (Left ankle soreness)[1]\n- Mohamed Diawara: Day-to-day (Ankle)[1]\n\n**Boston Celtics:**\n- Jayson Tatum: Out (Right Achilles, indefinitely)[1][3]\n- Sam Hauser: Out (Right thumb strain/Low Back spasms)[1][3][5][7]\n- Jaylen Brown: Questionable (Left hamstring tightness, right knee soreness)[1]\n- Neemias Queta: Game-time decision (Illness)[1]\n\n### Betting Lines\nNo relevant information available.\n\n### Line Movement\nNo relevant information available.\n\n### Recent News\n- Knicks acquired Jose Alvarado from New Orleans Pelicans before trade deadline; he is available and expected to debut[3][5].\n- Knicks coach Mike Brown gains lineup flexibility with returns of Karl-Anthony Towns and Josh Hart against Celtics missing Jayson Tatum[2].\n- Boston Celtics enter on five-game winning streak[1].\n\n### Additional Context\n### Jayson Tatum Injury Status\nJayson Tatum suffered a torn Achilles in May 2025 during the Eastern Conference semifinals against the New York Knicks and underwent surgery mid-May 2025[1][2][3][4]. As of February 8, 2026, he has progressed to controlled 5-on-5 scrimmages with coaches, per ESPN's Shams Charania on NBA Countdown, marking a significant rehab milestone roughly nine months post-surgery[1][2][3][4]. No return timeline exists; next steps include team practices and full medical clearance, with Tatum prioritizing 100% confidence in his leg to avoid returning as a \"shell of himself\"[1][2][3][4]. Celtics president Brad Stevens emphasized return only when Tatum is \"110 percent healthy\" with full clearance, as stated days before February 8[2][3].\n\n### Recent Game Outcome vs. Knicks (February 8, 2026)\nBoston lost 111-89 to New York at TD Garden, shooting 37% from the field and making only 2 three-pointers in the second half (lowest since November)[1]. Jaylen Brown scored 26 points in 33 minutes; Derrick White added 19[1]. The loss dropped Boston to 34-19, tying New York (34-19) for second in the East, 5 games behind Detroit[1][4]. Tatum's absence highlighted lacks in late-clock creation and shot gravity[1]. This was Boston's matinee game entering with a 34-18 record[2][4].\n\n### Celtics Performance Context Without Tatum\nNo search results provide specific offensive efficiency, perimeter defense stats, or details on a recent five-game winning streak without Tatum[1][2][3][4]. Boston holds the East's second-best record at 34-18/34-19 despite offseason losses of Kristaps Porzi\u0146\u0123is, Jrue Holiday, and Al Horford, exceeding expectations as a top playoff contender[4]. Tatum missed the entire 2025-26 season to date, with his durability previously noted (72+ games in four straight prior seasons)[4].\n\n### Knicks Defense Ranking\nNo search results confirm New York's defense as top-5 ranked or provide comparative efficiency metrics against Boston's role players[1][2][3][4].",
+  "injury_impact": {
+    "team1": {
+      "out_players": [
+        {
+          "name": "Sam Hauser",
+          "ppg": 9.1,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 9.1,
+      "adjusted_ppg_loss": 4.1
+    },
+    "team2": {
+      "out_players": [
+        {
+          "name": "O.G. Anunoby",
+          "ppg": 16.5,
+          "status": "Out"
+        },
+        {
+          "name": "Miles McBride",
+          "ppg": 12.5,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 29.0,
+      "adjusted_ppg_loss": 13.0
+    },
+    "total_reduction": 17.1,
+    "missing_ppg_diff": 8.9
+  }
+}

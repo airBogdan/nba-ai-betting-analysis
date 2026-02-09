@@ -1,0 +1,532 @@
+{
+  "matchup": {
+    "team1": "Phoenix Suns",
+    "team2": "Philadelphia 76ers",
+    "home_team": "Phoenix Suns"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Phoenix Suns",
+      "record": "31-21",
+      "conf_rank": 7,
+      "games": 57,
+      "ppg": 113.6,
+      "opp_ppg": 112.7,
+      "ortg": 113.5,
+      "drtg": 110.9,
+      "apg": 25.1,
+      "rpg": 42.9,
+      "topg": 15.1,
+      "net_rating": 2.63,
+      "fgp": 46.0,
+      "tpp": 36.0,
+      "last_ten": "6-4",
+      "last_ten_pct": 0.6,
+      "home_record": "17-8",
+      "away_record": "14-13",
+      "home_win_pct": 0.68,
+      "away_win_pct": 0.519,
+      "pace": 101.6,
+      "recent_ppg": 108.0,
+      "recent_margin": -1.9,
+      "sos": 0.522,
+      "sos_adjusted_net_rating": 2.85
+    },
+    "team2": {
+      "name": "Philadelphia 76ers",
+      "record": "29-22",
+      "conf_rank": 6,
+      "games": 56,
+      "ppg": 115.7,
+      "opp_ppg": 115.3,
+      "ortg": 112.6,
+      "drtg": 111.8,
+      "apg": 24.7,
+      "rpg": 43.5,
+      "topg": 14.1,
+      "net_rating": 0.75,
+      "fgp": 45.9,
+      "tpp": 34.8,
+      "last_ten": "6-4",
+      "last_ten_pct": 0.6,
+      "home_record": "15-13",
+      "away_record": "14-9",
+      "home_win_pct": 0.536,
+      "away_win_pct": 0.609,
+      "pace": 103.1,
+      "recent_ppg": 116.0,
+      "recent_margin": 5.5,
+      "sos": 0.485,
+      "sos_adjusted_net_rating": 0.6
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "L2",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.522,
+      "quality_wins": 3,
+      "quality_losses": 3
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "W1",
+      "games_last_7_days": 5,
+      "recent_opponent_avg_win_pct": 0.485,
+      "quality_wins": 3,
+      "quality_losses": 2
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "29-22",
+        "vs_win_pct": 0.569,
+        "result": "L",
+        "score": "103-109",
+        "home": true,
+        "margin": -6,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Golden State Warriors",
+        "vs_record": "28-24",
+        "vs_win_pct": 0.538,
+        "result": "L",
+        "score": "97-101",
+        "home": true,
+        "margin": -4,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Portland Trail Blazers",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "W",
+        "score": "130-125",
+        "home": false,
+        "margin": 5,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "24-27",
+        "vs_win_pct": 0.471,
+        "result": "L",
+        "score": "93-117",
+        "home": true,
+        "margin": -24,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Cleveland Cavaliers",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "W",
+        "score": "126-113",
+        "home": true,
+        "margin": 13,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Detroit Pistons",
+        "vs_record": "38-13",
+        "vs_win_pct": 0.745,
+        "result": "W",
+        "score": "114-96",
+        "home": true,
+        "margin": 18,
+        "date": "2026-01-30"
+      },
+      {
+        "vs": "Brooklyn Nets",
+        "vs_record": "14-37",
+        "vs_win_pct": 0.275,
+        "result": "W",
+        "score": "106-102",
+        "home": true,
+        "margin": 4,
+        "date": "2026-01-28"
+      },
+      {
+        "vs": "Miami Heat",
+        "vs_record": "27-26",
+        "vs_win_pct": 0.509,
+        "result": "L",
+        "score": "102-111",
+        "home": true,
+        "margin": -9,
+        "date": "2026-01-26"
+      },
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-27",
+        "vs_win_pct": 0.491,
+        "result": "L",
+        "score": "103-110",
+        "home": false,
+        "margin": -7,
+        "date": "2026-01-24"
+      },
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "29-22",
+        "vs_win_pct": 0.569,
+        "result": "W",
+        "score": "116-110",
+        "home": false,
+        "margin": 6,
+        "date": "2026-01-21"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Phoenix Suns",
+        "vs_record": "31-21",
+        "vs_win_pct": 0.596,
+        "result": "W",
+        "score": "109-103",
+        "home": false,
+        "margin": 6,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "L",
+        "score": "115-119",
+        "home": false,
+        "margin": -4,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Golden State Warriors",
+        "vs_record": "28-24",
+        "vs_win_pct": 0.538,
+        "result": "W",
+        "score": "113-94",
+        "home": false,
+        "margin": 19,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "24-27",
+        "vs_win_pct": 0.471,
+        "result": "W",
+        "score": "128-113",
+        "home": false,
+        "margin": 15,
+        "date": "2026-02-03"
+      },
+      {
+        "vs": "New Orleans Pelicans",
+        "vs_record": "14-40",
+        "vs_win_pct": 0.259,
+        "result": "W",
+        "score": "124-114",
+        "home": true,
+        "margin": 10,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-41",
+        "vs_win_pct": 0.226,
+        "result": "W",
+        "score": "113-111",
+        "home": true,
+        "margin": 2,
+        "date": "2026-01-30"
+      },
+      {
+        "vs": "Milwaukee Bucks",
+        "vs_record": "21-29",
+        "vs_win_pct": 0.42,
+        "result": "W",
+        "score": "139-122",
+        "home": true,
+        "margin": 17,
+        "date": "2026-01-28"
+      },
+      {
+        "vs": "Charlotte Hornets",
+        "vs_record": "24-28",
+        "vs_win_pct": 0.462,
+        "result": "L",
+        "score": "93-130",
+        "home": false,
+        "margin": -37,
+        "date": "2026-01-26"
+      },
+      {
+        "vs": "New York Knicks",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "109-112",
+        "home": true,
+        "margin": -3,
+        "date": "2026-01-24"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "31-19",
+        "vs_win_pct": 0.62,
+        "result": "W",
+        "score": "128-122",
+        "home": true,
+        "margin": 6,
+        "date": "2026-01-23"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Devin Booker",
+          "ppg": 25.0,
+          "plus_minus": 4.3,
+          "games": 45
+        },
+        {
+          "name": "Dillon Brooks",
+          "ppg": 20.7,
+          "plus_minus": 0.6,
+          "games": 50
+        },
+        {
+          "name": "Grayson Allen",
+          "ppg": 16.6,
+          "plus_minus": 2.0,
+          "games": 38
+        },
+        {
+          "name": "Royce O'Neale",
+          "ppg": 10.1,
+          "plus_minus": 0.2,
+          "games": 56
+        },
+        {
+          "name": "Collin Gillespie",
+          "ppg": 13.3,
+          "plus_minus": 3.2,
+          "games": 55
+        },
+        {
+          "name": "Mark Williams",
+          "ppg": 12.2,
+          "plus_minus": 1.5,
+          "games": 48
+        }
+      ],
+      "availability_concerns": [
+        "Grayson Allen (38/57 games)",
+        "Jared Butler (4/57 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Booker 25.0, Brooks 20.7, Allen 16.6",
+      "playmaker": "Devin Booker 6.2 APG",
+      "hot_hand": "Booker +4.3",
+      "star_dependency": 22.0,
+      "depth_rating": "balanced (4.8 MPG std dev)",
+      "bench_scoring": 48.3
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Tyrese Maxey",
+          "ppg": 28.1,
+          "plus_minus": 2.8,
+          "games": 54
+        },
+        {
+          "name": "V. Edgecombe",
+          "ppg": 15.1,
+          "plus_minus": 2.0,
+          "games": 51
+        },
+        {
+          "name": "Kelly Oubre Jr.",
+          "ppg": 13.6,
+          "plus_minus": 0.1,
+          "games": 34
+        },
+        {
+          "name": "Joel Embiid",
+          "ppg": 26.2,
+          "plus_minus": 4.4,
+          "games": 32
+        },
+        {
+          "name": "Paul George",
+          "ppg": 16.0,
+          "plus_minus": 3.6,
+          "games": 27
+        },
+        {
+          "name": "Quentin Grimes",
+          "ppg": 12.9,
+          "plus_minus": 0.7,
+          "games": 49
+        }
+      ],
+      "availability_concerns": [
+        "Kelly Oubre Jr. (34/56 games)",
+        "Joel Embiid (32/56 games)",
+        "Paul George (27/56 games)",
+        "Kennedy Chandler (4/56 games)",
+        "Jared McCain (37/56 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Maxey 28.1, Embiid 26.2, George 16.0",
+      "playmaker": "Tyrese Maxey 6.7 APG",
+      "hot_hand": "Embiid +4.4 (limited: 32 games)",
+      "star_dependency": 24.3,
+      "depth_rating": "star-dependent (6.5 MPG std dev)",
+      "bench_scoring": 44.8
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 6,
+      "team1_wins_all_time": 4,
+      "team2_wins_all_time": 2,
+      "team1_win_pct": 0.667,
+      "team1_home_wins": 2,
+      "team1_home_losses": 1,
+      "team1_away_wins": 2,
+      "team1_away_losses": 1,
+      "avg_point_diff": 2.0,
+      "team1_avg_points": 110.4,
+      "team2_avg_points": 108.5,
+      "last_5_games": [
+        "Philadelphia 76ers",
+        "Phoenix Suns",
+        "Phoenix Suns",
+        "Phoenix Suns",
+        "Phoenix Suns"
+      ],
+      "recent_trend": "team1_hot",
+      "close_games": 1,
+      "blowouts": 0
+    },
+    "patterns": {
+      "avg_total": 218.9,
+      "home_win_pct": 0.316,
+      "high_scoring_pct": 0.42,
+      "close_game_pct": 0.16
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 3,
+      "team2_wins_last_2_seasons": 1,
+      "last_winner": "Phoenix Suns",
+      "home_team_home_record": "1-1",
+      "games_last_2_seasons": 4
+    },
+    "quarters": {
+      "avg_q1_total": 49.1,
+      "avg_q2_total": 57.7,
+      "avg_q3_total": 58.8,
+      "avg_q4_total": 53.4,
+      "avg_first_half": 106.8,
+      "avg_second_half": 112.1,
+      "team1_q1_avg": 23.4,
+      "team2_q1_avg": 25.7,
+      "team1_q4_avg": 26.1,
+      "team2_q4_avg": 27.3,
+      "halftime_leader_wins_pct": 0.83
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 44.8,
+        "avg_tpp": 35.5,
+        "avg_rebounds": 43.0,
+        "avg_assists": 25.6,
+        "avg_turnovers": 16.3,
+        "avg_disruption": 10.6
+      },
+      "team2": {
+        "avg_fgp": 44.1,
+        "avg_tpp": 36.2,
+        "avg_rebounds": 46.5,
+        "avg_assists": 21.9,
+        "avg_turnovers": 16.0,
+        "avg_disruption": 13.3
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 225.6,
+    "total_diff_from_h2h": 10.4,
+    "team1_h2h_scoring_diff": 3.2,
+    "team2_h2h_scoring_diff": 7.2,
+    "margin_volatility": 4.2,
+    "h2h_total_variance": 9.9,
+    "pace_adjusted_total": 231.4,
+    "defense_factor": 111.3,
+    "recent_scoring_trend": -3.2,
+    "injury_adjusted_total": 210.9
+  },
+  "comparison": {
+    "ppg": -2.1,
+    "net_rating": 1.88,
+    "form": 0.0,
+    "turnovers": -1.0,
+    "rebounds": -0.6,
+    "fgp": 0.1,
+    "three_pt_pct": 1.2,
+    "pace": -1.5,
+    "combined_pace": 102.3,
+    "weighted_form": -7.4,
+    "adjusted_net_rating": 2.25
+  },
+  "signals": [
+    "Phoenix Suns playing second game today (fatigue factor)",
+    "Philadelphia 76ers playing second game today (fatigue factor)",
+    "Philadelphia 76ers missing 24% of offense with key players limited",
+    "Philadelphia 76ers starts faster (+2.3 Q1 avg in H2H)",
+    "Halftime leader wins 83% in this matchup",
+    "H2H games back-loaded (2H avg 112.1 vs 1H avg 106.8)",
+    "Phoenix Suns injury concerns: Grayson Allen (38/57 games), Jared Butler (4/57 games)",
+    "Philadelphia 76ers injury concerns: Kelly Oubre Jr. (34/56 games), Joel Embiid (32/56 games)",
+    "Phoenix Suns strong at home (17-8)",
+    "Philadelphia 76ers solid on road (14-9)",
+    "Phoenix Suns 3-1 in recent H2H",
+    "Phoenix Suns won 4+ of last 5 H2H meetings",
+    "Philadelphia 76ers dominates boards vs Phoenix Suns: 46.5 H2H vs 43.5 season",
+    "Phoenix Suns scoring -5.6 PPG below season avg recently \u2014 bounce-back likely"
+  ],
+  "api_game_id": 16282,
+  "search_context": "### Injury Report\n**Philadelphia 76ers:** Joel Embiid questionable (right knee soreness/injury management); Paul George out (suspension, est. return March 25).[1][3][5] Rest of roster available, including Tyrese Maxey, Kyle Lowry, Adem Bona, Jared McCain, Trendon Watford, Johni Broome, Quentin Grimes, Justin Edwards, VJ Edgecombe.[1][3]\n\n**Phoenix Suns:** Devin Booker available (right ankle sprain); Jalen Green available (right hamstring injury management, left hip contusion); Grayson Allen out (right knee sprain, not expected back until at least February 10); Isaiah Livers out (left shoulder sprain, out at least through All-Star break).[1][2][3][5] Frontcourt available including Nick Richards, Mark Williams, Oso Ighodaro; others available including Dillon Brooks, Royce O\u2019Neale, Collin Gillespie, Cole Anthony, Kelly Oubre Jr., Dominick Barlow, Ryan Dunn, Jordan Goodwin.[1][2][3]\n\n### Betting Lines\nNo current consensus spread, moneyline odds, or over/under total available in search results.\n\n### Line Movement\nNo information on opening lines or notable moves available in search results.\n\n### Recent News\nThe game occurred on February 7-8, 2026, with Philadelphia defeating Phoenix 109-103; Joel Embiid scored 33 points, Tyrese Maxey added 29.[3] Suns returnees Devin Booker and Jalen Green played but team struggled with shooting rhythm despite available bodies.[2][4] Phoenix holds 4-1 head-to-head edge over past three seasons, including 116-110 win on January 20, 2026.[1] Suns (31-21, 7th West) lost prior game 101-97 to Golden State.[2] 76ers (29-22, 6th East) won 6 of last 7.[3]\n\n### Additional Context\n### Embiid's Availability Status\nJoel Embiid is listed as **questionable** for the Philadelphia 76ers' game against the Phoenix Suns on February 7, 2026, due to right knee injury management; a final decision is expected closer to tip-off.[1][2][6]  \nPaul George is **out** (league suspension), while Kelly Oubre Jr. is **available** (left knee, wearing brace).[1][5][6]  \nThis status matters because Embiid has played in 5 of the 76ers' last 6 games, serving as the primary interior scorer (averaging ~26 points, 7 rebounds), and his absence shifts offense to perimeter players like Tyrese Maxey, potentially altering pace and paint defense against Phoenix.[1][2]\n\n### 76ers Offensive Efficiency and Pace with Embiid (Playing vs. Sitting)\nNo specific metrics on offensive efficiency (e.g., offensive rating) or pace (possessions per game) are available when Embiid plays through injury management versus sits out.[1-4]  \nWhen playing recently (e.g., past 10 games), Embiid averages 30.8 points, 8.6 rebounds, 4.9 assists (51.8% FG, 40.5% 3PT); over last 5 games, 32.4 points.[2]  \nAbsences occur mainly on back-to-backs (e.g., sat vs. Warriors on Feb 3-4, 2026, for knee/ankle management; sat vs. Hornets Jan 2026).[2][3]  \nIf out, Andre Drummond starts at center and Adem Bona sees more minutes, reducing interior scoring/free throws and increasing perimeter reliance, which could slow pace against Phoenix's paint defense.[1][2]\n\n### 76ers Winning Streak Context\nNo data confirms a 76ers **6-of-7 winning streak**; recent games show Embiid playing 5-of-6, but win-loss records unspecified.[1][2]  \nThis is the second meeting in 2025-26 season (Phoenix won first); both teams vie for playoff spots, amplifying Embiid's impact on scoring/rim protection.[1]\n\n### Suns Recent Loss and Fast-Paced Vulnerability\nPhoenix Suns lost to Golden State Warriors (date unspecified, but 76ers won that road game on second night of back-to-back, Feb 3-4, 2026).[3]  \nNo metrics available on Suns' vulnerability to fast-paced offenses post-loss.[1-7]\n\n### Suns' Three-Point Shooting and Defensive Rebounding (Last 5 Games, Without Grayson Allen)\nNo data on Grayson Allen's status, Suns' three-point shooting (e.g., 3PT%), or defensive rebounding over last 5 games.[1-7]  \nDevin Booker is questionable (right ankle sprain), but no exploitable weaknesses detailed.[5][6]  \n76ers' perimeter-oriented roster (e.g., Maxey, Oubre) could target any such gaps, but no opponent exploitation stats provided.[1-7]",
+  "injury_impact": {
+    "team1": {
+      "out_players": [
+        {
+          "name": "Grayson Allen",
+          "ppg": 16.6,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 16.6,
+      "adjusted_ppg_loss": 7.5
+    },
+    "team2": {
+      "out_players": [
+        {
+          "name": "Paul George",
+          "ppg": 16.0,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 16.0,
+      "adjusted_ppg_loss": 7.2
+    },
+    "total_reduction": 14.7,
+    "missing_ppg_diff": -0.3
+  }
+}
