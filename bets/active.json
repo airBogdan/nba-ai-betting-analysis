@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "id": "1ab1ba5b-756f-44da-b18f-d12f17617dfb",
+    "game_id": "16302",
+    "matchup": "San Antonio Spurs @ Los Angeles Lakers",
+    "bet_type": "moneyline",
+    "pick": "San Antonio Spurs",
+    "line": null,
+    "confidence": "high",
+    "units": 2.0,
+    "reasoning": "Lakers missing entire starting lineup (LeBron, Doncic, Reaves, Smart - 88.9 PPG). Spurs already won 136-108 yesterday against this exact depleted roster. Spurs have +7.4 net rating advantage at full strength, on 5-game win streak with healthy Wembanyama who dropped 40 in 26 minutes yesterday. This is as close to a lock as you'll find.",
+    "primary_edge": "Catastrophic Lakers injuries against elite Spurs team that dominated identical matchup by 28 yesterday",
+    "date": "2026-02-11",
+    "created_at": "2026-02-11T13:23:15.079209+00:00",
+    "odds_price": -110,
+    "amount": 24.86
+  },
+  {
+    "id": "c630c41f-4d72-4478-8aa0-85ac81904e85",
+    "game_id": "16301",
+    "matchup": "Dallas Mavericks @ Phoenix Suns",
+    "bet_type": "moneyline",
+    "pick": "Phoenix Suns",
+    "line": null,
+    "confidence": "high",
+    "units": 2.0,
+    "reasoning": "Phoenix +4.74 net rating edge aligns with our highest-performing bet type (90% on ratings_edge). Dallas on 8-game losing streak (longest since 2016), 5-16 on road, missing Kyrie Irving (surgery) and Lively II (season). Phoenix 17-9 at home, 5-1 recent H2H, won by 9 yesterday in same matchup. Multiple strong factors converge.",
+    "primary_edge": "Net rating differential + Dallas catastrophic road record + major injuries + 8-game losing streak",
+    "date": "2026-02-11",
+    "created_at": "2026-02-11T13:23:15.079224+00:00",
+    "odds_price": -110,
+    "amount": 24.86
+  },
+  {
+    "id": "5f4639ca-afcd-4642-a90e-501c0a99d7b4",
+    "game_id": "16300",
+    "matchup": "LA Clippers @ Houston Rockets",
+    "bet_type": "spread",
+    "pick": "Houston Rockets",
+    "line": -7.5,
+    "confidence": "medium",
+    "units": 1.0,
+    "reasoning": "Houston +5.8 net rating edge, 17-6 home record (73.9%), 5-2 recent H2H and 4-0 at home vs Clippers. Clippers in backcourt crisis with Beal out for season, Garland out, Bogdanovic questionable. Houston just beat LA 102-95 two days ago. Expected margin of 8 points provides slight edge over -7.5 line.",
+    "primary_edge": "Net rating advantage + dominant home court + Clippers backcourt injuries",
+    "date": "2026-02-11",
+    "created_at": "2026-02-11T13:23:15.079245+00:00",
+    "odds_price": -110,
+    "amount": 18.0
+  }
+]

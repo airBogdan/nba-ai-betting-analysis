@@ -12,7 +12,7 @@ python3.13 betting.py init
 
 ### 1. Generate matchup data
 ```bash
-python3.13 main.py 2026-02-04
+python3.13 main.py 2026-02-11
 ```
 Creates analysis files in `output/` for today's games.
 

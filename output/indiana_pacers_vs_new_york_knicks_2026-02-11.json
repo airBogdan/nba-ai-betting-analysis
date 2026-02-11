@@ -1,0 +1,545 @@
+{
+  "matchup": {
+    "team1": "New York Knicks",
+    "team2": "Indiana Pacers",
+    "home_team": "New York Knicks"
+  },
+  "current_season": {
+    "team1": {
+      "name": "New York Knicks",
+      "record": "34-20",
+      "conf_rank": 3,
+      "games": 60,
+      "ppg": 116.8,
+      "opp_ppg": 110.5,
+      "ortg": 114.9,
+      "drtg": 109.5,
+      "apg": 26.6,
+      "rpg": 46.5,
+      "topg": 13.7,
+      "net_rating": 5.3,
+      "fgp": 46.6,
+      "tpp": 37.1,
+      "last_ten": "9-1",
+      "last_ten_pct": 0.9,
+      "home_record": "21-6",
+      "away_record": "12-13",
+      "home_win_pct": 0.778,
+      "away_win_pct": 0.48,
+      "pace": 100.9,
+      "recent_ppg": 117.4,
+      "recent_margin": 5.9,
+      "sos": 0.501,
+      "sos_adjusted_net_rating": 5.31
+    },
+    "team2": {
+      "name": "Indiana Pacers",
+      "record": "14-40",
+      "conf_rank": 15,
+      "games": 58,
+      "ppg": 111.4,
+      "opp_ppg": 120.6,
+      "ortg": 108.4,
+      "drtg": 116.0,
+      "apg": 26.2,
+      "rpg": 42.9,
+      "topg": 14.8,
+      "net_rating": -7.66,
+      "fgp": 44.9,
+      "tpp": 34.9,
+      "last_ten": "3-7",
+      "last_ten_pct": 0.3,
+      "home_record": "10-18",
+      "away_record": "3-22",
+      "home_win_pct": 0.357,
+      "away_win_pct": 0.12,
+      "pace": 104.0,
+      "recent_ppg": 117.1,
+      "recent_margin": -5.4,
+      "sos": 0.538,
+      "sos_adjusted_net_rating": -7.28
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "L1",
+      "games_last_7_days": 5,
+      "recent_opponent_avg_win_pct": 0.501,
+      "quality_wins": 5,
+      "quality_losses": 1
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "W1",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.538,
+      "quality_wins": 2,
+      "quality_losses": 3
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Indiana Pacers",
+        "vs_record": "14-40",
+        "vs_win_pct": 0.259,
+        "result": "L",
+        "score": "134-137",
+        "home": true,
+        "margin": -3,
+        "date": "2026-02-11"
+      },
+      {
+        "vs": "Boston Celtics",
+        "vs_record": "34-19",
+        "vs_win_pct": 0.642,
+        "result": "W",
+        "score": "111-89",
+        "home": false,
+        "margin": 22,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Detroit Pistons",
+        "vs_record": "39-13",
+        "vs_win_pct": 0.75,
+        "result": "L",
+        "score": "80-118",
+        "home": false,
+        "margin": -38,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Denver Nuggets",
+        "vs_record": "34-20",
+        "vs_win_pct": 0.63,
+        "result": "W",
+        "score": "134-127",
+        "home": true,
+        "margin": 7,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Washington Wizards",
+        "vs_record": "14-38",
+        "vs_win_pct": 0.269,
+        "result": "W",
+        "score": "132-101",
+        "home": false,
+        "margin": 31,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "32-21",
+        "vs_win_pct": 0.604,
+        "result": "W",
+        "score": "112-100",
+        "home": true,
+        "margin": 12,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Portland Trail Blazers",
+        "vs_record": "26-28",
+        "vs_win_pct": 0.481,
+        "result": "W",
+        "score": "127-97",
+        "home": true,
+        "margin": 30,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Toronto Raptors",
+        "vs_record": "32-22",
+        "vs_win_pct": 0.593,
+        "result": "W",
+        "score": "119-92",
+        "home": false,
+        "margin": 27,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-43",
+        "vs_win_pct": 0.218,
+        "result": "W",
+        "score": "103-87",
+        "home": true,
+        "margin": 16,
+        "date": "2026-01-28"
+      },
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "30-23",
+        "vs_win_pct": 0.566,
+        "result": "W",
+        "score": "112-109",
+        "home": false,
+        "margin": 3,
+        "date": "2026-01-24"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "New York Knicks",
+        "vs_record": "34-20",
+        "vs_win_pct": 0.63,
+        "result": "W",
+        "score": "137-134",
+        "home": false,
+        "margin": 3,
+        "date": "2026-02-11"
+      },
+      {
+        "vs": "Toronto Raptors",
+        "vs_record": "32-22",
+        "vs_win_pct": 0.593,
+        "result": "L",
+        "score": "104-122",
+        "home": false,
+        "margin": -18,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Milwaukee Bucks",
+        "vs_record": "21-30",
+        "vs_win_pct": 0.412,
+        "result": "L",
+        "score": "99-105",
+        "home": false,
+        "margin": -6,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "17-37",
+        "vs_win_pct": 0.315,
+        "result": "L",
+        "score": "122-131",
+        "home": true,
+        "margin": -9,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "114-118",
+        "home": true,
+        "margin": -4,
+        "date": "2026-02-03"
+      },
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-29",
+        "vs_win_pct": 0.473,
+        "result": "W",
+        "score": "129-124",
+        "home": true,
+        "margin": 5,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-30",
+        "vs_win_pct": 0.444,
+        "result": "W",
+        "score": "113-110",
+        "home": true,
+        "margin": 3,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-29",
+        "vs_win_pct": 0.473,
+        "result": "L",
+        "score": "116-132",
+        "home": false,
+        "margin": -16,
+        "date": "2026-01-26"
+      },
+      {
+        "vs": "Oklahoma City Thunder",
+        "vs_record": "41-13",
+        "vs_win_pct": 0.759,
+        "result": "W",
+        "score": "117-114",
+        "home": false,
+        "margin": 3,
+        "date": "2026-01-24"
+      },
+      {
+        "vs": "Boston Celtics",
+        "vs_record": "34-19",
+        "vs_win_pct": 0.642,
+        "result": "L",
+        "score": "104-119",
+        "home": false,
+        "margin": -15,
+        "date": "2026-01-22"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Jalen Brunson",
+          "ppg": 26.5,
+          "plus_minus": 5.1,
+          "games": 54
+        },
+        {
+          "name": "Mikal Bridges",
+          "ppg": 15.5,
+          "plus_minus": 3.6,
+          "games": 59
+        },
+        {
+          "name": "O.G. Anunoby",
+          "ppg": 16.5,
+          "plus_minus": 5.7,
+          "games": 44
+        },
+        {
+          "name": "Karl-Anthony Towns",
+          "ppg": 19.1,
+          "plus_minus": 5.3,
+          "games": 54
+        },
+        {
+          "name": "Josh Hart",
+          "ppg": 12.0,
+          "plus_minus": 3.3,
+          "games": 44
+        },
+        {
+          "name": "Miles McBride",
+          "ppg": 12.5,
+          "plus_minus": 5.8,
+          "games": 40
+        }
+      ],
+      "availability_concerns": [
+        "Miles McBride (40/60 games)",
+        "Landry Shamet (33/60 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Brunson 26.5, Towns 19.1, Anunoby 16.5",
+      "playmaker": "Jalen Brunson 6.0 APG",
+      "hot_hand": "McBride +5.8 (limited: 40 games)",
+      "star_dependency": 22.7,
+      "depth_rating": "star-dependent (6.9 MPG std dev)",
+      "bench_scoring": 41.1,
+      "injuries": []
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Pascal Siakam",
+          "ppg": 23.2,
+          "plus_minus": -2.6,
+          "games": 54
+        },
+        {
+          "name": "Andrew Nembhard",
+          "ppg": 16.9,
+          "plus_minus": -6.0,
+          "games": 46
+        },
+        {
+          "name": "Bennedict Mathurin",
+          "ppg": 17.6,
+          "plus_minus": -5.8,
+          "games": 32
+        },
+        {
+          "name": "Aaron Nesmith",
+          "ppg": 13.3,
+          "plus_minus": -2.2,
+          "games": 35
+        },
+        {
+          "name": "Jarace Walker",
+          "ppg": 10.4,
+          "plus_minus": -5.1,
+          "games": 56
+        },
+        {
+          "name": "Ben Sheppard",
+          "ppg": 6.4,
+          "plus_minus": -4.4,
+          "games": 44
+        }
+      ],
+      "availability_concerns": [
+        "Bennedict Mathurin (32/58 games)",
+        "Aaron Nesmith (35/58 games)",
+        "Obi Toppin (7/58 games)",
+        "Gabe McGlothan (4/58 games)",
+        "Johnny Furphy (37/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Siakam 23.2, Mathurin 17.6, Nembhard 16.9",
+      "playmaker": "Andrew Nembhard 7.3 APG",
+      "hot_hand": "Furphy -1.4 (limited: 37 games)",
+      "star_dependency": 20.8,
+      "depth_rating": "star-dependent (5.4 MPG std dev)",
+      "bench_scoring": 34.0,
+      "injuries": []
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 21,
+      "team1_wins_all_time": 9,
+      "team2_wins_all_time": 12,
+      "team1_win_pct": 0.429,
+      "team1_home_wins": 6,
+      "team1_home_losses": 5,
+      "team1_away_wins": 3,
+      "team1_away_losses": 7,
+      "avg_point_diff": -0.8,
+      "team1_avg_points": 120.3,
+      "team2_avg_points": 121.1,
+      "last_5_games": [
+        "New York Knicks",
+        "Indiana Pacers",
+        "Indiana Pacers",
+        "New York Knicks",
+        "New York Knicks"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 7,
+      "blowouts": 6
+    },
+    "patterns": {
+      "avg_total": 241.4,
+      "home_win_pct": 0.302,
+      "high_scoring_pct": 0.85,
+      "close_game_pct": 0.64
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 5,
+      "team2_wins_last_2_seasons": 6,
+      "last_winner": "New York Knicks",
+      "home_team_home_record": "2-3",
+      "games_last_2_seasons": 11
+    },
+    "quarters": {
+      "avg_q1_total": 60.4,
+      "avg_q2_total": 61.2,
+      "avg_q3_total": 56.3,
+      "avg_q4_total": 56.6,
+      "avg_first_half": 121.6,
+      "avg_second_half": 112.9,
+      "team1_q1_avg": 28.4,
+      "team2_q1_avg": 32.0,
+      "team1_q4_avg": 29.3,
+      "team2_q4_avg": 27.3,
+      "halftime_leader_wins_pct": 0.57
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 48.5,
+        "avg_tpp": 35.5,
+        "avg_rebounds": 45.0,
+        "avg_assists": 29.1,
+        "avg_turnovers": 14.1,
+        "avg_disruption": 11.3
+      },
+      "team2": {
+        "avg_fgp": 49.6,
+        "avg_tpp": 36.6,
+        "avg_rebounds": 43.8,
+        "avg_assists": 27.2,
+        "avg_turnovers": 12.5,
+        "avg_disruption": 12.5
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 232.9,
+    "total_diff_from_h2h": -13.2,
+    "team1_h2h_scoring_diff": -3.5,
+    "team2_h2h_scoring_diff": -9.7,
+    "margin_volatility": 8.9,
+    "h2h_total_variance": 21.1,
+    "pace_adjusted_total": 228.8,
+    "defense_factor": 112.8,
+    "recent_scoring_trend": 3.7,
+    "injury_adjusted_total": 215.2
+  },
+  "comparison": {
+    "ppg": 5.4,
+    "net_rating": 12.96,
+    "form": 0.6,
+    "turnovers": 1.1,
+    "rebounds": 3.6,
+    "fgp": 1.7,
+    "three_pt_pct": 2.2,
+    "pace": -3.1,
+    "combined_pace": 102.5,
+    "weighted_form": 11.3,
+    "adjusted_net_rating": 12.59
+  },
+  "signals": [
+    "New York Knicks playing second game today (fatigue factor)",
+    "Indiana Pacers playing second game today (fatigue factor)",
+    "New York Knicks missing 23% of offense with key players limited",
+    "Indiana Pacers starts faster (+3.6 Q1 avg in H2H)",
+    "New York Knicks stronger closer (+2.0 Q4 avg in H2H)",
+    "H2H games front-loaded (1H avg 121.6 vs 2H avg 112.9)",
+    "New York Knicks injury concerns: Miles McBride (40/60 games), Landry Shamet (33/60 games)",
+    "Indiana Pacers injury concerns: Bennedict Mathurin (32/58 games), Aaron Nesmith (35/58 games)",
+    "New York Knicks hot form (9-1 L10)",
+    "Indiana Pacers struggling (3-7 L10)",
+    "New York Knicks strong at home (21-6)",
+    "Indiana Pacers poor on road (3-22)",
+    "New York Knicks +5.4 PPG edge",
+    "New York Knicks significantly better net rating (+13.0)",
+    "High-scoring matchup (85% H2H games over 220)",
+    "Competitive series (64% decided by 5 or less)",
+    "High-variance H2H (\u00b121.1 pts std dev in totals)",
+    "Indiana Pacers FG% elevated vs New York Knicks: 49.6% H2H vs 44.9% season",
+    "Indiana Pacers more careful vs New York Knicks: 12.5 H2H vs 14.8 season TOV",
+    "Indiana Pacers scoring +5.7 PPG above season avg recently \u2014 regression likely"
+  ],
+  "api_game_id": 16299,
+  "search_context": "### Injury Report\n**Indiana Pacers:**\n- Tyrese Haliburton: Out (Achilles)[1][2][3][4][5]\n- Obi Toppin: Out (foot/stress fracture right foot/right hamstring)[1][2][3][4][5]\n- Johnny Furphy: Out (torn right ACL/knee)[1][2][3][4]\n- Ivica Zubac: Out (left ankle sprain)[1][2][3][4]\n- Jarace Walker: Out (illness)[3][4]\n- Quenton Jackson: Questionable (two-way)[3]\n- Taelon Peter: Questionable (two-way)[3]\n- Ethan Thompson: Questionable (two-way)[3]\n- T.J. McConnell: Available (right hamstring soreness, upgraded from questionable)[1][3]\n- Aaron Nesmith: Available (left hand strain, upgraded from questionable)[1][3]\n- Micah Potter: Available (left hip contusion)[3]\n\n**New York Knicks:**\n- Miles McBride: Out (pelvic core muscle surgery/sports hernia/ankle)[1][2][3][4]\n- Mitchell Robinson: Out (left ankle)[1][3][4]\n- OG Anunoby: Out (right toe avulsion/toe)[1][2][3][4]\n- Pacome Dadiet: Questionable (G League assignment)[1][3]\n\n### Betting Lines\nNo current consensus spread, moneyline odds, or over/under total available in search results.\n\n### Line Movement\nNo information on opening lines or notable moves available in search results.\n\n### Recent News\nBennedict Mathurin traded to the Clippers at the deadline; no longer on Pacers roster.[1]\nKnicks acquired Jose Alvarado from New Orleans Pelicans ahead of trade deadline; expected to take on larger bench role with McBride out for rest of regular season.[3]\nPacers (13-40) near bottom of Eastern Conference; relying on Siakam and available guards; using game to evaluate roster amid injuries.[1]\nKnicks (34-19) competing for top Eastern Conference seed; main core (Brunson, Towns, Bridges, Hart, Clarkson) available.[1]\n\n### Additional Context\n### OG Anunoby's Status and Perimeter Defense Impact\n**OG Anunoby ruled out for February 10, 2026, game vs. Pacers due to right toe soreness (toenail avulsion).** [1][2][3][5][6]  \nThis marks his third straight absence, following misses against Detroit (Feb 7) and Boston (Feb 9). [1][3]  \nAnunoby, Knicks' primary wing defender (season averages: 16.6 PPG, 5.5 RPG, 2.4 APG, 47.9% FG, 37.0% 3PT), leaves a gap in perimeter containment. [2]  \nReplacements include Mohamed Diawara (started Feb 7 vs. Detroit) and Landry Shamet for added minutes; Diawara likely starts again. [1][3]  \n**Why it matters:** Pacers guards like T.J. McConnell exploit pick-and-roll via speed and passing; Nesmith's improved shooting (recent upgrade noted in query context) targets weakened Knicks wing defense without Anunoby's 2.0 SPG average over last 5 games pre-injury (22.8 PPG, 55.8% FG). [1]\n\n### Mitchell Robinson's Availability\n**Mitchell Robinson out with left ankle injury; not expected back before February 11, 2026.** [5]  \nListed as long-term out in injury reports as of Feb 10. [5][6]  \n**Why it matters:** Removes Knicks' rim protection anchor, forcing reliance on committee (e.g., Diawara), which exposes paint and influences pace/offensive rebounding against Pacers' transition attack.\n\n### Knicks' Recent Scoring Efficiency and Pace Trends Without Robinson\nSearch results lack specific scoring efficiency (e.g., offensive rating, eFG%) or pace stats for Knicks games without Robinson. [All]  \nRecent games without key players (e.g., Feb 3 vs. Wizards: Knicks won 132-101 with Anunoby active, high-output plays noted) do not isolate Robinson's absence. [4]  \nNo data on games specifically without Robinson for trends like points per possession or tempo. [All]  \n**Why it matters:** Absence alters rebounding/defensive structure, potentially inflating pace and over/under totals, but quantifiable trends unavailable here.\n\n### Additional Injuries Affecting Knicks Rotation\n| Player | Status | Injury/Details | Source/Timeframe |\n|--------|--------|----------------|------------------|\n| Miles McBride | Out | Pelvic core muscle surgery; several weeks remaining | [5][6] (Feb 10 report) |\n| Pacome Dadiet | Questionable | G League assignment | [5][6] (Feb 10 report) |\n\n**Why it matters:** Thins backcourt depth, compounding Anunoby's absence for guard containment vs. Pacers' McConnell/Nesmith pick-and-roll actions. [6]",
+  "injury_impact": {
+    "team1": {
+      "out_players": [
+        {
+          "name": "Miles McBride",
+          "ppg": 12.5,
+          "status": "Out"
+        },
+        {
+          "name": "O.G. Anunoby",
+          "ppg": 16.5,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 29.0,
+      "adjusted_ppg_loss": 13.0
+    },
+    "team2": {
+      "out_players": [
+        {
+          "name": "Jarace Walker",
+          "ppg": 10.4,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 10.4,
+      "adjusted_ppg_loss": 4.7
+    },
+    "total_reduction": 17.7,
+    "missing_ppg_diff": -8.3
+  }
+}

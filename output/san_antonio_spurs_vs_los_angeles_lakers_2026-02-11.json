@@ -1,0 +1,544 @@
+{
+  "matchup": {
+    "team1": "Los Angeles Lakers",
+    "team2": "San Antonio Spurs",
+    "home_team": "Los Angeles Lakers"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Los Angeles Lakers",
+      "record": "32-21",
+      "conf_rank": 5,
+      "games": 59,
+      "ppg": 114.7,
+      "opp_ppg": 114.1,
+      "ortg": 111.5,
+      "drtg": 112.9,
+      "apg": 24.8,
+      "rpg": 41.2,
+      "topg": 15.5,
+      "net_rating": -1.32,
+      "fgp": 49.2,
+      "tpp": 35.0,
+      "last_ten": "7-3",
+      "last_ten_pct": 0.7,
+      "home_record": "14-8",
+      "away_record": "18-11",
+      "home_win_pct": 0.636,
+      "away_win_pct": 0.621,
+      "pace": 101.1,
+      "recent_ppg": 112.7,
+      "recent_margin": -5.2,
+      "sos": 0.516,
+      "sos_adjusted_net_rating": -1.16
+    },
+    "team2": {
+      "name": "San Antonio Spurs",
+      "record": "37-16",
+      "conf_rank": 2,
+      "games": 58,
+      "ppg": 118.4,
+      "opp_ppg": 112.5,
+      "ortg": 115.2,
+      "drtg": 109.2,
+      "apg": 26.6,
+      "rpg": 46.5,
+      "topg": 13.9,
+      "net_rating": 6.07,
+      "fgp": 47.9,
+      "tpp": 35.0,
+      "last_ten": "7-3",
+      "last_ten_pct": 0.7,
+      "home_record": "19-6",
+      "away_record": "16-10",
+      "home_win_pct": 0.76,
+      "away_win_pct": 0.615,
+      "pace": 103.0,
+      "recent_ppg": 125.1,
+      "recent_margin": 12.9,
+      "sos": 0.494,
+      "sos_adjusted_net_rating": 6.01
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 0,
+      "streak": "L2",
+      "games_last_7_days": 5,
+      "recent_opponent_avg_win_pct": 0.516,
+      "quality_wins": 2,
+      "quality_losses": 4
+    },
+    "team2": {
+      "days_rest": 0,
+      "streak": "W5",
+      "games_last_7_days": 4,
+      "recent_opponent_avg_win_pct": 0.494,
+      "quality_wins": 4,
+      "quality_losses": 1
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "San Antonio Spurs",
+        "vs_record": "37-16",
+        "vs_win_pct": 0.698,
+        "result": "L",
+        "score": "108-136",
+        "home": true,
+        "margin": -28,
+        "date": "2026-02-11"
+      },
+      {
+        "vs": "Oklahoma City Thunder",
+        "vs_record": "41-13",
+        "vs_win_pct": 0.759,
+        "result": "L",
+        "score": "110-119",
+        "home": true,
+        "margin": -9,
+        "date": "2026-02-10"
+      },
+      {
+        "vs": "Golden State Warriors",
+        "vs_record": "29-25",
+        "vs_win_pct": 0.537,
+        "result": "W",
+        "score": "105-99",
+        "home": true,
+        "margin": 6,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "30-23",
+        "vs_win_pct": 0.566,
+        "result": "W",
+        "score": "119-115",
+        "home": true,
+        "margin": 4,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Brooklyn Nets",
+        "vs_record": "15-37",
+        "vs_win_pct": 0.288,
+        "result": "W",
+        "score": "125-109",
+        "home": false,
+        "margin": 16,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "New York Knicks",
+        "vs_record": "34-20",
+        "vs_win_pct": 0.63,
+        "result": "L",
+        "score": "100-112",
+        "home": false,
+        "margin": -12,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Washington Wizards",
+        "vs_record": "14-38",
+        "vs_win_pct": 0.269,
+        "result": "W",
+        "score": "142-111",
+        "home": false,
+        "margin": 31,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Cleveland Cavaliers",
+        "vs_record": "33-21",
+        "vs_win_pct": 0.611,
+        "result": "L",
+        "score": "99-129",
+        "home": false,
+        "margin": -30,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-30",
+        "vs_win_pct": 0.444,
+        "result": "W",
+        "score": "129-118",
+        "home": false,
+        "margin": 11,
+        "date": "2026-01-27"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-34",
+        "vs_win_pct": 0.358,
+        "result": "W",
+        "score": "116-110",
+        "home": false,
+        "margin": 6,
+        "date": "2026-01-25"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "32-21",
+        "vs_win_pct": 0.604,
+        "result": "W",
+        "score": "136-108",
+        "home": false,
+        "margin": 28,
+        "date": "2026-02-11"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-34",
+        "vs_win_pct": 0.358,
+        "result": "W",
+        "score": "138-125",
+        "home": true,
+        "margin": 13,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-34",
+        "vs_win_pct": 0.358,
+        "result": "W",
+        "score": "135-123",
+        "home": false,
+        "margin": 12,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Oklahoma City Thunder",
+        "vs_record": "41-13",
+        "vs_win_pct": 0.759,
+        "result": "W",
+        "score": "116-106",
+        "home": true,
+        "margin": 10,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Orlando Magic",
+        "vs_record": "28-24",
+        "vs_win_pct": 0.538,
+        "result": "W",
+        "score": "112-103",
+        "home": true,
+        "margin": 9,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Charlotte Hornets",
+        "vs_record": "25-29",
+        "vs_win_pct": 0.463,
+        "result": "L",
+        "score": "106-111",
+        "home": false,
+        "margin": -5,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "W",
+        "score": "111-99",
+        "home": false,
+        "margin": 12,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "New Orleans Pelicans",
+        "vs_record": "15-40",
+        "vs_win_pct": 0.273,
+        "result": "L",
+        "score": "95-104",
+        "home": true,
+        "margin": -9,
+        "date": "2026-01-26"
+      },
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "17-37",
+        "vs_win_pct": 0.315,
+        "result": "W",
+        "score": "126-109",
+        "home": false,
+        "margin": 17,
+        "date": "2026-01-23"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "33-19",
+        "vs_win_pct": 0.635,
+        "result": "L",
+        "score": "106-111",
+        "home": false,
+        "margin": -5,
+        "date": "2026-01-21"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Luka Doncic",
+          "ppg": 32.6,
+          "plus_minus": 1.0,
+          "games": 44
+        },
+        {
+          "name": "LeBron James",
+          "ppg": 21.8,
+          "plus_minus": -0.8,
+          "games": 35
+        },
+        {
+          "name": "Austin Reaves",
+          "ppg": 24.8,
+          "plus_minus": 1.7,
+          "games": 31
+        },
+        {
+          "name": "Rui Hachimura",
+          "ppg": 12.1,
+          "plus_minus": -0.1,
+          "games": 48
+        },
+        {
+          "name": "Marcus Smart",
+          "ppg": 9.7,
+          "plus_minus": 1.7,
+          "games": 45
+        },
+        {
+          "name": "Deandre Ayton",
+          "ppg": 12.8,
+          "plus_minus": -0.8,
+          "games": 51
+        }
+      ],
+      "availability_concerns": [
+        "LeBron James (35/59 games)",
+        "Austin Reaves (31/59 games)",
+        "Luke Kennard (3/59 games)",
+        "Gabe Vincent (33/59 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Doncic 32.6, Reaves 24.8, James 21.8",
+      "playmaker": "Luka Doncic 8.5 APG",
+      "hot_hand": "Reaves +1.7 (limited: 31 games)",
+      "star_dependency": 28.4,
+      "depth_rating": "star-dependent (5.1 MPG std dev)",
+      "bench_scoring": 43.6,
+      "injuries": []
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "De'Aaron Fox",
+          "ppg": 19.2,
+          "plus_minus": 3.3,
+          "games": 45
+        },
+        {
+          "name": "Devin Vassell",
+          "ppg": 14.0,
+          "plus_minus": 6.1,
+          "games": 45
+        },
+        {
+          "name": "Stephon Castle",
+          "ppg": 16.6,
+          "plus_minus": 3.7,
+          "games": 46
+        },
+        {
+          "name": "Victor Wembanyama",
+          "ppg": 23.7,
+          "plus_minus": 6.9,
+          "games": 44
+        },
+        {
+          "name": "Julian Champagnie",
+          "ppg": 11.3,
+          "plus_minus": 5.6,
+          "games": 58
+        },
+        {
+          "name": "Harrison Barnes",
+          "ppg": 10.2,
+          "plus_minus": 3.2,
+          "games": 58
+        }
+      ],
+      "availability_concerns": [
+        "Jeremy Sochan (28/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Wembanyama 23.7, Fox 19.2, Castle 16.6",
+      "playmaker": "Stephon Castle 7.1 APG",
+      "hot_hand": "Wembanyama +6.9",
+      "star_dependency": 20.0,
+      "depth_rating": "star-dependent (5.4 MPG std dev)",
+      "bench_scoring": 46.3,
+      "injuries": []
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 11,
+      "team1_wins_all_time": 6,
+      "team2_wins_all_time": 5,
+      "team1_win_pct": 0.545,
+      "team1_home_wins": 3,
+      "team1_home_losses": 3,
+      "team1_away_wins": 3,
+      "team1_away_losses": 2,
+      "avg_point_diff": -6.4,
+      "team1_avg_points": 113.1,
+      "team2_avg_points": 119.5,
+      "last_5_games": [
+        "San Antonio Spurs",
+        "Los Angeles Lakers",
+        "San Antonio Spurs",
+        "San Antonio Spurs",
+        "Los Angeles Lakers"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 4,
+      "blowouts": 5
+    },
+    "patterns": {
+      "avg_total": 232.6,
+      "home_win_pct": 0.447,
+      "high_scoring_pct": 0.79,
+      "close_game_pct": 0.32
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 4,
+      "team2_wins_last_2_seasons": 4,
+      "last_winner": "Los Angeles Lakers",
+      "home_team_home_record": "2-3",
+      "games_last_2_seasons": 8
+    },
+    "quarters": {
+      "avg_q1_total": 60.1,
+      "avg_q2_total": 58.8,
+      "avg_q3_total": 58.8,
+      "avg_q4_total": 54.9,
+      "avg_first_half": 118.8,
+      "avg_second_half": 113.8,
+      "team1_q1_avg": 28.4,
+      "team2_q1_avg": 31.6,
+      "team1_q4_avg": 26.9,
+      "team2_q4_avg": 28.0,
+      "halftime_leader_wins_pct": 0.91
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 47.5,
+        "avg_tpp": 36.8,
+        "avg_rebounds": 41.5,
+        "avg_assists": 25.7,
+        "avg_turnovers": 13.9,
+        "avg_disruption": 12.1
+      },
+      "team2": {
+        "avg_fgp": 49.3,
+        "avg_tpp": 36.7,
+        "avg_rebounds": 44.1,
+        "avg_assists": 28.2,
+        "avg_turnovers": 14.3,
+        "avg_disruption": 13.6
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 232.5,
+    "total_diff_from_h2h": 0.5,
+    "team1_h2h_scoring_diff": 1.6,
+    "team2_h2h_scoring_diff": -1.1,
+    "margin_volatility": 8.6,
+    "h2h_total_variance": 14.5,
+    "pace_adjusted_total": 231.3,
+    "defense_factor": 111.1,
+    "recent_scoring_trend": 0.3,
+    "injury_adjusted_total": 192.5
+  },
+  "comparison": {
+    "ppg": -3.7,
+    "net_rating": -7.39,
+    "form": 0.0,
+    "turnovers": -1.6,
+    "rebounds": -5.3,
+    "fgp": 1.3,
+    "three_pt_pct": 0.0,
+    "pace": -1.9,
+    "combined_pace": 102.0,
+    "weighted_form": -18.1,
+    "adjusted_net_rating": -7.17
+  },
+  "signals": [
+    "Los Angeles Lakers playing second game today (fatigue factor)",
+    "San Antonio Spurs playing second game today (fatigue factor)",
+    "Los Angeles Lakers missing 28% of offense with key players limited",
+    "San Antonio Spurs won 5 straight",
+    "San Antonio Spurs starts faster (+3.2 Q1 avg in H2H)",
+    "Halftime leader wins 91% in this matchup",
+    "H2H games front-loaded (1H avg 118.8 vs 2H avg 113.8)",
+    "Los Angeles Lakers injury concerns: LeBron James (35/59 games), Austin Reaves (31/59 games)",
+    "San Antonio Spurs injury concerns: Jeremy Sochan (28/58 games)",
+    "Los Angeles Lakers hot form (7-3 L10)",
+    "San Antonio Spurs hot form (7-3 L10)",
+    "Los Angeles Lakers strong at home (14-8)",
+    "San Antonio Spurs solid on road (16-10)",
+    "San Antonio Spurs +3.7 PPG edge",
+    "San Antonio Spurs significantly better net rating (+7.4)",
+    "High-scoring matchup (79% H2H games over 220)",
+    "San Antonio Spurs scoring +6.7 PPG above season avg recently \u2014 regression likely"
+  ],
+  "api_game_id": 16302,
+  "search_context": "I need to clarify an important issue with your request: **the game you're asking about has already been played**. The San Antonio Spurs defeated the Los Angeles Lakers 136-108 on **Tuesday, February 10, 2026**[1][3], which was yesterday relative to today's date (Wednesday, February 11, 2026).\n\nThe search results contain post-game information rather than pre-game analysis. If you're looking for information about a different game today, please clarify which matchup you need researched. \n\nBased on the search results provided, I can confirm that the Spurs' next game is against the **Golden State Warriors on Wednesday at 9:00 PM CDT**[5], which would be today. However, I don't have pre-game data (injury reports, betting lines, or line movement) for that matchup in the current search results.\n\nTo provide you with an accurate pre-game research report, please specify:\n- Which game you need analyzed (Spurs vs. Warriors today, or a different matchup)?\n- Whether you need the report for the already-completed Lakers game for historical reference?\n\n### Additional Context\n### Game Context\nThe referenced game was San Antonio Spurs at Los Angeles Lakers on February 10, 2026, resulting in a 136-108 Spurs win.[1][3][4] Spurs entered with a 36-16 record (first in Southwest Division, top-3 in West) and four straight wins; Lakers were 32-20 (fifth in West).[2] Spurs lead season series 2-1, both wins by double digits.[2] This context matters as it highlights Spurs' roster stability and rebounding/rim protection edge (117.6 PPG, 46.6 RPG) over Lakers (116.0 PPG).[2]\n\n### Injury Status for Spurs @ Lakers (Feb 10 Game)\n**Spurs (Core Available):** Victor Wembanyama (23.9 PPG, 11.1 RPG, 2.7 BPG), Stephon Castle (20.3 PPG, 7.0 APG; exited early with pelvic contusion/tailbone soreness but X-rays negative), Keldon Johnson (55.2% FG, 38.9% 3PT), Julian Champagnie active.[2][3][4] Out: Lindy Waters III (knee hyperextension, return after Feb 11), David Jones Garcia (ankle surgery, season), Harrison Ingram (two-way G-League).[2][6] Healthy core drove 40 points from Wembanyama in 26 minutes.[4]\n\n**Lakers (Entire Starting Lineup Unavailable):** Out: LeBron James (left foot arthritis), Luka Doncic (left hamstring strain), Austin Reaves (left calf), Marcus Smart (right ankle tweak from prior game, high soreness), Adou Thiero (right knee/MCL), Cole Anthony (not with team), Isaiah Livers (left shoulder).[1][2][5][6] Questionable/game-time: Deandre Ayton (right knee soreness).[1][2][5][6] Rui Hachimura (44.9% 3PT) expected to play.[2] Absences depleted paint stability and scoring, enabling Spurs blowout.[1][2][5]\n\n### Stephon Castle Update Post-Lakers Game (Relevant to Next Matchup)\nCastle ruled out second half of Feb 10 win with pelvic contusion/tailbone impact after hard fall; X-rays negative, self-reported \"I'm good.\"[3][4] Coach expects \"really sore\" tailbone; game-time decision for Feb 11 Spurs @ Warriors (back-to-back, pre-All-Star).[3][4] Matters for pace/lineup as Castle provides 20+ PPG and playmaking in 12 minutes played.[3]\n\n### Betting Line Movement and Sharp Action\nNo specific opening/current lines, movements, or sharp/public money indicators in results. Game outcome (136-108) reflects heavy Spurs favoritism due to Lakers' mass absences vs Spurs' health.[1][2]\n\n### Spurs Pace/Efficiency in Recent Wins (W5 Streak Context)\nSpurs won four straight entering Feb 10, extending to five with 136-108 result; driven by core health (Wembanyama rim protection, Johnson efficiency, Castle assists) and consistency (117.6 PPG, strong rebounding/interior D).[2][4] Feb 10 featured 69-46 halftime lead, 40 Wembanyama points; no explicit pace metrics, but blowout on back-to-back suggests sustainable form from roster depth vs variance.[1][3][4] Lakers short-handed matchup limits outlier assessment.[1][2][5]",
+  "injury_impact": {
+    "team1": {
+      "out_players": [
+        {
+          "name": "LeBron James",
+          "ppg": 21.8,
+          "status": "Out"
+        },
+        {
+          "name": "Luka Doncic",
+          "ppg": 32.6,
+          "status": "Out"
+        },
+        {
+          "name": "Austin Reaves",
+          "ppg": 24.8,
+          "status": "Out"
+        },
+        {
+          "name": "Marcus Smart",
+          "ppg": 9.7,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 88.9,
+      "adjusted_ppg_loss": 40.0
+    },
+    "team2": {
+      "out_players": [],
+      "missing_ppg": 0,
+      "adjusted_ppg_loss": 0.0
+    },
+    "total_reduction": 40.0,
+    "missing_ppg_diff": -40.0
+  }
+}

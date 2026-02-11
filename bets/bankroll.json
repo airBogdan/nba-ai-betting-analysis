@@ -1,6 +1,6 @@
 {
   "starting": 1000.0,
-  "current": 828.5,
+  "current": 760.78,
   "transactions": [
     {
       "date": "2026-02-05",
@@ -190,6 +190,27 @@
       "amount": 22.909090909090907,
       "bet_id": "cde2ab15-b1d6-4c13-ac3a-ea42841aa306",
       "description": "WIN: Detroit Pistons @ Charlotte Hornets (+$10.91)"
+    },
+    {
+      "date": "2026-02-11",
+      "type": "bet",
+      "amount": -24.86,
+      "bet_id": "1ab1ba5b-756f-44da-b18f-d12f17617dfb",
+      "description": "San Antonio Spurs @ Los Angeles Lakers - moneyline San Antonio Spurs"
+    },
+    {
+      "date": "2026-02-11",
+      "type": "bet",
+      "amount": -24.86,
+      "bet_id": "c630c41f-4d72-4478-8aa0-85ac81904e85",
+      "description": "Dallas Mavericks @ Phoenix Suns - moneyline Phoenix Suns"
+    },
+    {
+      "date": "2026-02-11",
+      "type": "bet",
+      "amount": -18.0,
+      "bet_id": "5f4639ca-afcd-4642-a90e-501c0a99d7b4",
+      "description": "LA Clippers @ Houston Rockets - spread Houston Rockets"
     }
   ]
 }
