@@ -508,39 +508,39 @@
   "odds": {
     "spread": {
       "home": {
-        "line": -9.0,
-        "price": -110
+        "line": -9.5,
+        "price": -108
       },
       "away": {
-        "line": 9.0,
-        "price": -110
+        "line": 9.5,
+        "price": -112
       }
     },
     "total": {
       "line": 208.5,
-      "over": -108,
-      "under": -112
+      "over": -110,
+      "under": -110
     },
     "moneyline": {
-      "home": -340,
-      "away": 275
+      "home": -390,
+      "away": 310
     },
     "alternate_spreads": [
       {
-        "line": -9.5,
-        "price": -102
+        "line": -10.5,
+        "price": 108
       },
       {
-        "line": -10.5,
-        "price": 114
+        "line": -11.5,
+        "price": 122
       },
       {
         "line": -8.5,
-        "price": -116
+        "price": -122
       },
       {
         "line": -7.5,
-        "price": -132
+        "price": -140
       }
     ],
     "alternate_totals": [
@@ -550,7 +550,7 @@
       },
       {
         "line": 206.5,
-        "price": -130
+        "price": -136
       },
       {
         "line": 209.5,
@@ -562,5 +562,5 @@
       }
     ]
   },
-  "search_context": "### Injury Report\n\n**LA Clippers**\n\n| Player | Position | Status | Injury |\n|--------|----------|--------|--------|\n| Bradley Beal | SG | Out | Left hip fracture (surgery in November 2025); out for season[2] |\n| Darius Garland | PG | Out | Left toe injury; projected to miss through at least February 19[2] |\n| Bogdan Bogdanovi\u0107 | SG | Questionable | Left hamstring; game-time decision[2] |\n\n**Houston Rockets**\n\n| Player | Position | Status | Injury |\n|--------|----------|--------|--------|\n| Steven Adams | C | Out | Left ankle (Grade 3 sprain, surgery in January); out for season[1][2] |\n| Fred VanVleet | PG | Out | Right knee ACL tear; not expected back before June[2] |\n| Jae'Sean Tate | SF | Out | Left wrist contusion; no definitive return date[1] |\n\n### Betting Lines\n\n**Spread:** Houston by 7.5 points[1]\n\n**Moneyline:** Houston favored[2]\n\n**Over/Under:** 209.5 total points[1]\n\n### Line Movement\n\nNo information available on line movement or opening lines in the search results.\n\n### Recent News\n\nThe Clippers (25-28) are dealing with significant guard depth issues due to injuries to Beal and Garland, forcing reliance on secondary ball-handlers including Kris Dunn, TyTy Washington Jr., Kobe Sanders, and Jordan Miller[2]. Kawhi Leonard continues to lead the offense, averaging approximately 28.0 points on 49.5% shooting[2].\n\nThe Rockets (34-19 or 33-19) maintain most of their main rotation despite long-term absences[2]. Kevin Durant and Alperen \u015eeng\u00fcn remain primary offensive weapons, with the Rockets ranking in the top-10 offensively this season[2]. Houston has won three of four matchups against the Clippers last season and currently leads the all-time series 128-92; the teams have split their first two games this season[2].\n\n### Additional Context\n### Clippers Backcourt Injury Status\nBradley Beal (SG) is out for the season due to a left hip fracture from November 2025, requiring surgery and eliminating his backcourt contribution.[1][2][3]  \nDarius Garland (PG) is out with a left toe injury (reported February 9, 2026), with no timetable for return or projected miss through at least February 19; this leaves a major gap in point guard playmaking.[1][2][5]  \nBogdan Bogdanovi\u0107 (SG) is questionable with a left hamstring injury (ongoing since at least January 30, 2026), recently playing limited minutes (12 on February 5 vs. Cavaliers: 2 pts, 1 reb, 1 ast).[1][3][4]  \nThis creates a depth crisis, forcing reliance on Kris Dunn, Kobe Sanders, TyTy Washington Jr., and Jordan Miller in the backcourt, which lacks proven scoring efficiency against elite defenses.[1][5]\n\n### Clippers Projected Lineup and Depth Impact\nAvailable core includes Kawhi Leonard, Brook Lopez, Nicolas Batum, Derrick Jones Jr., John Collins, Kobe Sanders, Kris Dunn, TyTy Washington Jr., and Jordan Miller; recent rotations highlight limited offensive options post-trade deadline, with Leonard capped at 31 minutes recently due to prior knee contusion.[1][5]  \nBeal's absence has opened minutes for Bennedict Mathurin and Derrick Jones Jr., but Garland's toe injury adds uncertainty without a clear replacement for pace-setting guard play.[2]  \nNo historical data in results on Clippers' offensive efficiency or pace specifically vs. Houston's perimeter defense (e.g., Amen Thompson, Jabari Smith Jr., Dorian Finney-Smith) amid these absences; general backcourt voids reduce scoring versatility against Houston's projected defenders.[1]\n\n### Rockets Injury Status and Projected Lineup\nHouston has long-term absences: Steven Adams (C) out for season (left ankle surgery, January 2026); Fred VanVleet (PG) out (right knee ACL surgery, return not before June).[1]  \nAvailable core: Kevin Durant, Alperen \u015eeng\u00fcn, Amen Thompson, Jabari Smith Jr., Dorian Finney-Smith, Tari Eason, Reed Sheppard, Tristen Newton, Jeff Green, Josh Okogie; this maintains strong perimeter defense despite gaps at center and point guard.[1]  \nAll-time series favors Houston 128-92, providing matchup edge with intact wings vs. Clippers' depleted guards.[1]\n\n### Rockets Recent Performance Context\nNo specific data on Houston's two-game winning streak, lineup combinations, or matchup advantages in results; projected availability of Durant, \u015eeng\u00fcn, and perimeter defenders (Thompson, Smith Jr., Finney-Smith) suggests continuity in defensive schemes that pressure guard-heavy offenses.[1]  \nClippers' desperation stems from short-handed status post-trades (e.g., no James Harden, Ivica Zubac), but no quantifiable correlation to Rockets' streak provided.[5]"
+  "search_context": "### Injury Report\n**LA Clippers:**\n- Darius Garland (PG): Questionable, toe injury[2][4].\n- Bradley Beal (SG): Out, hip (sidelined extended period, season-ending fractured hip per some reports)[2][4].\n- Bogdan Bogdanovi\u0107 (SG): Questionable, hamstring[4].\n\n**Houston Rockets:**\n- Jae'Sean Tate (SF): Out, wrist contusion[2].\n- Steven Adams (C): Out, ankle (Grade 3 sprain, season-ending surgery)[2][4].\n- Fred VanVleet (PG): Out, knee (torn ACL, season-ending)[2][4].\n- Tari Eason: Likely out (no specific injury detailed)[8].\n- Dorian Finney-Smith: Likely out (no specific injury detailed)[8].\n\nOfficial NBA injury reports for this game were not yet submitted as of 12:15 PM ET[6][7].\n\n### Betting Lines\nNo current consensus spread, moneyline odds, or over/under total available in search results.\n\n### Line Movement\nNo information on opening lines or notable moves available.\n\n### Recent News\nNo relevant team news from the last 48 hours on roster moves, rotation changes, notable performances, or rest decisions available.\n\n### Additional Context\n### Houston Injury Status and Depth Impacts\nFred VanVleet is **out** with a right knee ACL repair from the offseason, yet to play this season, forcing increased ball-handling on Amen Thompson and younger guards.[1][3][5][6][7]  \nTari Eason is **questionable** (right ankle sprain, as of Jan 18, 2026) or **probably out**, thinning rotation and perimeter options; recent games saw him contribute poised shot-making in a win over OKC.[2][3][5]  \nSteven Adams is **out** for the season (left ankle surgery, late-January), removing a top offensive rebounder and physical paint presence, shifting to committee rebounding.[1][3][5][6]  \nDorian Finney-Smith is **probably out**, further straining lineups amid multiple injuries.[4][5][7]  \nRockets hold a 32-19 record (4th in West), winning 6 of last 9 despite three rotation players out, relying on young core like Thompson, Eason (if available), Durant, Smith Jr., and Sengun.[1][6]  \nThis matters as VanVleet's absence locks Houston into a post-FVV identity with diversified playmaking from inexperienced guards, exposing backup ball-handling.[1]\n\n### Clippers Injury Status and Point Guard Situation\nDarius Garland is **out** (left toe injury management), delaying his Clippers debut after trade from Cleveland; team managing recovery cautiously.[1][3][5][6]  \nBradley Beal is **out** for season (left hip fracture, early November).[1][3][6]  \nProbable Clippers lineup: Bogdan Bogdanovic (PG), Mathurin (SG), Kawhi Leonard (SF), John Collins (PF), Brook Lopez (C); Bennedict Mathurin (17.8 PPG, 43% FG) debuts after Zubac trade.[1][3][6]  \nThis matters as Garland's absence pressures alternative PGs like Bogdanovic/Dunn, but Clippers' defense (Lopez anchoring paint) remains potent even shorthanded.[1]\n\n### Houston Backup Ball-Handling and Perimeter Defense Without Key Players\nWithout VanVleet, Amen Thompson takes primary PG duties in expected lineup, increasing decision-making for young guards; team has adapted via next-man-up mentality but offense ranks 26th over last 15 games.[1][5][6][7]  \nEason's potential absence (questionable/probably out) weakens perimeter defense and wing depth, as he's featured in recent wins; Finney-Smith out adds to thinner lineups.[2][3][4][5]  \nCoach Udoka notes availability shapes responsibility, with resilience shown in 112-106 OKC win sans Adams/VanVleet.[1]  \nThis matters for exploitation: Clippers can target inexperienced handling (e.g., Thompson) and perimeter gaps from Eason/Finney-Smith absences.[1][7]\n\n### Betting Lines and Sharp Money Movement\nNo specific current betting lines or sharp money movements reported in available sources for this February 11, 2026 matchup.[1][3][6]  \nRockets' 32-19 record and #3/#4 seed status (sources vary slightly) persist despite injuries, creating line challenges vs. shorthanded Clippers; recent power rankings drop to 7th after losses.[1][6][7]\n\n### Player & Team News\n### Player Form & Streaks\nAmen Thompson scored 16 points in his return game after missing Saturday's win over Oklahoma City due to illness.[1][3] Kawhi Leonard scored 24 points after posting 41 in the teams' December matchup.[1][3]\n\n### Rotation & Role Changes\nBennedict Mathurin played 26 minutes, scoring 9 points with 7 rebounds, in his first game since being traded from Indiana last week.[1][3]\n\n### Returning Players & Ramp-Ups\nAmen Thompson returned from illness and contributed 16 points in 26 minutes against the Clippers on Tuesday.[1][3]\n\n### Trade & Roster Buzz\nHouston acquired Bennedict Mathurin from Indiana last week; he debuted with 9 points and 7 rebounds in 26 minutes Tuesday.[1][3] Darius Garland, acquired by Houston in the trade that sent James Harden to Cleveland, remains sidelined with a toe injury.[1][3]\n\n### Matchup Storylines\nThis back-to-back rematch follows Houston's 102-95 win over the Clippers on Tuesday, where Kevin Durant scored 26 points and Alperen Sengun added 22 to secure the victory ahead of the All-Star break.[1][3][4] Kawhi Leonard led LA with 24 points after his 41-point outburst in December's Clippers blowout win.[1][3]"
 }

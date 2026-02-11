@@ -1,6 +1,6 @@
 {
   "starting": 1000.0,
-  "current": 760.78,
+  "current": 764.5,
   "transactions": [
     {
       "date": "2026-02-05",
@@ -194,23 +194,23 @@
     {
       "date": "2026-02-11",
       "type": "bet",
-      "amount": -24.86,
-      "bet_id": "1ab1ba5b-756f-44da-b18f-d12f17617dfb",
-      "description": "San Antonio Spurs @ Los Angeles Lakers - moneyline San Antonio Spurs"
-    },
-    {
-      "date": "2026-02-11",
-      "type": "bet",
-      "amount": -24.86,
-      "bet_id": "c630c41f-4d72-4478-8aa0-85ac81904e85",
+      "amount": -22.82,
+      "bet_id": "7650bdb0-f78c-443f-aeb7-e2aacd81a7e0",
       "description": "Dallas Mavericks @ Phoenix Suns - moneyline Phoenix Suns"
     },
     {
       "date": "2026-02-11",
       "type": "bet",
+      "amount": -22.82,
+      "bet_id": "5e40b516-224e-48b2-a8f9-e8804283ad0a",
+      "description": "San Antonio Spurs @ Los Angeles Lakers - moneyline San Antonio Spurs"
+    },
+    {
+      "date": "2026-02-11",
+      "type": "bet",
       "amount": -18.0,
-      "bet_id": "5f4639ca-afcd-4642-a90e-501c0a99d7b4",
-      "description": "LA Clippers @ Houston Rockets - spread Houston Rockets"
+      "bet_id": "e8b5b59d-8757-4b5b-bb1b-ac413ae45f10",
+      "description": "Indiana Pacers @ New York Knicks - moneyline New York Knicks"
     }
   ]
 }

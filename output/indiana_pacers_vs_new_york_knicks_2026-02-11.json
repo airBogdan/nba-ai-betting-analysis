@@ -445,20 +445,20 @@
     },
     "matchup_stats": {
       "team1": {
-        "avg_fgp": 48.5,
-        "avg_tpp": 35.5,
-        "avg_rebounds": 45.0,
-        "avg_assists": 29.1,
-        "avg_turnovers": 14.1,
-        "avg_disruption": 11.3
+        "avg_fgp": 49.3,
+        "avg_tpp": 33.3,
+        "avg_rebounds": 44.1,
+        "avg_assists": 27.1,
+        "avg_turnovers": 12.9,
+        "avg_disruption": 9.7
       },
       "team2": {
-        "avg_fgp": 49.6,
-        "avg_tpp": 36.6,
-        "avg_rebounds": 43.8,
-        "avg_assists": 27.2,
-        "avg_turnovers": 12.5,
-        "avg_disruption": 12.5
+        "avg_fgp": 50.1,
+        "avg_tpp": 38.1,
+        "avg_rebounds": 39.8,
+        "avg_assists": 28.2,
+        "avg_turnovers": 11.6,
+        "avg_disruption": 10.9
       }
     }
   },
@@ -471,8 +471,7 @@
     "h2h_total_variance": 21.1,
     "pace_adjusted_total": 228.8,
     "defense_factor": 112.8,
-    "recent_scoring_trend": 3.7,
-    "injury_adjusted_total": 215.2
+    "recent_scoring_trend": 3.7
   },
   "comparison": {
     "ppg": 5.4,
@@ -505,41 +504,11 @@
     "High-scoring matchup (85% H2H games over 220)",
     "Competitive series (64% decided by 5 or less)",
     "High-variance H2H (\u00b121.1 pts std dev in totals)",
-    "Indiana Pacers FG% elevated vs New York Knicks: 49.6% H2H vs 44.9% season",
-    "Indiana Pacers more careful vs New York Knicks: 12.5 H2H vs 14.8 season TOV",
+    "Indiana Pacers FG% elevated vs New York Knicks: 50.1% H2H vs 44.9% season",
+    "Indiana Pacers more careful vs New York Knicks: 11.6 H2H vs 14.8 season TOV",
+    "Indiana Pacers struggles on boards vs New York Knicks: 39.8 H2H vs 42.9 season",
     "Indiana Pacers scoring +5.7 PPG above season avg recently \u2014 regression likely"
   ],
   "api_game_id": 16299,
-  "search_context": "### Injury Report\n**Indiana Pacers:**\n- Tyrese Haliburton: Out (Achilles)[1][2][3][4][5]\n- Obi Toppin: Out (foot/stress fracture right foot/right hamstring)[1][2][3][4][5]\n- Johnny Furphy: Out (torn right ACL/knee)[1][2][3][4]\n- Ivica Zubac: Out (left ankle sprain)[1][2][3][4]\n- Jarace Walker: Out (illness)[3][4]\n- Quenton Jackson: Questionable (two-way)[3]\n- Taelon Peter: Questionable (two-way)[3]\n- Ethan Thompson: Questionable (two-way)[3]\n- T.J. McConnell: Available (right hamstring soreness, upgraded from questionable)[1][3]\n- Aaron Nesmith: Available (left hand strain, upgraded from questionable)[1][3]\n- Micah Potter: Available (left hip contusion)[3]\n\n**New York Knicks:**\n- Miles McBride: Out (pelvic core muscle surgery/sports hernia/ankle)[1][2][3][4]\n- Mitchell Robinson: Out (left ankle)[1][3][4]\n- OG Anunoby: Out (right toe avulsion/toe)[1][2][3][4]\n- Pacome Dadiet: Questionable (G League assignment)[1][3]\n\n### Betting Lines\nNo current consensus spread, moneyline odds, or over/under total available in search results.\n\n### Line Movement\nNo information on opening lines or notable moves available in search results.\n\n### Recent News\nBennedict Mathurin traded to the Clippers at the deadline; no longer on Pacers roster.[1]\nKnicks acquired Jose Alvarado from New Orleans Pelicans ahead of trade deadline; expected to take on larger bench role with McBride out for rest of regular season.[3]\nPacers (13-40) near bottom of Eastern Conference; relying on Siakam and available guards; using game to evaluate roster amid injuries.[1]\nKnicks (34-19) competing for top Eastern Conference seed; main core (Brunson, Towns, Bridges, Hart, Clarkson) available.[1]\n\n### Additional Context\n### OG Anunoby's Status and Perimeter Defense Impact\n**OG Anunoby ruled out for February 10, 2026, game vs. Pacers due to right toe soreness (toenail avulsion).** [1][2][3][5][6]  \nThis marks his third straight absence, following misses against Detroit (Feb 7) and Boston (Feb 9). [1][3]  \nAnunoby, Knicks' primary wing defender (season averages: 16.6 PPG, 5.5 RPG, 2.4 APG, 47.9% FG, 37.0% 3PT), leaves a gap in perimeter containment. [2]  \nReplacements include Mohamed Diawara (started Feb 7 vs. Detroit) and Landry Shamet for added minutes; Diawara likely starts again. [1][3]  \n**Why it matters:** Pacers guards like T.J. McConnell exploit pick-and-roll via speed and passing; Nesmith's improved shooting (recent upgrade noted in query context) targets weakened Knicks wing defense without Anunoby's 2.0 SPG average over last 5 games pre-injury (22.8 PPG, 55.8% FG). [1]\n\n### Mitchell Robinson's Availability\n**Mitchell Robinson out with left ankle injury; not expected back before February 11, 2026.** [5]  \nListed as long-term out in injury reports as of Feb 10. [5][6]  \n**Why it matters:** Removes Knicks' rim protection anchor, forcing reliance on committee (e.g., Diawara), which exposes paint and influences pace/offensive rebounding against Pacers' transition attack.\n\n### Knicks' Recent Scoring Efficiency and Pace Trends Without Robinson\nSearch results lack specific scoring efficiency (e.g., offensive rating, eFG%) or pace stats for Knicks games without Robinson. [All]  \nRecent games without key players (e.g., Feb 3 vs. Wizards: Knicks won 132-101 with Anunoby active, high-output plays noted) do not isolate Robinson's absence. [4]  \nNo data on games specifically without Robinson for trends like points per possession or tempo. [All]  \n**Why it matters:** Absence alters rebounding/defensive structure, potentially inflating pace and over/under totals, but quantifiable trends unavailable here.\n\n### Additional Injuries Affecting Knicks Rotation\n| Player | Status | Injury/Details | Source/Timeframe |\n|--------|--------|----------------|------------------|\n| Miles McBride | Out | Pelvic core muscle surgery; several weeks remaining | [5][6] (Feb 10 report) |\n| Pacome Dadiet | Questionable | G League assignment | [5][6] (Feb 10 report) |\n\n**Why it matters:** Thins backcourt depth, compounding Anunoby's absence for guard containment vs. Pacers' McConnell/Nesmith pick-and-roll actions. [6]",
-  "injury_impact": {
-    "team1": {
-      "out_players": [
-        {
-          "name": "Miles McBride",
-          "ppg": 12.5,
-          "status": "Out"
-        },
-        {
-          "name": "O.G. Anunoby",
-          "ppg": 16.5,
-          "status": "Out"
-        }
-      ],
-      "missing_ppg": 29.0,
-      "adjusted_ppg_loss": 13.0
-    },
-    "team2": {
-      "out_players": [
-        {
-          "name": "Jarace Walker",
-          "ppg": 10.4,
-          "status": "Out"
-        }
-      ],
-      "missing_ppg": 10.4,
-      "adjusted_ppg_loss": 4.7
-    },
-    "total_reduction": 17.7,
-    "missing_ppg_diff": -8.3
-  }
+  "search_context": "I cannot provide the pre-game research report you've requested because the game you're asking about has already been played. The Indiana Pacers @ New York Knicks matchup occurred on **February 10, 2026**[1], which was yesterday relative to today's date (February 11, 2026).\n\nThe search results contain injury information and preview details from before that game, but they do not include:\n\n- **Betting Lines**: No current consensus spread, moneyline odds, or over/under totals are provided in the search results.\n- **Line Movement**: No information about opening lines or line movement is available.\n- **Recent News**: The results contain pre-game preview content rather than post-game news or current roster updates.\n\nIf you're looking for information about an upcoming Knicks game, the search results reference a **New York Knicks @ Philadelphia 76ers matchup on February 11, 2026**[7], which would be today. However, the search results do not contain sufficient detail (injury reports, betting lines, or recent news) to construct a comprehensive pre-game report for that matchup either.\n\nTo get the research report you need, please clarify which game you're interested in, and I can search for current information if available.\n\n### Additional Context\n### Knicks' Defensive Efficiency (Last 10 Games)\nKnicks ranked **26th in defensive efficiency** and **29th in opponent three-point percentage** during their 2-9 stretch in January 2025, indicating poor perimeter containment that allowed opponents to exploit spacing[5]. Season-long defensive rating stands at **114.1 (12th in NBA)**, with **113.7** when Jalen Brunson plays (48 games) versus **120.6** without him (5 games), showing reliance on key players for defensive structure[2]. This matters against Pacers' spacing, as elevated opponent 3P% in recent losses highlights vulnerability to three-point volume.\n\n### Knicks' Three-Point Shooting Variance (Last 10 Games)\nNo direct last-10-games 3PT stats available; season 3P% is **37.8% (3rd in NBA)**, with team averaging **39.5 3PA/game** in recent matchup analysis[1][2]. January's 29th-ranked opponent 3P% defense suggests defensive lapses amplified shooting variance, rather than isolated offensive issues[5]. Relevant for Pacers game, as Knicks' high 3PT rate (**43.6%** possessions) could rebound but exposes them if perimeter D falters.\n\n### Impact of Injuries (McBride and Shamet)\nNo specific status or impact data for Miles McBride or Landry Shamet in provided results; general Knicks bench stats show **7.3 steals/play** season average, led by OG Anunoby at **1.7 SPG**[1][3]. Season defensive rating worsens without Brunson (**120.6**), implying bench absences compound perimeter issues by reducing steals (**7.2 SPG without vs. 8.0 with**) and turnovers forced[2]. This affects containing Indiana's spacing, as weaker bench perimeter D (e.g., lower steals/turnovers) limits disruption of drives and kick-outs.\n\n### Knicks Loss Streak Context\n2-9 record in January tied to **26th-ranked def efficiency**, reflecting sustainable perimeter weaknesses over variance, not just opponent strength[5]. Current record **34-19 (2nd East)** as of Feb 10, 2026, with **+5.6 net rating (4th)**, but recent defensive drop matters versus Pacers' potential despite poor record[2]. Pacers not directly compared; Knicks def rebound % (**76.3%**) strong but opp 3PT points (**41.8/game** in sample) vulnerable[1].\n\n### Player & Team News\n### Player Form & Streaks\nPascal Siakam scored a team-high 30 points with 6 rebounds and 4 assists in the Pacers' win over the Knicks on February 10.[1] Jalen Brunson tallied 40 points, 8 assists, and 5 rebounds, including a game-tying three-pointer with 5.1 seconds left in regulation.[1][2][3] Andrew Nembhard recorded 24 points, 10 assists, and 4 rebounds.[1]\n\n### Rotation & Role Changes\nKobe Brown, recently acquired by the Pacers from the Clippers, hit a three-pointer off a kickout from Nembhard.[2] Shepard provided 8 points in 8 minutes off the Knicks' bench.[2][3] Alvarado dished his fifth assist and hit a bank shot with a foul.[2][3]\n\n### Matchup Storylines\nNembhard chased Brunson defensively during key mid-range sequences, with Brunson pushing back with behind-the-back moves and finishes.[2][3] Aaron Nesmith (N Smith) went at Mikal Bridges on the baseline, drawing contact before hitting a jumper; Bridges later hit both free throws after a lob with his long arms in front.[2][3][1] Jackson guarded Brunson late, contributing to Knicks fatigue.[2][3] Towns fouled out after an offensive foul.[3]"
 }
