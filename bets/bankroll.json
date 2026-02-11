@@ -1,6 +1,6 @@
 {
   "starting": 1000.0,
-  "current": 764.5,
+  "current": 851.630909090909,
   "transactions": [
     {
       "date": "2026-02-05",
@@ -211,6 +211,20 @@
       "amount": -18.0,
       "bet_id": "e8b5b59d-8757-4b5b-bb1b-ac413ae45f10",
       "description": "Indiana Pacers @ New York Knicks - moneyline New York Knicks"
+    },
+    {
+      "date": "2026-02-11",
+      "type": "result",
+      "amount": 43.56545454545454,
+      "bet_id": "7650bdb0-f78c-443f-aeb7-e2aacd81a7e0",
+      "description": "WIN: Dallas Mavericks @ Phoenix Suns (+$20.75)"
+    },
+    {
+      "date": "2026-02-11",
+      "type": "result",
+      "amount": 43.56545454545454,
+      "bet_id": "5e40b516-224e-48b2-a8f9-e8804283ad0a",
+      "description": "WIN: San Antonio Spurs @ Los Angeles Lakers (+$20.75)"
     }
   ]
 }
