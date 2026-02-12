@@ -58,6 +58,9 @@ def main():
     # update-strategy
     subparsers.add_parser("update-strategy", help="Update strategy from history")
 
+    # check
+    subparsers.add_parser("check", help="Check open positions and auto-close if edge lost")
+
     args = parser.parse_args()
 
     if args.command == "init":
@@ -95,6 +98,10 @@ def main():
         from workflow.strategy import run_strategy_workflow
 
         asyncio.run(run_strategy_workflow())
+    elif args.command == "check":
+        from workflow.check import run_check_workflow
+
+        asyncio.run(run_check_workflow())
 
 
 if __name__ == "__main__":

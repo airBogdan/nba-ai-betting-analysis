@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from helpers.api import get_game_by_id, get_games_by_date
 from helpers.utils import get_current_nba_season_year
+from .db import insert_bet as db_insert_bet
 from .io import (
     JOURNAL_DIR,
     OUTPUT_DIR,
@@ -12,14 +13,12 @@ from .io import (
     clear_output_dir,
     get_active_bets,
     get_bankroll,
-    get_history,
     save_active_bets,
     save_bankroll,
-    save_history,
 )
 from .llm import complete_json
 from .prompts import REFLECT_BET_PROMPT, SYSTEM_ANALYST
-from .types import ActiveBet, Bankroll, BetHistory, CompletedBet, GameResult
+from .types import ActiveBet, Bankroll, CompletedBet, GameResult
 
 # Limit concurrent LLM calls to avoid rate limiting
 MAX_CONCURRENT_LLM_CALLS = 4
@@ -97,32 +96,6 @@ def match_bet_to_result(
             return r
 
     return None
-
-
-def _categorize_edge(edge: str) -> str:
-    """Normalize edge description to a category for tracking."""
-    edge_lower = edge.lower()
-
-    # Check for common edge types
-    if any(w in edge_lower for w in ["home", "home court", "home advantage"]):
-        return "home_court"
-    if any(w in edge_lower for w in ["rest", "fatigue", "back-to-back", "b2b", "tired"]):
-        return "rest_advantage"
-    if any(w in edge_lower for w in ["injury", "injured", "missing", "out", "questionable"]):
-        return "injury_edge"
-    if any(w in edge_lower for w in ["form", "streak", "momentum", "hot", "cold", "recent"]):
-        return "form_momentum"
-    if any(w in edge_lower for w in ["h2h", "head-to-head", "matchup history"]):
-        return "h2h_history"
-    if any(w in edge_lower for w in ["rating", "net rating", "offensive", "defensive", "efficiency"]):
-        return "ratings_edge"
-    if any(w in edge_lower for w in ["mismatch", "size", "pace", "style"]):
-        return "style_mismatch"
-    if any(w in edge_lower for w in ["total", "over", "under", "scoring"]):
-        return "totals_edge"
-
-    # Default: truncate to 25 chars
-    return edge[:25] if len(edge) > 25 else edge
 
 
 def _teams_match(name1: str, name2: str) -> bool:
@@ -288,101 +261,6 @@ async def reflect_on_bet(
     return await complete_json(prompt, system=SYSTEM_ANALYST)
 
 
-def update_history_with_bet(history: BetHistory, bet: CompletedBet) -> BetHistory:
-    """Update history with a completed bet."""
-    history["bets"].append(bet)
-
-    summary = history["summary"]
-    summary["total_bets"] += 1
-    summary["net_units"] += bet["profit_loss"]
-
-    # Only count units wagered for non-push bets
-    if bet["result"] != "push":
-        summary["total_units_wagered"] += bet["units"]
-
-    if bet["result"] == "win":
-        summary["wins"] += 1
-    elif bet["result"] == "loss":
-        summary["losses"] += 1
-    elif bet["result"] == "push":
-        summary["pushes"] = summary.get("pushes", 0) + 1
-
-    if summary["total_bets"] > 0:
-        summary["win_rate"] = round(summary["wins"] / summary["total_bets"], 3)
-        if summary["total_units_wagered"] > 0:
-            summary["roi"] = round(
-                summary["net_units"] / summary["total_units_wagered"], 3
-            )
-
-    # Update by_confidence (skip pushes)
-    if bet["result"] != "push":
-        conf = bet["confidence"]
-        if conf not in summary["by_confidence"]:
-            summary["by_confidence"][conf] = {"wins": 0, "losses": 0, "win_rate": 0.0}
-        if bet["result"] == "win":
-            summary["by_confidence"][conf]["wins"] += 1
-        else:
-            summary["by_confidence"][conf]["losses"] += 1
-        conf_total = (
-            summary["by_confidence"][conf]["wins"]
-            + summary["by_confidence"][conf]["losses"]
-        )
-        summary["by_confidence"][conf]["win_rate"] = round(
-            summary["by_confidence"][conf]["wins"] / conf_total, 3
-        )
-
-    # Update by_primary_edge (normalize to categories, skip pushes)
-    if bet["result"] != "push":
-        edge = _categorize_edge(bet["primary_edge"])
-        if edge not in summary["by_primary_edge"]:
-            summary["by_primary_edge"][edge] = {"wins": 0, "losses": 0, "win_rate": 0.0}
-        if bet["result"] == "win":
-            summary["by_primary_edge"][edge]["wins"] += 1
-        else:
-            summary["by_primary_edge"][edge]["losses"] += 1
-        edge_total = (
-            summary["by_primary_edge"][edge]["wins"]
-            + summary["by_primary_edge"][edge]["losses"]
-        )
-        summary["by_primary_edge"][edge]["win_rate"] = round(
-            summary["by_primary_edge"][edge]["wins"] / edge_total, 3
-        )
-
-    # Update by_bet_type (skip pushes)
-    if bet["result"] != "push":
-        bet_type = bet.get("bet_type", "moneyline")
-        if "by_bet_type" not in summary:
-            summary["by_bet_type"] = {}
-        if bet_type not in summary["by_bet_type"]:
-            summary["by_bet_type"][bet_type] = {"wins": 0, "losses": 0, "win_rate": 0.0}
-        if bet["result"] == "win":
-            summary["by_bet_type"][bet_type]["wins"] += 1
-        else:
-            summary["by_bet_type"][bet_type]["losses"] += 1
-        type_total = (
-            summary["by_bet_type"][bet_type]["wins"]
-            + summary["by_bet_type"][bet_type]["losses"]
-        )
-        summary["by_bet_type"][bet_type]["win_rate"] = round(
-            summary["by_bet_type"][bet_type]["wins"] / type_total, 3
-        )
-
-    # Update streak (ignore pushes)
-    recent_results = [b["result"] for b in history["bets"][-10:] if b["result"] != "push"]
-    if recent_results:
-        current = recent_results[-1]
-        count = 1
-        for r in reversed(recent_results[:-1]):
-            if r == current:
-                count += 1
-            else:
-                break
-        prefix = "W" if current == "win" else "L"
-        summary["current_streak"] = f"{prefix}{count}"
-
-    return history
-
-
 def append_journal_post_game(date: str, completed: List[CompletedBet]) -> None:
     """Append post-game results to journal."""
     journal_path = JOURNAL_DIR / f"{date}.md"
@@ -541,7 +419,6 @@ async def _process_results_for_date(date: str, season: int) -> None:
     print(f"Processing {len(date_bets)} bets...")
 
     # First pass: match bets to results and determine outcomes
-    history = get_history()
     unresolved: List[ActiveBet] = []
     matched: List[Tuple[ActiveBet, GameResult, str, float]] = []  # (bet, result, outcome, profit_loss)
 
@@ -602,7 +479,7 @@ async def _process_results_for_date(date: str, season: int) -> None:
             if structured_ref:
                 completed_bet["structured_reflection"] = structured_ref
             completed.append(completed_bet)
-            history = update_history_with_bet(history, completed_bet)
+            db_insert_bet(completed_bet)
 
     # Update bankroll for completed bets
     bankroll = get_bankroll()
@@ -614,7 +491,6 @@ async def _process_results_for_date(date: str, season: int) -> None:
     # Keep bets that weren't for this date, plus unresolved bets from this date
     other_bets = [b for b in active if b["date"] != date]
     save_active_bets(other_bets + unresolved)
-    save_history(history)
 
     # Append to journal
     if completed:

@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, List, Optional
 
-from .types import ActiveBet, Bankroll, BetHistory, BetHistorySummary
+from .types import ActiveBet, Bankroll, BetHistory
 
 BETS_DIR = Path(__file__).parent.parent / "bets"
 JOURNAL_DIR = BETS_DIR / "journal"
@@ -76,35 +76,12 @@ def save_active_bets(bets: List[ActiveBet]) -> None:
     write_json(BETS_DIR / "active.json", bets)
 
 
-def _empty_summary() -> BetHistorySummary:
-    """Return empty summary structure."""
-    return {
-        "total_bets": 0,
-        "wins": 0,
-        "losses": 0,
-        "pushes": 0,
-        "win_rate": 0.0,
-        "total_units_wagered": 0.0,
-        "net_units": 0.0,
-        "roi": 0.0,
-        "by_confidence": {},
-        "by_primary_edge": {},
-        "by_bet_type": {},
-        "current_streak": "",
-    }
-
 
 def get_history() -> BetHistory:
-    """Load history.json, return initialized empty structure if missing."""
-    data = read_json(BETS_DIR / "history.json")
-    if data is None:
-        return {"bets": [], "summary": _empty_summary()}
-    return data
+    """Load bet history from SQLite database."""
+    from .db import get_history as db_get_history
 
-
-def save_history(history: BetHistory) -> None:
-    """Save history to history.json."""
-    write_json(BETS_DIR / "history.json", history)
+    return db_get_history()
 
 
 def get_bankroll() -> Bankroll:

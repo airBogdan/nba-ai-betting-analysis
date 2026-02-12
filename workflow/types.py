@@ -7,7 +7,7 @@ class BankrollTransaction(TypedDict):
     """Single bankroll transaction."""
 
     date: str
-    type: Literal["bet", "result", "adjustment"]
+    type: Literal["bet", "result", "adjustment", "early_exit"]
     amount: float  # Negative for bets placed, positive for payouts
     bet_id: Optional[str]
     description: str
@@ -128,7 +128,7 @@ class _CompletedBetRequired(TypedDict):
     primary_edge: str
     date: str
     created_at: str
-    result: Literal["win", "loss", "push"]
+    result: Literal["win", "loss", "push", "early_exit"]
     winner: str
     final_score: str
     actual_total: Optional[int]  # For totals bets

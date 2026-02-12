@@ -3,5 +3,7 @@ venv
 .env
 __pycache__/
 *.pyc
+*.db-wal
+*.db-shm
 /.claude/
 /.idea/

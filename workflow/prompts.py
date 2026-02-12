@@ -380,6 +380,66 @@ If the results adequately cover injuries, betting lines, line movement, and rece
 Otherwise, describe in 1-2 sentences what additional information would be most valuable for betting analysis on this game and why. Be specific — not keywords, but a clear research directive."""
 
 
+SYSTEM_POSITION_MANAGER = """You are a conservative position manager for NBA betting on Polymarket.
+Your default action is HOLD. Only recommend CLOSE when the original betting thesis is clearly
+invalidated by new information (injuries, lineup changes, major news). Price movement alone
+is NOT sufficient reason to close — the edge may still exist at worse odds.
+Be specific about what changed and why it invalidates the original edge."""
+
+
+CHECK_POSITION_PROMPT = """Re-evaluate this open betting position given new information.
+
+## Original Bet
+- Matchup: {matchup}
+- Bet Type: {bet_type}
+- Pick: {pick}
+- Line: {line}
+- Confidence: {confidence}
+- Original Edge: {primary_edge}
+- Reasoning: {reasoning}
+
+## Price Movement
+- Entry Price: {entry_price:.2f} (bought at this price)
+- Current Price: {live_price:.2f}
+- P&L: {pnl_pct:+.1f}%
+- Unrealized P&L: ${unrealized_pnl:+.2f}
+
+## Recent Context (Injury/Lineup Changes)
+{search_context}
+
+## Instructions
+1. Is the original edge still valid given the new information above?
+2. Has anything changed that specifically invalidates the thesis?
+3. Price movement alone is NOT a reason to close — only new facts matter.
+
+**Default is HOLD.** Only recommend CLOSE if:
+- A key player in the thesis is now OUT/available when they weren't before
+- The injury situation that created the edge has materially changed
+- New information directly contradicts the original reasoning
+
+Respond with JSON:
+{{
+  "action": "HOLD" | "CLOSE",
+  "edge_still_valid": true | false,
+  "new_factors": ["factor 1", ...],
+  "reasoning": "Why hold or close",
+  "revised_confidence": "low" | "medium" | "high"
+}}"""
+
+
+SEARCH_POSITION_CONTEXT_PROMPT = """I need a quick update on injury and lineup changes for an NBA game today.
+
+**Game: {matchup}**
+
+Focus ONLY on:
+1. **Injury updates** — any changes to player availability since this morning
+2. **Lineup changes** — confirmed starters, late scratches
+3. **Status upgrades/downgrades** — players whose status changed (e.g., questionable → out, doubtful → available)
+
+Skip betting lines, odds, analysis, and general team news. Just injury/lineup facts.
+Keep it brief and factual."""
+
+
 def format_analyses_for_synthesis(
     analyses: List[Dict[str, Any]],
 ) -> str:

@@ -292,7 +292,7 @@ class TestRun:
             "POLYMARKET_FUNDER": "0x" + "cd" * 20,
         }):
             with patch("polymarket.create_clob_client") as mock_client:
-                run("2026-02-11")
+                run()
 
         mock_place.assert_called_once()
         args = mock_place.call_args
@@ -315,7 +315,7 @@ class TestRun:
             "POLYMARKET_PRIVATE_KEY": "0x" + "ab" * 32,
             "POLYMARKET_FUNDER": "0x" + "cd" * 20,
         }):
-            run("2026-02-11")
+            run()
 
         mock_place.assert_not_called()
         mock_fetch.assert_not_called()
@@ -349,7 +349,7 @@ class TestRun:
             "POLYMARKET_FUNDER": "0x" + "cd" * 20,
         }):
             with patch("polymarket.create_clob_client"):
-                run("2026-02-11")
+                run()
 
         mock_place.assert_not_called()
 
@@ -370,7 +370,7 @@ class TestRun:
             "POLYMARKET_FUNDER": "0x" + "cd" * 20,
         }):
             with patch("polymarket.create_clob_client"):
-                run("2026-02-11")
+                run()
 
         mock_place.assert_called_once()
 

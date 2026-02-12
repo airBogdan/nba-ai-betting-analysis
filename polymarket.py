@@ -62,6 +62,13 @@ def place_bet(client: ClobClient, token_id: str, amount: float) -> dict:
     return client.post_order(signed_order, orderType="FOK")
 
 
+def sell_position(client: ClobClient, token_id: str, shares: float) -> dict:
+    """Sell shares of a position on Polymarket."""
+    order_args = MarketOrderArgs(token_id=token_id, amount=shares, side="SELL")
+    signed_order = client.create_market_order(order_args)
+    return client.post_order(signed_order, orderType="FOK")
+
+
 def run() -> None:
     """Load unplaced active bets, resolve markets, and place orders."""
     load_dotenv()
