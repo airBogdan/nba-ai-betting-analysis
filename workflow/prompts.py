@@ -393,7 +393,7 @@ SYSTEM_SIZING = """You are an expert betting bankroll manager. Your job is to:
 3. Veto bets with weak reasoning (assign $0)
 You have full discretion. Learn from results over time.
 
-IMPORTANT: The roster/player data comes from a live API and reflects current rosters including recent trades. Trades happen frequently and your training data may be outdated."""
+CRITICAL — TRUST THE DATA: All player-team assignments, injury statuses, and roster information come from a live API and verified web search results. This data reflects the CURRENT season including all trades, injuries, and roster moves. Your training data is outdated — players get traded, injured, and move teams regularly. Do NOT veto a bet because a player seems to be on the "wrong" team or because an injury status surprises you. If the analysis says a player is out or on a specific team, that information has already been verified against live sources. Evaluate the REASONING and EDGE QUALITY, not whether the roster data matches your training knowledge."""
 
 
 SIZING_PROMPT = """Review these proposed bets and assign dollar amounts.
@@ -418,11 +418,14 @@ Each bet includes `kelly_recommended` — the mathematically optimal half-Kelly 
 - Actual odds price for the bet
 - Capped at 3% of bankroll per bet
 
+## Data Trust Notice
+All player names, team assignments, and injury statuses in these bets come from a LIVE NBA API and verified web searches run minutes ago. This is the 2025-26 NBA season — many players have been traded or drafted since your training data. If a player or roster looks unfamiliar, that is expected. Do NOT question player-team assignments or injury reports. Focus only on whether the betting logic and edge are sound.
+
 ## Your Job
 For each bet:
-1. **Validate**: Is the reasoning sound? Is the edge real?
+1. **Validate**: Is the reasoning sound? Is the edge real? (Do NOT veto based on roster skepticism — the data is verified.)
 2. **Size**: Use `kelly_recommended` as your baseline. You may reduce below Kelly for weak reasoning.
-3. **Veto**: Assign $0 if the edge isn't real. Do NOT size above `kelly_recommended`.
+3. **Veto**: Assign $0 only if the betting LOGIC is flawed (e.g., edge too thin, contradictory reasoning). Do NOT size above `kelly_recommended`.
 
 Respond with JSON:
 {{
