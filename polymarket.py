@@ -11,9 +11,10 @@ from py_clob_client.constants import POLYGON
 from polymarket_helpers.gamma import fetch_nba_events, find_market
 from polymarket_helpers.matching import parse_matchup, event_matches_matchup, pick_matches_outcome
 from polymarket_helpers.odds import format_price_comparison
-from workflow.io import get_active_bets
+from workflow.io import get_active_bets, save_active_bets
 
 POLYMARKET_HOST = "https://clob.polymarket.com"
+PRICE_DRIFT_TOLERANCE = 0.05
 
 
 def resolve_token_id(bet: dict, events: list[dict]) -> tuple[str, float] | None:
@@ -69,7 +70,8 @@ def run(date: str) -> None:
         print("Error: POLYMARKET_PRIVATE_KEY and POLYMARKET_FUNDER must be set")
         return
 
-    bets = [b for b in get_active_bets() if b["date"] == date]
+    all_active = get_active_bets()
+    bets = [b for b in all_active if b["date"] == date and not b.get("placed_polymarket")]
     if not bets:
         print(f"No active bets for {date}")
         return
@@ -102,6 +104,16 @@ def run(date: str) -> None:
         if odds_price:
             print(f"  {format_price_comparison(odds_price, poly_price)}")
 
+        # Price drift gate: skip if live price moved too far from analysis price
+        analysis_price = bet.get("poly_price")
+        if analysis_price is not None:
+            drift = abs(poly_price - analysis_price)
+            if drift > PRICE_DRIFT_TOLERANCE:
+                print(f"SKIP: {label} -> price drifted {drift:.2f} "
+                      f"(was {analysis_price:.2f}, now {poly_price:.2f})")
+                skipped += 1
+                continue
+
         amount = bet.get("amount", 0)
         if amount <= 0:
             print(f"SKIP: {label} -> no amount set")
@@ -112,11 +124,13 @@ def run(date: str) -> None:
             resp = place_bet(client, token_id, amount)
             print(f"OK:   {label} -> ${amount:.2f} placed")
             print(f"      Response: {resp}")
+            bet["placed_polymarket"] = True
             placed += 1
         except Exception as e:
             print(f"FAIL: {label} -> {e}")
             skipped += 1
 
+    save_active_bets(all_active)
     print(f"\nDone: {placed} placed, {skipped} skipped")
 
 

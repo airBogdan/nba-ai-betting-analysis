@@ -21,11 +21,11 @@ from .io import (
     write_text,
 )
 from .llm import complete_json
+from .polymarket_prices import extract_poly_price_for_bet, fetch_polymarket_prices
 from .prompts import (
     ANALYZE_GAME_PROMPT,
     EXTRACT_INJURIES_PROMPT,
-    NO_ODDS_SECTION,
-    ODDS_CONTEXT_SECTION,
+    POLYMARKET_ODDS_SECTION,
     SIZING_PROMPT,
     SYNTHESIZE_BETS_PROMPT,
     SYSTEM_ANALYST,
@@ -34,6 +34,7 @@ from .prompts import (
     format_analyses_for_synthesis,
     format_history_summary,
 )
+from polymarket_helpers.odds import poly_price_to_american
 from .types import ActiveBet, Bankroll, BetRecommendation, SelectedBet
 
 # Kelly Criterion parameters
@@ -349,13 +350,18 @@ async def analyze_game(
     search_context = game_data.get("search_context")
     search_section = f"\n## Web Search Context\n{search_context}\n\n" if search_context else "\n"
 
-    # Strip internal/search keys before serializing for the LLM (search_context
-    # is injected as its own prompt section, not buried in the JSON blob)
-    clean_data = {k: v for k, v in game_data.items() if not k.startswith("_") and not k.startswith("search_context")}
+    # Strip internal/search keys and sportsbook odds from the JSON blob
+    clean_data = {k: v for k, v in game_data.items()
+                  if not k.startswith("_") and k not in ("search_context", "polymarket_odds", "odds")}
 
-    # Conditional odds context
-    has_odds = "odds" in clean_data and clean_data["odds"]
-    odds_context = ODDS_CONTEXT_SECTION if has_odds else NO_ODDS_SECTION
+    # Polymarket context (all games reaching analysis have polymarket_odds)
+    poly_odds = game_data.get("polymarket_odds")
+    if poly_odds:
+        polymarket_context = POLYMARKET_ODDS_SECTION.format(
+            polymarket_json=compact_json(poly_odds)
+        )
+    else:
+        polymarket_context = ""
 
     prompt = ANALYZE_GAME_PROMPT.format(
         matchup_json=compact_json(clean_data),
@@ -364,7 +370,7 @@ async def analyze_game(
         game_id=game_id,
         matchup=matchup_str,
         home_team=home_team,
-        odds_context=odds_context,
+        polymarket_context=polymarket_context,
     )
 
     result = await complete_json(prompt, system=SYSTEM_ANALYST)
@@ -468,26 +474,20 @@ def _extract_sizing_strategy(strategy: Optional[str]) -> str:
     return "No sizing strategy defined yet."
 
 
-def _extract_odds_price(game_data: Dict, bet: ActiveBet) -> int:
-    """Extract real odds price from game data for a bet."""
-    odds = game_data.get("odds")
-    if not odds:
-        return -110
+def _extract_poly_and_odds_price(
+    game_data: Dict[str, Any], bet: ActiveBet
+) -> tuple:
+    """Get Polymarket price for a bet, derive odds_price from it.
 
-    # Determine if pick is home or away from matchup string "Away @ Home"
-    parts = bet["matchup"].split(" @ ")
-    home_team = parts[1] if len(parts) == 2 else ""
-    is_home_pick = (bet["pick"] == home_team)
-
-    if bet["bet_type"] == "moneyline" and odds.get("moneyline"):
-        return odds["moneyline"].get("home" if is_home_pick else "away") or -110
-    elif bet["bet_type"] == "spread" and odds.get("spread"):
-        side = odds["spread"].get("home" if is_home_pick else "away")
-        return side.get("price", -110) if side else -110
-    elif bet["bet_type"] == "total" and odds.get("total"):
-        return odds["total"].get("over" if bet["pick"].lower() == "over" else "under", -110) or -110
-    return -110
-
+    Returns (poly_price, odds_price). poly_price is None if the bet's
+    market isn't available on Polymarket.
+    """
+    poly_price = extract_poly_price_for_bet(
+        game_data, bet["bet_type"], bet["pick"], bet.get("line")
+    )
+    if poly_price is not None:
+        return poly_price, poly_price_to_american(poly_price)
+    return None, -110
 
 
 def _fallback_sizing(bets: List[ActiveBet], available: float) -> List[ActiveBet]:
@@ -677,6 +677,15 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
     print("Computing injury impact...")
     await _extract_and_compute_injuries(games)
 
+    # Phase 1.7: Fetch Polymarket prices
+    print("Fetching Polymarket prices...")
+    await asyncio.to_thread(fetch_polymarket_prices, games, date)
+    # Drop games with no Polymarket market
+    games = [g for g in games if g.get("polymarket_odds")]
+    if not games:
+        print("No games with Polymarket markets found. Exiting.")
+        return
+
     # Load context
     strategy = read_text(BETS_DIR / "strategy.md")
     history = get_history()
@@ -723,14 +732,21 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
     valid_bets = [s for s in selected if s.get("pick") and s.get("matchup")]
     new_bets = [create_active_bet(s, date) for s in valid_bets]
 
-    # Build game lookup and set real odds_price on bets
+    # Build game lookup and extract Polymarket pricing for bets
     game_lookup: Dict[str, Dict[str, Any]] = {}
     for game in games:
         gid = str(game["api_game_id"]) if game.get("api_game_id") else extract_game_id(game["_file"])
         game_lookup[gid] = game
 
     for bet in new_bets:
-        bet["odds_price"] = _extract_odds_price(game_lookup.get(bet["game_id"], {}), bet)
+        game = game_lookup.get(bet["game_id"], {})
+        poly_price, odds_price = _extract_poly_and_odds_price(game, bet)
+        bet["odds_price"] = odds_price
+        if poly_price is not None:
+            bet["poly_price"] = poly_price
+
+    # Drop bets where no poly_price could be extracted (can't place on Polymarket)
+    new_bets = [b for b in new_bets if b.get("poly_price") is not None]
 
     if not new_bets:
         print("No bets selected by analysis.")

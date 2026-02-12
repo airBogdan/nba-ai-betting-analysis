@@ -23,29 +23,14 @@ def compact_json(data: Any) -> str:
     return json.dumps(_clean(data), separators=(", ", ": "))
 
 
-ODDS_CONTEXT_SECTION = """## Using the Odds Data
-The matchup data includes an "odds" object with betting lines:
-- **spread**: Main spread with line and price for home/away teams
-- **total**: Main total with line, over price, under price
-- **moneyline**: Straight-up win prices for each team
-- **alternate_spreads**: 4 alternate spread lines (2 lower, 2 higher than main) - prices shown are for HOME team
-- **alternate_totals**: 4 alternate total lines (2 lower, 2 higher than main) - prices shown are for OVER
+POLYMARKET_ODDS_SECTION = """## Polymarket Execution Prices
+These are the prices where bets will be placed. Evaluate edge against these prices.
+Prices are probabilities (0-1), e.g. 0.60 = 60% implied probability.
 
-**Using alternates**: If your expected margin is close to the main line, check alternates for better value:
-- If you expect home -8 but main line is -6.5, check if home -8.5 or -9.5 alternate has good + odds
-- If you expect total of 218 but line is 224.5, the under at 220.5 alternate may offer better value
-- Note: alternate_spreads prices are for HOME team; for away bets, use the main spread or mentally flip the line
+{polymarket_json}
 
-**Price evaluation**: American odds context:
-- -110 is standard juice (bet $110 to win $100)
-- Positive odds (+150) mean underdog, higher = more value if you're confident
-- Large negative odds (-300+) rarely offer value unless you have very high confidence
-
-**Line discrepancies**: If the web search context shows different lines than the matchup data odds, prefer the web search lines — they are more current. The API odds may be hours old. Do not skip a game just because lines differ between sources.
-"""
-
-NO_ODDS_SECTION = """
-Note: No odds data available for this game. Base analysis on statistical matchup data only.
+**IMPORTANT**: Only recommend bets on lines/markets that appear in the Polymarket data above.
+If a specific line or market type is not listed, do NOT recommend it — we cannot place that bet.
 """
 
 
@@ -60,16 +45,16 @@ ANALYZE_GAME_PROMPT = """Analyze this NBA matchup for betting value across all b
 ## Current Strategy
 {strategy}
 
-{odds_context}
+{polymarket_context}
 ## Bet Types to Evaluate
-1. **Moneyline**: Which team wins outright? Consider the price - heavy favorites (-300+) need high confidence.
-2. **Spread**: Use expected_margin to determine if a team covers. Consider alternate lines if edge is marginal.
-3. **Totals**: Use expected_total and H2H patterns. Check alternate totals if your projection differs from the line.
+1. **Moneyline**: Which team wins outright? Consider the price — heavy favorites (>0.75 probability) need high confidence.
+2. **Spread**: Use expected_margin to determine if a team covers. Check available_spreads in the Polymarket data for lines you can bet.
+3. **Totals**: Use expected_total and H2H patterns. Check available_totals in the Polymarket data for lines you can bet.
 
 ## Multiple Bets Per Game
 You can recommend MULTIPLE bets on the same game if independent edges exist:
 - Spread + Total often have uncorrelated edges (team wins big doesn't mean high-scoring)
-- Different alternate lines can both have value (e.g., spread AND alternate total)
+- Different available lines can both have value (e.g., spread AND a total)
 - Only combine if each bet has its own valid reasoning - don't force it
 
 ## Key Factors
@@ -112,13 +97,13 @@ Respond with JSON:
   }},
   "spread": {{
     "pick": "Team Name",
-    "line": -4.5,  // The line you're betting (can be main or alternate)
+    "line": -4.5,  // Must be from Polymarket available_spreads
     "confidence": "low" | "medium" | "high" | "skip",
     "edge": "Why they cover at this number"
   }},
   "total": {{
     "pick": "over" | "under",
-    "line": 224.5,  // The line you're betting (can be main or alternate)
+    "line": 224.5,  // Must be from Polymarket available_totals
     "confidence": "low" | "medium" | "high" | "skip",
     "edge": "Pace/defensive factors"
   }},
@@ -167,7 +152,7 @@ Each analysis includes a "recommended_bets" array - these are the analyst's pre-
    - Spread + moneyline on same team = correlated (pick one)
    - Spread + total = usually uncorrelated (can bet both)
    - Multiple games with same edge type = consider diversifying
-7. Use the specific line from the analysis (may be alternate, not main line)
+7. Use the specific line from the analysis (must be from Polymarket available lines)
 8. Use expected_margin to evaluate spread bets - look for meaningful edges where the margin clearly exceeds the line.
 
 Respond with JSON:

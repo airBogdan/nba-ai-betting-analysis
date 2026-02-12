@@ -32,6 +32,7 @@ def fetch_nba_events(date: str) -> list[dict]:
                 "closed": "false",
                 "active": "true",
             },
+            timeout=10,
         )
         resp.raise_for_status()
         events = resp.json()
@@ -70,3 +71,45 @@ def find_market(event: dict, bet_type: str, line: float | None) -> dict | None:
             return market
 
     return None
+
+
+def extract_polymarket_odds(event: dict) -> dict:
+    """Extract all market prices from a matched event into a structured dict.
+
+    Returns:
+        {
+            "moneyline": {"outcomes": [...], "prices": [...]},
+            "available_spreads": [{"line": -4.5, "outcomes": [...], "prices": [...]}],
+            "available_totals": [{"line": 224.5, "outcomes": [...], "prices": [...]}],
+        }
+    """
+    result: dict = {}
+
+    for market in event.get("markets", []):
+        market = _normalize_market(market)
+
+        # Skip markets not accepting orders
+        accepting = market.get("acceptingOrders")
+        if not accepting or str(accepting).lower() == "false":
+            continue
+
+        sport_type = market.get("sportsMarketType", "")
+        outcomes = market.get("outcomes", [])
+        prices = [float(p) for p in market.get("outcomePrices", [])]
+
+        if sport_type == "moneyline":
+            result["moneyline"] = {"outcomes": outcomes, "prices": prices}
+        elif sport_type in ("spread", "spreads"):
+            result.setdefault("available_spreads", []).append({
+                "line": float(market.get("line", 0)),
+                "outcomes": outcomes,
+                "prices": prices,
+            })
+        elif sport_type in ("total", "totals"):
+            result.setdefault("available_totals", []).append({
+                "line": float(market.get("line", 0)),
+                "outcomes": outcomes,
+                "prices": prices,
+            })
+
+    return result

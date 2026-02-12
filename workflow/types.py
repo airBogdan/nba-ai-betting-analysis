@@ -110,6 +110,7 @@ class ActiveBet(_ActiveBetRequired, total=False):
 
     amount: float  # Dollar amount to wager
     odds_price: int  # American odds price for payout calc (e.g., -150, +130)
+    poly_price: float  # Polymarket price (0-1) at analysis time
 
 
 class _CompletedBetRequired(TypedDict):
@@ -151,6 +152,7 @@ class CompletedBet(_CompletedBetRequired, total=False):
 
     amount: float  # Dollar amount wagered
     odds_price: int  # American odds used
+    poly_price: float  # Polymarket price (0-1) at analysis time
     structured_reflection: StructuredReflection
 
 

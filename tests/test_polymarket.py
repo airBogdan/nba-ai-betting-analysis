@@ -1,5 +1,5 @@
 import pytest
-from polymarket_helpers.odds import american_to_implied_probability, format_price_comparison
+from polymarket_helpers.odds import american_to_implied_probability, format_price_comparison, poly_price_to_american
 
 
 class TestAmericanToImpliedProbability:
@@ -24,6 +24,42 @@ class TestFormatPriceComparison:
     def test_negative_delta(self):
         result = format_price_comparison(+150, 0.55)
         assert "40.0%" in result and "-15.0pp" in result
+
+
+class TestPolyPriceToAmerican:
+    def test_favorite_60_pct(self):
+        assert poly_price_to_american(0.60) == -150
+
+    def test_even_money(self):
+        assert poly_price_to_american(0.50) == 100
+
+    def test_underdog_40_pct(self):
+        assert poly_price_to_american(0.40) == 150
+
+    def test_heavy_favorite(self):
+        assert poly_price_to_american(0.80) == -400
+
+    def test_heavy_underdog(self):
+        assert poly_price_to_american(0.20) == 400
+
+    def test_boundary_zero(self):
+        assert poly_price_to_american(0.0) == -110  # fallback
+
+    def test_boundary_one(self):
+        assert poly_price_to_american(1.0) == -110  # fallback
+
+    def test_roundtrip_favorite(self):
+        """Converting to American and back should approximate the original."""
+        original = 0.65
+        american = poly_price_to_american(original)
+        roundtrip = american_to_implied_probability(american)
+        assert roundtrip == pytest.approx(original, abs=0.01)
+
+    def test_roundtrip_underdog(self):
+        original = 0.35
+        american = poly_price_to_american(original)
+        roundtrip = american_to_implied_probability(american)
+        assert roundtrip == pytest.approx(original, abs=0.01)
 
 
 from polymarket_helpers.matching import (
@@ -240,11 +276,13 @@ class TestResolveTokenId:
 
 
 class TestRun:
+    @patch("polymarket.save_active_bets")
     @patch("polymarket.place_bet")
     @patch("polymarket.fetch_nba_events")
     @patch("polymarket.get_active_bets")
-    def test_run_places_bets(self, mock_get_bets, mock_fetch, mock_place):
-        mock_get_bets.return_value = [_make_bet()]
+    def test_run_places_bets(self, mock_get_bets, mock_fetch, mock_place, mock_save):
+        bet = _make_bet()
+        mock_get_bets.return_value = [bet]
         mock_fetch.return_value = [SAMPLE_EVENT]
         mock_place.return_value = {"status": "matched"}
 
@@ -260,3 +298,104 @@ class TestRun:
         args = mock_place.call_args
         assert args[0][1] == "token_b"  # token_id
         assert args[0][2] == 22.0  # amount
+        assert bet["placed_polymarket"] is True
+        mock_save.assert_called_once()
+
+    @patch("polymarket.save_active_bets")
+    @patch("polymarket.place_bet")
+    @patch("polymarket.fetch_nba_events")
+    @patch("polymarket.get_active_bets")
+    def test_skips_already_placed(self, mock_get_bets, mock_fetch, mock_place, mock_save):
+        """Bets with placed_polymarket=True are not placed again."""
+        bet = _make_bet(placed_polymarket=True)
+        mock_get_bets.return_value = [bet]
+
+        from polymarket import run
+        with patch.dict("os.environ", {
+            "POLYMARKET_PRIVATE_KEY": "0x" + "ab" * 32,
+            "POLYMARKET_FUNDER": "0x" + "cd" * 20,
+        }):
+            run("2026-02-11")
+
+        mock_place.assert_not_called()
+        mock_fetch.assert_not_called()
+
+    @patch("polymarket.save_active_bets")
+    @patch("polymarket.place_bet")
+    @patch("polymarket.fetch_nba_events")
+    @patch("polymarket.get_active_bets")
+    def test_drift_gate_skips_drifted(self, mock_get_bets, mock_fetch, mock_place, mock_save):
+        """Bets with price drift > 5pp are skipped."""
+        bet = _make_bet(poly_price=0.60)  # analysis price was 60%
+        # Live price is 0.60 but the Suns outcome is token_b at 0.60 → no drift
+        # Let's make the live price differ by changing the event
+        drifted_event = {
+            "ticker": "nba-dal-phx-2026-02-11",
+            "title": "Mavericks vs. Suns",
+            "markets": [{
+                "id": "1001", "sportsMarketType": "moneyline",
+                "outcomes": ["Mavericks", "Suns"],
+                "outcomePrices": ["0.34", "0.66"],  # drifted from 0.60 to 0.66 = 6pp
+                "clobTokenIds": ["token_a", "token_b"],
+                "acceptingOrders": True,
+            }],
+        }
+        mock_get_bets.return_value = [bet]
+        mock_fetch.return_value = [drifted_event]
+
+        from polymarket import run
+        with patch.dict("os.environ", {
+            "POLYMARKET_PRIVATE_KEY": "0x" + "ab" * 32,
+            "POLYMARKET_FUNDER": "0x" + "cd" * 20,
+        }):
+            with patch("polymarket.create_clob_client"):
+                run("2026-02-11")
+
+        mock_place.assert_not_called()
+
+    @patch("polymarket.save_active_bets")
+    @patch("polymarket.place_bet")
+    @patch("polymarket.fetch_nba_events")
+    @patch("polymarket.get_active_bets")
+    def test_drift_gate_allows_small_drift(self, mock_get_bets, mock_fetch, mock_place, mock_save):
+        """Bets with price drift <= 5pp are placed."""
+        bet = _make_bet(poly_price=0.60)
+        mock_get_bets.return_value = [bet]
+        mock_fetch.return_value = [SAMPLE_EVENT]  # Suns at 0.60 → 0pp drift
+        mock_place.return_value = {"status": "matched"}
+
+        from polymarket import run
+        with patch.dict("os.environ", {
+            "POLYMARKET_PRIVATE_KEY": "0x" + "ab" * 32,
+            "POLYMARKET_FUNDER": "0x" + "cd" * 20,
+        }):
+            with patch("polymarket.create_clob_client"):
+                run("2026-02-11")
+
+        mock_place.assert_called_once()
+
+
+from polymarket_helpers.gamma import extract_polymarket_odds
+
+
+class TestExtractPolymarketOdds:
+    def test_extracts_all_market_types(self):
+        odds = extract_polymarket_odds(SAMPLE_EVENT)
+        assert "moneyline" in odds
+        assert odds["moneyline"]["outcomes"] == ["Mavericks", "Suns"]
+        assert odds["moneyline"]["prices"] == [0.40, 0.60]
+
+    def test_extracts_spreads(self):
+        odds = extract_polymarket_odds(SAMPLE_EVENT)
+        assert len(odds["available_spreads"]) == 1
+        assert odds["available_spreads"][0]["line"] == -4.5
+
+    def test_extracts_totals_skips_not_accepting(self):
+        odds = extract_polymarket_odds(SAMPLE_EVENT)
+        # Only line 224.5 is accepting orders, 226.5 is not
+        assert len(odds["available_totals"]) == 1
+        assert odds["available_totals"][0]["line"] == 224.5
+
+    def test_empty_event(self):
+        odds = extract_polymarket_odds({"markets": []})
+        assert odds == {}

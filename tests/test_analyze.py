@@ -4,6 +4,7 @@ import pytest
 
 from workflow.analyze import (
     _american_odds_to_decimal,
+    _extract_poly_and_odds_price,
     _half_kelly_amount,
     _fallback_sizing,
     CONFIDENCE_WIN_PROB,
@@ -112,3 +113,45 @@ class TestFallbackSizing:
         result = _fallback_sizing(bets, 1000.0)
         assert len(result) == 1
         assert result[0]["amount"] == 30.0  # 3% cap at -110 default
+
+
+class TestExtractPolyAndOddsPrice:
+    """Tests for _extract_poly_and_odds_price using Polymarket prices."""
+
+    GAME_WITH_POLY = {
+        "matchup": {"home_team": "Phoenix Suns", "team1": "Phoenix Suns", "team2": "Dallas Mavericks"},
+        "polymarket_odds": {
+            "moneyline": {"outcomes": ["Mavericks", "Suns"], "prices": [0.40, 0.60]},
+            "available_spreads": [
+                {"line": -4.5, "outcomes": ["Suns", "Mavericks"], "prices": [0.52, 0.48]},
+            ],
+            "available_totals": [
+                {"line": 224.5, "outcomes": ["Over", "Under"], "prices": [0.51, 0.49]},
+            ],
+        },
+    }
+
+    def test_moneyline(self):
+        bet = {"bet_type": "moneyline", "pick": "Phoenix Suns", "matchup": "Dallas Mavericks @ Phoenix Suns"}
+        poly_price, odds_price = _extract_poly_and_odds_price(self.GAME_WITH_POLY, bet)
+        assert poly_price == 0.60
+        assert odds_price == -150  # derived from poly_price_to_american(0.60)
+
+    def test_total(self):
+        bet = {"bet_type": "total", "pick": "over", "line": 224.5, "matchup": "Dallas Mavericks @ Phoenix Suns"}
+        poly_price, odds_price = _extract_poly_and_odds_price(self.GAME_WITH_POLY, bet)
+        assert poly_price == 0.51
+        assert odds_price < 0  # ~-104
+
+    def test_no_poly_line_returns_none(self):
+        bet = {"bet_type": "spread", "pick": "Phoenix Suns", "line": -6.5, "matchup": "Dallas Mavericks @ Phoenix Suns"}
+        poly_price, odds_price = _extract_poly_and_odds_price(self.GAME_WITH_POLY, bet)
+        assert poly_price is None
+        assert odds_price == -110  # default
+
+    def test_no_polymarket_odds_returns_none(self):
+        game = {"matchup": {"home_team": "Phoenix Suns"}}
+        bet = {"bet_type": "moneyline", "pick": "Phoenix Suns", "matchup": "Dallas Mavericks @ Phoenix Suns"}
+        poly_price, odds_price = _extract_poly_and_odds_price(game, bet)
+        assert poly_price is None
+        assert odds_price == -110  # default
