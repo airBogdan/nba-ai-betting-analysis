@@ -24,15 +24,7 @@ python3.13 betting.py analyze
 - Selects up to 3 bets (use `--max-bets N` to change)
 - Saves to `active.json` and `journal/YYYY-MM-DD.md`
 
-### 3. Post-game: Process results
-```bash
-python3.13 betting.py results
-```
-- Fetches final scores from API
-- Evaluates bets and updates history
-- Appends results to journal
-
-### 4. Place bets on Polymarket
+### 3. Place bets on Polymarket
 ```bash
 python3.13 polymarket.py
 ```
@@ -40,6 +32,14 @@ python3.13 polymarket.py
 - Places market buy orders via the CLOB API
 - Skips bets where the live price drifted >5pp from the analysis price
 - Requires `POLYMARKET_PRIVATE_KEY` and `POLYMARKET_FUNDER` in `.env`
+
+### 4. Post-game: Process results
+```bash
+python3.13 betting.py results
+```
+- Fetches final scores from API
+- Evaluates bets and updates history
+- Appends results to journal
 
 ### 5. Update strategy (after 15+ bets)
 ```bash
