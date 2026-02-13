@@ -224,127 +224,139 @@ def get_recent_bets(n: int = 20, db_path: Optional[Path] = None) -> List[Complet
         conn.close()
 
 
+def _get_summary_from_conn(conn: sqlite3.Connection) -> BetHistorySummary:
+    """Compute summary from SQL aggregation using an existing connection."""
+    row = conn.execute("""
+        SELECT
+            COUNT(*) as total_bets,
+            SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) as wins,
+            SUM(CASE WHEN result = 'loss' THEN 1 ELSE 0 END) as losses,
+            SUM(CASE WHEN result = 'push' THEN 1 ELSE 0 END) as pushes,
+            SUM(profit_loss) as net_units,
+            SUM(CASE WHEN result IN ('win', 'loss') THEN units ELSE 0 END) as total_units_wagered
+        FROM completed_bets
+        WHERE result != 'early_exit'
+    """).fetchone()
+
+    total_bets = row[0] or 0
+    wins = row[1] or 0
+    losses = row[2] or 0
+    pushes = row[3] or 0
+    net_units = row[4] or 0.0
+    total_units_wagered = row[5] or 0.0
+
+    win_rate = round(wins / total_bets, 3) if total_bets > 0 else 0.0
+    roi = round(net_units / total_units_wagered, 3) if total_units_wagered > 0 else 0.0
+
+    # by_confidence (wins/losses only)
+    by_confidence = {}
+    for conf_row in conn.execute("""
+        SELECT confidence,
+               SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) as wins,
+               SUM(CASE WHEN result = 'loss' THEN 1 ELSE 0 END) as losses
+        FROM completed_bets
+        WHERE result IN ('win', 'loss')
+        GROUP BY confidence
+    """).fetchall():
+        conf, c_wins, c_losses = conf_row
+        c_total = c_wins + c_losses
+        by_confidence[conf] = {
+            "wins": c_wins,
+            "losses": c_losses,
+            "win_rate": round(c_wins / c_total, 3) if c_total > 0 else 0.0,
+        }
+
+    # by_primary_edge (use edge_category, wins/losses only)
+    by_primary_edge = {}
+    for edge_row in conn.execute("""
+        SELECT edge_category,
+               SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) as wins,
+               SUM(CASE WHEN result = 'loss' THEN 1 ELSE 0 END) as losses
+        FROM completed_bets
+        WHERE result IN ('win', 'loss')
+        GROUP BY edge_category
+    """).fetchall():
+        edge, e_wins, e_losses = edge_row
+        e_total = e_wins + e_losses
+        by_primary_edge[edge] = {
+            "wins": e_wins,
+            "losses": e_losses,
+            "win_rate": round(e_wins / e_total, 3) if e_total > 0 else 0.0,
+        }
+
+    # by_bet_type (wins/losses only)
+    by_bet_type = {}
+    for type_row in conn.execute("""
+        SELECT bet_type,
+               SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) as wins,
+               SUM(CASE WHEN result = 'loss' THEN 1 ELSE 0 END) as losses
+        FROM completed_bets
+        WHERE result IN ('win', 'loss')
+        GROUP BY bet_type
+    """).fetchall():
+        bt, t_wins, t_losses = type_row
+        t_total = t_wins + t_losses
+        by_bet_type[bt] = {
+            "wins": t_wins,
+            "losses": t_losses,
+            "win_rate": round(t_wins / t_total, 3) if t_total > 0 else 0.0,
+        }
+
+    # current_streak from last 10 win/loss results
+    recent_results = conn.execute("""
+        SELECT result FROM completed_bets
+        WHERE result IN ('win', 'loss')
+        ORDER BY date DESC, created_at DESC
+        LIMIT 10
+    """).fetchall()
+
+    current_streak = ""
+    if recent_results:
+        latest = recent_results[0][0]
+        count = 1
+        for r in recent_results[1:]:
+            if r[0] == latest:
+                count += 1
+            else:
+                break
+        prefix = "W" if latest == "win" else "L"
+        current_streak = f"{prefix}{count}"
+
+    return {
+        "total_bets": total_bets,
+        "wins": wins,
+        "losses": losses,
+        "pushes": pushes,
+        "win_rate": win_rate,
+        "total_units_wagered": total_units_wagered,
+        "net_units": net_units,
+        "roi": roi,
+        "by_confidence": by_confidence,
+        "by_primary_edge": by_primary_edge,
+        "by_bet_type": by_bet_type,
+        "current_streak": current_streak,
+    }
+
+
 def get_summary(db_path: Optional[Path] = None) -> BetHistorySummary:
     """Compute summary from SQL aggregation."""
     conn = _get_conn(db_path)
     try:
-        row = conn.execute("""
-            SELECT
-                COUNT(*) as total_bets,
-                SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) as wins,
-                SUM(CASE WHEN result = 'loss' THEN 1 ELSE 0 END) as losses,
-                SUM(CASE WHEN result = 'push' THEN 1 ELSE 0 END) as pushes,
-                SUM(profit_loss) as net_units,
-                SUM(CASE WHEN result IN ('win', 'loss') THEN units ELSE 0 END) as total_units_wagered
-            FROM completed_bets
-            WHERE result != 'early_exit'
-        """).fetchone()
-
-        total_bets = row[0] or 0
-        wins = row[1] or 0
-        losses = row[2] or 0
-        pushes = row[3] or 0
-        net_units = row[4] or 0.0
-        total_units_wagered = row[5] or 0.0
-
-        win_rate = round(wins / total_bets, 3) if total_bets > 0 else 0.0
-        roi = round(net_units / total_units_wagered, 3) if total_units_wagered > 0 else 0.0
-
-        # by_confidence (wins/losses only)
-        by_confidence = {}
-        for conf_row in conn.execute("""
-            SELECT confidence,
-                   SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) as wins,
-                   SUM(CASE WHEN result = 'loss' THEN 1 ELSE 0 END) as losses
-            FROM completed_bets
-            WHERE result IN ('win', 'loss')
-            GROUP BY confidence
-        """).fetchall():
-            conf, c_wins, c_losses = conf_row
-            c_total = c_wins + c_losses
-            by_confidence[conf] = {
-                "wins": c_wins,
-                "losses": c_losses,
-                "win_rate": round(c_wins / c_total, 3) if c_total > 0 else 0.0,
-            }
-
-        # by_primary_edge (use edge_category, wins/losses only)
-        by_primary_edge = {}
-        for edge_row in conn.execute("""
-            SELECT edge_category,
-                   SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) as wins,
-                   SUM(CASE WHEN result = 'loss' THEN 1 ELSE 0 END) as losses
-            FROM completed_bets
-            WHERE result != 'push'
-            GROUP BY edge_category
-        """).fetchall():
-            edge, e_wins, e_losses = edge_row
-            e_total = e_wins + e_losses
-            by_primary_edge[edge] = {
-                "wins": e_wins,
-                "losses": e_losses,
-                "win_rate": round(e_wins / e_total, 3) if e_total > 0 else 0.0,
-            }
-
-        # by_bet_type (wins/losses only)
-        by_bet_type = {}
-        for type_row in conn.execute("""
-            SELECT bet_type,
-                   SUM(CASE WHEN result = 'win' THEN 1 ELSE 0 END) as wins,
-                   SUM(CASE WHEN result = 'loss' THEN 1 ELSE 0 END) as losses
-            FROM completed_bets
-            WHERE result IN ('win', 'loss')
-            GROUP BY bet_type
-        """).fetchall():
-            bt, t_wins, t_losses = type_row
-            t_total = t_wins + t_losses
-            by_bet_type[bt] = {
-                "wins": t_wins,
-                "losses": t_losses,
-                "win_rate": round(t_wins / t_total, 3) if t_total > 0 else 0.0,
-            }
-
-        # current_streak from last 10 win/loss results
-        recent_results = conn.execute("""
-            SELECT result FROM completed_bets
-            WHERE result IN ('win', 'loss')
-            ORDER BY date DESC, created_at DESC
-            LIMIT 10
-        """).fetchall()
-
-        current_streak = ""
-        if recent_results:
-            latest = recent_results[0][0]
-            count = 1
-            for r in recent_results[1:]:
-                if r[0] == latest:
-                    count += 1
-                else:
-                    break
-            prefix = "W" if latest == "win" else "L"
-            current_streak = f"{prefix}{count}"
-
-        return {
-            "total_bets": total_bets,
-            "wins": wins,
-            "losses": losses,
-            "pushes": pushes,
-            "win_rate": win_rate,
-            "total_units_wagered": total_units_wagered,
-            "net_units": net_units,
-            "roi": roi,
-            "by_confidence": by_confidence,
-            "by_primary_edge": by_primary_edge,
-            "by_bet_type": by_bet_type,
-            "current_streak": current_streak,
-        }
+        return _get_summary_from_conn(conn)
     finally:
         conn.close()
 
 
 def get_history(db_path: Optional[Path] = None) -> BetHistory:
     """Backward-compatible history dict with bets list and computed summary."""
-    return {
-        "bets": get_all_bets(db_path),
-        "summary": get_summary(db_path),
-    }
+    conn = _get_conn(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        rows = conn.execute(
+            "SELECT * FROM completed_bets ORDER BY date, created_at"
+        ).fetchall()
+        bets = [_row_to_bet(row) for row in rows]
+        summary = _get_summary_from_conn(conn)
+        return {"bets": bets, "summary": summary}
+    finally:
+        conn.close()
