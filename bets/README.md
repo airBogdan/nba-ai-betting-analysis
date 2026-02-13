@@ -33,7 +33,17 @@ python3.13 polymarket.py
 - Skips bets where the live price drifted >5pp from the analysis price
 - Requires `POLYMARKET_PRIVATE_KEY` and `POLYMARKET_FUNDER` in `.env`
 
-### 4. Post-game: Process results
+### 4. Check open positions
+```bash
+python3.13 betting.py check
+```
+- Fetches live Polymarket prices for all placed positions
+- Computes P&L (shares, unrealized profit/loss, percentage move)
+- Re-evaluates positions that moved adversely by >10pp (searches for injury/lineup news, asks LLM to HOLD or CLOSE)
+- Auto-sells positions recommended for close and updates bankroll
+- Appends position check results to journal
+
+### 5. Post-game: Process results
 ```bash
 python3.13 betting.py results
 ```
@@ -41,7 +51,7 @@ python3.13 betting.py results
 - Evaluates bets and updates history
 - Appends results to journal
 
-### 5. Update strategy (after 15+ bets)
+### 6. Update strategy (after 15+ bets)
 ```bash
 python3.13 betting.py update-strategy
 ```

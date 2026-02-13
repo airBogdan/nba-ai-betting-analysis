@@ -92,6 +92,14 @@ Fetches final scores from the API, evaluates each active bet (win/loss/push), ge
 |------|-------------|
 | `--date YYYY-MM-DD` | Process results for a specific date (default: all active bets) |
 
+### Check open positions
+
+```bash
+python betting.py check
+```
+
+Monitors placed Polymarket positions by fetching live prices and computing P&L. Positions that have moved adversely by more than 10pp trigger a re-evaluation — searches for fresh context (injuries, lineup changes) via Perplexity, then asks the LLM whether to HOLD or CLOSE. Positions recommended for close are auto-sold on Polymarket with bankroll and history updated. Results are appended to the daily journal.
+
 ### Update strategy
 
 ```bash
@@ -124,6 +132,7 @@ helpers/
 workflow/
     analyze.py          # Pre-game: matchups -> LLM -> bet selection
     results.py          # Post-game: scores -> evaluation -> history
+    check.py            # Position monitoring and auto-close workflow
     strategy.py         # Strategy evolution from performance patterns
     prompts.py          # LLM prompts and matchup condensing
     llm.py              # OpenRouter API client
