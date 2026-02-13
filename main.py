@@ -3,7 +3,9 @@
 import asyncio
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from helpers.api import (
     get_scheduled_games,
@@ -156,11 +158,14 @@ async def analyze_game(
 
 async def main() -> None:
     """Process all games for a given date."""
-    if len(sys.argv) != 2:
-        print("Usage: python main.py YYYY-MM-DD")
+    if len(sys.argv) > 2:
+        print("Usage: python main.py [YYYY-MM-DD]")
         sys.exit(1)
 
-    game_date = sys.argv[1]  # e.g., "2026-01-31"
+    if len(sys.argv) == 2:
+        game_date = sys.argv[1]
+    else:
+        game_date = datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d")
     season = 2025  # Hardcoded for now
 
     # Fetch all scheduled games for the date

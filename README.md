@@ -26,7 +26,7 @@ See `.env.sample` for links to each API.
 Generate matchup data for all games on a given date:
 
 ```bash
-python main.py 2026-02-10
+python main.py
 ```
 
 For each game, this:
