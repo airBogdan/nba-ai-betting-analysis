@@ -64,23 +64,58 @@ def clear_output_dir() -> None:
 
 
 def get_active_bets() -> List[ActiveBet]:
-    """Load active bets from SQLite database."""
-    from .db import get_active_bets_db
-
-    return get_active_bets_db()
+    """Load active bets from bets/active.json."""
+    data = read_json(BETS_DIR / "active.json")
+    if isinstance(data, list):
+        return data
+    return []
 
 
 def save_active_bets(bets: List[ActiveBet]) -> None:
-    """Save active bets to SQLite database."""
-    from .db import save_active_bets_db
-
-    save_active_bets_db(bets)
+    """Save active bets to bets/active.json."""
+    write_json(BETS_DIR / "active.json", bets)
 
 
 def get_history() -> BetHistory:
-    """Load bet history from SQLite database."""
-    from .db import get_history as db_get_history
+    """Load bet history from bets/history.json."""
+    data = read_json(BETS_DIR / "history.json")
+    if isinstance(data, dict) and "bets" in data and "summary" in data:
+        return data
+    return {"bets": [], "summary": _empty_summary()}
 
-    return db_get_history()
 
+def save_history(history: BetHistory) -> None:
+    """Save bet history to bets/history.json."""
+    write_json(BETS_DIR / "history.json", history)
+
+
+def _empty_summary() -> dict:
+    """Return an empty BetHistorySummary dict."""
+    return {
+        "total_bets": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "win_rate": 0.0,
+        "total_units_wagered": 0.0,
+        "net_units": 0.0,
+        "roi": 0.0,
+        "by_confidence": {},
+        "by_primary_edge": {},
+        "by_bet_type": {},
+        "current_streak": "",
+        "net_dollar_pnl": 0.0,
+    }
+
+
+def get_dollar_pnl() -> float:
+    """Get total dollar P&L from all completed bets in history."""
+    history = get_history()
+    return sum(b.get("dollar_pnl", 0.0) for b in history["bets"])
+
+
+def get_open_exposure() -> float:
+    """Get total dollar amount committed in active bets."""
+    active = get_active_bets()
+    return sum(b.get("amount", 0.0) for b in active)
 

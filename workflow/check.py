@@ -13,13 +13,16 @@ from dotenv import load_dotenv
 
 from polymarket_helpers.gamma import fetch_nba_events
 from polymarket import create_clob_client, resolve_token_id, sell_position
-from .db import get_dollar_pnl, insert_bet as db_insert_bet
 from .io import (
     JOURNAL_DIR,
     append_text,
     get_active_bets,
+    get_dollar_pnl,
+    get_history,
     save_active_bets,
+    save_history,
 )
+from .results import update_history_with_bet
 from .llm import complete, complete_json
 from .prompts import (
     CHECK_POSITION_PROMPT,
@@ -130,7 +133,7 @@ def execute_close(
     events: List[dict],
     active_bets: List[Dict[str, Any]],
 ) -> bool:
-    """Execute a SELL order and record to DB.
+    """Execute a SELL order and record to history.
 
     Returns True if sell succeeded, False otherwise.
     """
@@ -156,7 +159,7 @@ def execute_close(
     cost_basis = bet["amount"]
     profit_loss_dollars = sell_proceeds - cost_basis
 
-    # Record as completed bet in DB
+    # Record as completed bet in history
     completed_bet = {
         **bet,
         "result": "early_exit",
@@ -174,7 +177,9 @@ def execute_close(
     # Remove polymarket fields that aren't in CompletedBet
     for key in ("placed_polymarket",):
         completed_bet.pop(key, None)
-    db_insert_bet(completed_bet)
+    history = get_history()
+    update_history_with_bet(history, completed_bet)
+    save_history(history)
 
     # Remove from active bets
     active_bets[:] = [b for b in active_bets if b["id"] != bet["id"]]

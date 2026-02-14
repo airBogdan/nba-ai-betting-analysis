@@ -5,14 +5,16 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from helpers.api import get_game_by_id, get_games_by_date
 from helpers.utils import get_current_nba_season_year
-from .db import get_dollar_pnl, insert_bet as db_insert_bet
 from .io import (
     JOURNAL_DIR,
     OUTPUT_DIR,
     append_text,
     clear_output_dir,
     get_active_bets,
+    get_dollar_pnl,
+    get_history,
     save_active_bets,
+    save_history,
 )
 from .llm import complete_json
 from .prompts import REFLECT_BET_PROMPT, SYSTEM_ANALYST
@@ -20,6 +22,107 @@ from .types import ActiveBet, CompletedBet, GameResult
 
 # Limit concurrent LLM calls to avoid rate limiting
 MAX_CONCURRENT_LLM_CALLS = 4
+
+
+def _categorize_edge(edge: str) -> str:
+    """Normalize edge description to a category for tracking."""
+    edge_lower = edge.lower()
+
+    if any(w in edge_lower for w in ["home", "home court", "home advantage"]):
+        return "home_court"
+    if any(w in edge_lower for w in ["rest", "fatigue", "back-to-back", "b2b", "tired"]):
+        return "rest_advantage"
+    if any(w in edge_lower for w in ["injury", "injured", "missing", "out", "questionable"]):
+        return "injury_edge"
+    if any(w in edge_lower for w in ["form", "streak", "momentum", "hot", "cold", "recent"]):
+        return "form_momentum"
+    if any(w in edge_lower for w in ["h2h", "head-to-head", "matchup history"]):
+        return "h2h_history"
+    if any(w in edge_lower for w in ["rating", "net rating", "offensive", "defensive", "efficiency"]):
+        return "ratings_edge"
+    if any(w in edge_lower for w in ["mismatch", "size", "pace", "style"]):
+        return "style_mismatch"
+    if any(w in edge_lower for w in ["total", "over", "under", "scoring"]):
+        return "totals_edge"
+
+    return edge[:25] if len(edge) > 25 else edge
+
+
+def update_history_with_bet(history: dict, bet: CompletedBet) -> None:
+    """Add a completed bet to history and recompute summary."""
+    history["bets"].append(bet)
+    summary = history["summary"]
+
+    result = bet["result"]
+    units = bet["units"]
+    profit_loss = bet["profit_loss"]
+
+    # early_exit: track dollar_pnl and net_units but don't count in W/L/P
+    if result == "early_exit":
+        summary["net_units"] = summary.get("net_units", 0.0) + profit_loss
+        summary["net_dollar_pnl"] = summary.get("net_dollar_pnl", 0.0) + bet.get("dollar_pnl", 0.0)
+        return
+
+    summary["total_bets"] = summary.get("total_bets", 0) + 1
+
+    if result == "win":
+        summary["wins"] = summary.get("wins", 0) + 1
+    elif result == "loss":
+        summary["losses"] = summary.get("losses", 0) + 1
+    elif result == "push":
+        summary["pushes"] = summary.get("pushes", 0) + 1
+
+    summary["net_units"] = summary.get("net_units", 0.0) + profit_loss
+    summary["net_dollar_pnl"] = summary.get("net_dollar_pnl", 0.0) + bet.get("dollar_pnl", 0.0)
+
+    if result in ("win", "loss"):
+        summary["total_units_wagered"] = summary.get("total_units_wagered", 0.0) + units
+
+    total = summary["total_bets"]
+    summary["win_rate"] = round(summary["wins"] / total, 3) if total > 0 else 0.0
+    wagered = summary["total_units_wagered"]
+    summary["roi"] = round(summary["net_units"] / wagered, 3) if wagered > 0 else 0.0
+
+    # Update by_confidence, by_primary_edge, by_bet_type
+    if result in ("win", "loss"):
+        result_key = "wins" if result == "win" else "losses"
+
+        confidence = bet["confidence"]
+        by_conf = summary.setdefault("by_confidence", {})
+        entry = by_conf.setdefault(confidence, {"wins": 0, "losses": 0, "win_rate": 0.0})
+        entry[result_key] = entry.get(result_key, 0) + 1
+        ct = entry["wins"] + entry["losses"]
+        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
+
+        edge_cat = _categorize_edge(bet["primary_edge"])
+        by_edge = summary.setdefault("by_primary_edge", {})
+        entry = by_edge.setdefault(edge_cat, {"wins": 0, "losses": 0, "win_rate": 0.0})
+        entry[result_key] = entry.get(result_key, 0) + 1
+        ct = entry["wins"] + entry["losses"]
+        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
+
+        bet_type = bet.get("bet_type", "moneyline")
+        by_type = summary.setdefault("by_bet_type", {})
+        entry = by_type.setdefault(bet_type, {"wins": 0, "losses": 0, "win_rate": 0.0})
+        entry[result_key] = entry.get(result_key, 0) + 1
+        ct = entry["wins"] + entry["losses"]
+        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
+
+    # Recompute current_streak from last 10 results
+    recent = [
+        b["result"]
+        for b in reversed(history["bets"])
+        if b["result"] in ("win", "loss")
+    ][:10]
+    if recent:
+        latest = recent[0]
+        count = 1
+        for r in recent[1:]:
+            if r == latest:
+                count += 1
+            else:
+                break
+        summary["current_streak"] = f"{'W' if latest == 'win' else 'L'}{count}"
 
 
 def parse_single_game_result(game: Dict[str, Any]) -> GameResult:
@@ -459,10 +562,15 @@ async def _process_results_for_date(date: str, season: int) -> None:
                 payout = calculate_payout(amount, odds_price, outcome)
                 completed_bet["dollar_pnl"] = round(payout - amount, 2)
             completed.append(completed_bet)
-            db_insert_bet(completed_bet)
 
-    # Update files
-    # Keep bets that weren't for this date, plus unresolved bets from this date
+    # Update history with completed bets
+    if completed:
+        history = get_history()
+        for bet in completed:
+            update_history_with_bet(history, bet)
+        save_history(history)
+
+    # Update active bets: keep bets not for this date + unresolved from this date
     other_bets = [b for b in active if b["date"] != date]
     save_active_bets(other_bets + unresolved)
 

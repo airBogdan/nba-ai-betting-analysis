@@ -12,7 +12,9 @@ from .io import (
     BETS_DIR,
     JOURNAL_DIR,
     get_active_bets,
+    get_dollar_pnl,
     get_history,
+    get_open_exposure,
     read_text,
     save_active_bets,
     write_text,
@@ -33,7 +35,6 @@ from .prompts import (
 )
 from polymarket import get_polymarket_balance
 from polymarket_helpers.odds import poly_price_to_american
-from .db import get_dollar_pnl, get_open_exposure
 from .types import ActiveBet, BetRecommendation, SelectedBet
 
 # Kelly Criterion parameters

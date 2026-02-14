@@ -689,17 +689,84 @@
         "key_lesson": "B2B situations deserve larger confidence discounts, especially when opponent just beat you and has momentum.",
         "summary": "The ratings edge was real but we underweighted the compounding effect of B2B fatigue plus facing a team that just beat you with confidence. A 3-point loss in a 271-point game shows variance, but the situational discount should have been larger or pushed this to a pass."
       }
+    },
+    {
+      "id": "7f9f2202-4e89-4f52-a01c-e042955968f3",
+      "game_id": "16317",
+      "matchup": "Milwaukee Bucks @ Oklahoma City Thunder",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 214.5,
+      "confidence": "high",
+      "units": 2.0,
+      "reasoning": "Catastrophic injury situation with SGA (30.9 PPG), Mitchell (14.1 PPG), and Giannis (27.1 PPG) all OUT - that's 72+ PPG of star production missing. Injury-adjusted projection of 194.4 gives a 20-point edge. Both teams on back-to-backs with 4 games in 7 days adding fatigue. Williams and Holmgren also questionable after leaving Phoenix game. Even with replacement scoring, this total is massively inflated.",
+      "primary_edge": "injury_edge",
+      "date": "2026-02-12",
+      "created_at": "2026-02-12T11:45:02.503535+00:00",
+      "result": "win",
+      "winner": "Milwaukee Bucks",
+      "final_score": "Milwaukee Bucks 110 @ Oklahoma City Thunder 93",
+      "actual_total": 203,
+      "actual_margin": -17,
+      "profit_loss": 2.0,
+      "reflection": "The injury edge was perfectly identified - 72+ PPG of missing star production resulted in a 203 total, 11.5 points under the line. This was a textbook high-confidence spot where the market couldn't adjust quickly enough to unprecedented injury news.",
+      "amount": 20.0,
+      "odds_price": 113,
+      "poly_price": 0.47,
+      "structured_reflection": {
+        "edge_valid": true,
+        "missed_factors": [],
+        "process_assessment": "sound",
+        "key_lesson": "Catastrophic multi-star injury situations create massive edges on totals that the market consistently underadjusts for.",
+        "summary": "The injury edge was perfectly identified - 72+ PPG of missing star production resulted in a 203 total, 11.5 points under the line. This was a textbook high-confidence spot where the market couldn't adjust quickly enough to unprecedented injury news."
+      },
+      "dollar_pnl": 22.6
+    },
+    {
+      "id": "e1ffaf8f-0803-4244-860b-54eb186ed05e",
+      "game_id": "16319",
+      "matchup": "Dallas Mavericks @ Los Angeles Lakers",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 232.5,
+      "confidence": "high",
+      "units": 2.0,
+      "reasoning": "Both teams missing primary scorers - Doncic (32.6 PPG) for Lakers, Flagg (19.7), Irving (out for season), Lively (out), Marshall (14.6 doubtful) for Dallas. Injury-adjusted total of 197.3 vs line of 232.5 = 35+ point edge. Both teams on back-to-backs. Even accounting for variance and some regression, this total is far too high for two depleted rosters.",
+      "primary_edge": "injury_edge",
+      "date": "2026-02-12",
+      "created_at": "2026-02-12T11:45:02.503589+00:00",
+      "result": "win",
+      "winner": "Los Angeles Lakers",
+      "final_score": "Dallas Mavericks 104 @ Los Angeles Lakers 124",
+      "actual_total": 228,
+      "actual_margin": 20,
+      "profit_loss": 2.0,
+      "reflection": "The injury edge was valid - actual total of 228 came in under 232.5 despite Lakers scoring 124. The 35+ point projected edge provided enough cushion to absorb variance, validating the high-confidence approach on significant line discrepancies.",
+      "amount": 20.0,
+      "odds_price": 122,
+      "poly_price": 0.45,
+      "structured_reflection": {
+        "edge_valid": true,
+        "missed_factors": [
+          "Lakers offense performed above expected despite injuries",
+          "Game pace may have been faster than anticipated for back-to-back scenario"
+        ],
+        "process_assessment": "sound",
+        "key_lesson": "Large injury-driven edges on totals can still hit even when one team outperforms expectations - the margin of safety matters.",
+        "summary": "The injury edge was valid - actual total of 228 came in under 232.5 despite Lakers scoring 124. The 35+ point projected edge provided enough cushion to absorb variance, validating the high-confidence approach on significant line discrepancies."
+      },
+      "dollar_pnl": 24.4
     }
   ],
   "summary": {
-    "total_bets": 27,
-    "wins": 20,
+    "total_bets": 29,
+    "wins": 22,
     "losses": 7,
     "pushes": 0,
-    "win_rate": 0.741,
-    "total_units_wagered": 37.5,
-    "net_units": 19.5,
-    "roi": 0.52,
+    "win_rate": 0.759,
+    "total_units_wagered": 41.5,
+    "net_units": 23.5,
+    "roi": 0.566,
     "by_confidence": {
       "medium": {
         "wins": 10,
@@ -712,9 +779,9 @@
         "win_rate": 1.0
       },
       "high": {
-        "wins": 9,
+        "wins": 11,
         "losses": 2,
-        "win_rate": 0.818
+        "win_rate": 0.846
       }
     },
     "by_primary_edge": {
@@ -734,9 +801,9 @@
         "win_rate": 1.0
       },
       "injury_edge": {
-        "wins": 7,
+        "wins": 9,
         "losses": 4,
-        "win_rate": 0.636
+        "win_rate": 0.692
       }
     },
     "by_bet_type": {
@@ -751,11 +818,12 @@
         "win_rate": 0.6
       },
       "total": {
-        "wins": 3,
+        "wins": 5,
         "losses": 2,
-        "win_rate": 0.6
+        "win_rate": 0.714
       }
     },
-    "current_streak": "L1"
+    "current_streak": "W2",
+    "net_dollar_pnl": 47.0
   }
 }

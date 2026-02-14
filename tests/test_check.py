@@ -123,7 +123,9 @@ class TestExecuteClose:
 
         with patch("workflow.check.resolve_token_id", return_value=("token123", 0.35)), \
              patch("workflow.check.sell_position", return_value={"status": "ok"}), \
-             patch("workflow.check.db_insert_bet") as mock_db:
+             patch("workflow.check.get_history", return_value={"bets": [], "summary": {}}), \
+             patch("workflow.check.save_history") as mock_save, \
+             patch("workflow.check.update_history_with_bet") as mock_update:
 
             result = execute_close(
                 bet, pnl, recommendation,
@@ -134,11 +136,12 @@ class TestExecuteClose:
         # Bet removed from active
         assert len(active_bets) == 1
         assert active_bets[0]["id"] == "other-bet"
-        # DB insert called with dollar_pnl
-        mock_db.assert_called_once()
-        completed = mock_db.call_args[0][0]
+        # History updated with completed bet
+        mock_update.assert_called_once()
+        completed = mock_update.call_args[0][1]
         assert completed["result"] == "early_exit"
         assert completed["dollar_pnl"] == round(pnl["current_value"] - bet["amount"], 2)
+        mock_save.assert_called_once()
 
     def test_sell_fails(self):
         """Sell failure — position stays open."""
