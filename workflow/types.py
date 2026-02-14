@@ -3,24 +3,6 @@
 from typing import Dict, List, Literal, Optional, TypedDict
 
 
-class BankrollTransaction(TypedDict):
-    """Single bankroll transaction."""
-
-    date: str
-    type: Literal["bet", "result", "adjustment", "early_exit"]
-    amount: float  # Negative for bets placed, positive for payouts
-    bet_id: Optional[str]
-    description: str
-
-
-class Bankroll(TypedDict):
-    """Bankroll state."""
-
-    starting: float
-    current: float
-    transactions: List[BankrollTransaction]
-
-
 class MoneylineAnalysis(TypedDict):
     """Moneyline bet analysis from LLM."""
 
@@ -155,6 +137,7 @@ class CompletedBet(_CompletedBetRequired, total=False):
     odds_price: int  # American odds used
     poly_price: float  # Polymarket price (0-1) at analysis time
     structured_reflection: StructuredReflection
+    dollar_pnl: float  # Dollar profit/loss (positive=win, negative=loss)
 
 
 class GameResult(TypedDict):
@@ -192,6 +175,7 @@ class BetHistorySummary(TypedDict):
     by_primary_edge: Dict[str, ConfidenceStats]
     by_bet_type: Dict[str, ConfidenceStats]
     current_streak: str
+    net_dollar_pnl: float
 
 
 class BetHistory(TypedDict):

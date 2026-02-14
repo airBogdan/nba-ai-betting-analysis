@@ -38,13 +38,11 @@ def run_init() -> None:
     ensure_dir(BETS_DIR)
     ensure_dir(JOURNAL_DIR)
 
-    # Initialize active.json
-    active_path = BETS_DIR / "active.json"
-    if not active_path.exists():
-        write_json(active_path, [])
-        print(f"Created {active_path}")
-    else:
-        print(f"Already exists: {active_path}")
+    # Ensure database is initialized (creates active_bets + completed_bets tables)
+    from .db import _get_conn
+    conn = _get_conn()
+    conn.close()
+    print("Database initialized (active_bets, completed_bets)")
 
     # Initialize history.json
     history_path = BETS_DIR / "history.json"

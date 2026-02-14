@@ -69,14 +69,14 @@ class TestHalfKellyAmount:
         amount = _half_kelly_amount(+200, "high", 1000.0)
         assert amount == 30.0
 
-    def test_zero_bankroll(self):
+    def test_zero_available(self):
         assert _half_kelly_amount(-110, "high", 0.0) == 0.0
 
     def test_unknown_confidence_defaults_to_low(self):
         amount = _half_kelly_amount(-110, "unknown", 1000.0)
         assert amount == _half_kelly_amount(-110, "low", 1000.0)
 
-    def test_scales_with_bankroll(self):
+    def test_scales_with_available(self):
         small = _half_kelly_amount(-110, "low", 500.0)
         large = _half_kelly_amount(-110, "low", 2000.0)
         assert large == pytest.approx(small * 4, abs=0.02)

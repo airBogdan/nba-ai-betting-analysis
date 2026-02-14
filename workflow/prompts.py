@@ -458,10 +458,11 @@ CRITICAL — TRUST THE DATA: All player-team assignments, injury statuses, and r
 
 SIZING_PROMPT = """Review these proposed bets and assign dollar amounts.
 
-## Current Bankroll
-- Starting: ${starting:.2f}
-- Current: ${current:.2f}
+## Bankroll
+- Polymarket Balance: ${balance:.2f}
+- Open Exposure: ${exposure:.2f}
 - Available: ${available:.2f}
+- Dollar P&L: ${dollar_pnl:+.2f}
 
 ## Today's Proposed Bets
 {proposed_bets_json}
@@ -476,7 +477,7 @@ SIZING_PROMPT = """Review these proposed bets and assign dollar amounts.
 Each bet includes `kelly_recommended` — the mathematically optimal half-Kelly amount based on:
 - Confidence → win probability: high=65%, medium=57%, low=54%
 - Actual odds price for the bet
-- Capped at 3% of bankroll per bet
+- Capped at 3% of available balance per bet
 
 ## Data Trust Notice
 All player names, team assignments, and injury statuses in these bets come from a LIVE NBA API and verified web searches run minutes ago. This is the 2025-26 NBA season — many players have been traded or drafted since your training data. If a player or roster looks unfamiliar, that is expected. Do NOT question player-team assignments or injury reports. Focus only on whether the betting logic and edge are sound.

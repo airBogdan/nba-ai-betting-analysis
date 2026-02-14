@@ -109,7 +109,7 @@ class TestIsAdverse:
 
 class TestExecuteClose:
     def test_successful_close(self):
-        """Sell succeeds — updates bankroll, DB, removes from active."""
+        """Sell succeeds — records to DB, removes from active."""
         bet = _make_bet()
         pnl = compute_position_pnl(0.47, 0.35, 20.0)
         recommendation = {"action": "CLOSE", "reasoning": "Edge gone"}
@@ -120,7 +120,6 @@ class TestExecuteClose:
         mock_client.post_order.return_value = {"status": "ok"}
 
         active_bets = [bet, _make_bet(id="other-bet")]
-        bankroll = {"starting": 1000, "current": 960, "transactions": []}
 
         with patch("workflow.check.resolve_token_id", return_value=("token123", 0.35)), \
              patch("workflow.check.sell_position", return_value={"status": "ok"}), \
@@ -128,23 +127,18 @@ class TestExecuteClose:
 
             result = execute_close(
                 bet, pnl, recommendation,
-                mock_client, events, active_bets, bankroll,
+                mock_client, events, active_bets,
             )
 
         assert result is True
         # Bet removed from active
         assert len(active_bets) == 1
         assert active_bets[0]["id"] == "other-bet"
-        # Bankroll updated with sell proceeds
-        assert len(bankroll["transactions"]) == 1
-        txn = bankroll["transactions"][0]
-        assert txn["type"] == "early_exit"
-        assert txn["amount"] == pnl["current_value"]
-        assert bankroll["current"] == 960 + pnl["current_value"]
-        # DB insert called
+        # DB insert called with dollar_pnl
         mock_db.assert_called_once()
         completed = mock_db.call_args[0][0]
         assert completed["result"] == "early_exit"
+        assert completed["dollar_pnl"] == round(pnl["current_value"] - bet["amount"], 2)
 
     def test_sell_fails(self):
         """Sell failure — position stays open."""
@@ -153,20 +147,15 @@ class TestExecuteClose:
         recommendation = {"action": "CLOSE", "reasoning": "Edge gone"}
         events = []
         active_bets = [bet]
-        bankroll = {"starting": 1000, "current": 960, "transactions": []}
 
         with patch("workflow.check.resolve_token_id", return_value=None):
             result = execute_close(
                 bet, pnl, recommendation,
-                MagicMock(), events, active_bets, bankroll,
+                MagicMock(), events, active_bets,
             )
 
         assert result is False
-        # Bet stays in active
         assert len(active_bets) == 1
-        # Bankroll unchanged
-        assert bankroll["current"] == 960
-        assert len(bankroll["transactions"]) == 0
 
     def test_sell_exception(self):
         """Sell throws — position stays open."""
@@ -175,13 +164,12 @@ class TestExecuteClose:
         recommendation = {"action": "CLOSE", "reasoning": "Edge gone"}
         events = []
         active_bets = [bet]
-        bankroll = {"starting": 1000, "current": 960, "transactions": []}
 
         with patch("workflow.check.resolve_token_id", return_value=("token123", 0.35)), \
              patch("workflow.check.sell_position", side_effect=Exception("Network error")):
             result = execute_close(
                 bet, pnl, recommendation,
-                MagicMock(), events, active_bets, bankroll,
+                MagicMock(), events, active_bets,
             )
 
         assert result is False
@@ -231,8 +219,7 @@ class TestRunCheckWorkflow:
 
     @patch("workflow.check.append_journal_check")
     @patch("workflow.check.save_active_bets")
-    @patch("workflow.check.save_bankroll")
-    @patch("workflow.check.get_bankroll", return_value={"starting": 1000, "current": 960, "transactions": []})
+    @patch("workflow.check.get_dollar_pnl", return_value=-40.0)
     @patch("workflow.check.create_clob_client")
     @patch("workflow.check.execute_close", return_value=True)
     @patch("workflow.check.reevaluate_position")
@@ -243,7 +230,7 @@ class TestRunCheckWorkflow:
     async def test_adverse_triggers_reeval_and_close(
         self, mock_active, mock_events, mock_price,
         mock_search, mock_reeval, mock_exec,
-        mock_clob, mock_bankroll, mock_save_bankroll,
+        mock_clob, mock_dollar_pnl,
         mock_save_active, mock_journal, capsys,
         monkeypatch,
     ):

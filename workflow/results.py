@@ -5,20 +5,18 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from helpers.api import get_game_by_id, get_games_by_date
 from helpers.utils import get_current_nba_season_year
-from .db import insert_bet as db_insert_bet
+from .db import get_dollar_pnl, insert_bet as db_insert_bet
 from .io import (
     JOURNAL_DIR,
     OUTPUT_DIR,
     append_text,
     clear_output_dir,
     get_active_bets,
-    get_bankroll,
     save_active_bets,
-    save_bankroll,
 )
 from .llm import complete_json
 from .prompts import REFLECT_BET_PROMPT, SYSTEM_ANALYST
-from .types import ActiveBet, Bankroll, CompletedBet, GameResult
+from .types import ActiveBet, CompletedBet, GameResult
 
 # Limit concurrent LLM calls to avoid rate limiting
 MAX_CONCURRENT_LLM_CALLS = 4
@@ -139,30 +137,6 @@ def calculate_payout(amount: float, odds_price: int, result: str) -> float:
         profit = amount * (odds_price / 100)
 
     return amount + profit  # Stake back + profit
-
-
-def update_bankroll_for_result(bet: CompletedBet, bankroll: Bankroll) -> None:
-    """Update bankroll after bet result."""
-    amount = bet.get("amount", 0)
-    if not amount:
-        return  # Legacy bet without amount
-
-    odds_price = bet.get("odds_price", -110)  # Default to standard juice
-    payout = calculate_payout(amount, odds_price, bet["result"])
-
-    if payout > 0:
-        if bet["result"] == "win":
-            description = f"WIN: {bet['matchup']} (+${payout - amount:.2f})"
-        else:  # push
-            description = f"PUSH: {bet['matchup']}"
-        bankroll["transactions"].append({
-            "date": bet["date"],
-            "type": "result",
-            "amount": payout,
-            "bet_id": bet["id"],
-            "description": description,
-        })
-        bankroll["current"] += payout
 
 
 def _evaluate_bet(bet: ActiveBet, result: GameResult) -> tuple:
@@ -478,14 +452,14 @@ async def _process_results_for_date(date: str, season: int) -> None:
             }
             if structured_ref:
                 completed_bet["structured_reflection"] = structured_ref
+            # Compute dollar P&L from payout
+            amount = bet.get("amount")
+            odds_price = bet.get("odds_price")
+            if amount and odds_price:
+                payout = calculate_payout(amount, odds_price, outcome)
+                completed_bet["dollar_pnl"] = round(payout - amount, 2)
             completed.append(completed_bet)
             db_insert_bet(completed_bet)
-
-    # Update bankroll for completed bets
-    bankroll = get_bankroll()
-    for completed_bet in completed:
-        update_bankroll_for_result(completed_bet, bankroll)
-    save_bankroll(bankroll)
 
     # Update files
     # Keep bets that weren't for this date, plus unresolved bets from this date
@@ -506,8 +480,9 @@ async def _process_results_for_date(date: str, season: int) -> None:
     else:
         print(f"\nResults: {wins}-{losses}, {net:+.1f} units")
 
-    # Print bankroll summary
-    print(f"Bankroll: ${bankroll['current']:.2f}")
+    # Print dollar P&L
+    total_pnl = get_dollar_pnl()
+    print(f"Dollar P&L: ${total_pnl:+.2f}")
 
     if unresolved:
         print(f"{len(unresolved)} bets still pending (games not finished)")

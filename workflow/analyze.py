@@ -12,12 +12,9 @@ from .io import (
     BETS_DIR,
     JOURNAL_DIR,
     get_active_bets,
-    get_bankroll,
     get_history,
     read_text,
-    revert_bankroll_for_date,
     save_active_bets,
-    save_bankroll,
     write_text,
 )
 from .llm import complete_json
@@ -34,13 +31,15 @@ from .prompts import (
     format_analyses_for_synthesis,
     format_history_summary,
 )
+from polymarket import get_polymarket_balance
 from polymarket_helpers.odds import poly_price_to_american
-from .types import ActiveBet, Bankroll, BetRecommendation, SelectedBet
+from .db import get_dollar_pnl, get_open_exposure
+from .types import ActiveBet, BetRecommendation, SelectedBet
 
 # Kelly Criterion parameters
 CONFIDENCE_WIN_PROB = {"high": 0.65, "medium": 0.57, "low": 0.54}
 KELLY_FRACTION = 0.5
-KELLY_MAX_BET_FRACTION = 0.03  # 3% of bankroll per bet
+KELLY_MAX_BET_FRACTION = 0.03  # 3% of available balance per bet
 
 # Injury impact parameters
 INJURY_REPLACEMENT_FACTOR = 0.55  # Replacement players recover ~55% of missing PPG
@@ -169,7 +168,7 @@ def _american_odds_to_decimal(odds: int) -> float:
     return 1 + odds / 100
 
 
-def _half_kelly_amount(odds_price: int, confidence: str, bankroll: float) -> float:
+def _half_kelly_amount(odds_price: int, confidence: str, available: float) -> float:
     """Compute Half Kelly bet amount. Returns 0 if no edge."""
     p = CONFIDENCE_WIN_PROB.get(confidence, 0.54)
     decimal_odds = _american_odds_to_decimal(odds_price)
@@ -180,7 +179,7 @@ def _half_kelly_amount(odds_price: int, confidence: str, bankroll: float) -> flo
     if kelly <= 0:
         return 0.0
     fraction = min(kelly * KELLY_FRACTION, KELLY_MAX_BET_FRACTION)
-    return round(fraction * bankroll, 2)
+    return round(fraction * available, 2)
 
 # Limit concurrent LLM calls to avoid rate limiting
 MAX_CONCURRENT_LLM_CALLS = 4
@@ -505,20 +504,20 @@ def _fallback_sizing(bets: List[ActiveBet], available: float) -> List[ActiveBet]
 
 async def size_bets(
     proposed_bets: List[ActiveBet],
-    bankroll: Bankroll,
+    balance: float,
     strategy: Optional[str],
     history_summary: Dict[str, Any],
 ) -> Tuple[List[ActiveBet], List[Dict[str, str]]]:
     """Size bets using LLM. Returns (sized_bets, sizing_skipped)."""
-    # Calculate available bankroll (exclude pending bets from other dates)
-    other_pending = [b for b in get_active_bets() if b.get("amount")]
-    pending_amount = sum(b.get("amount", 0) for b in other_pending)
-    available = bankroll["current"] - pending_amount
+    exposure = get_open_exposure()
+    available = balance - exposure
+    dollar_pnl = get_dollar_pnl()
 
     prompt = SIZING_PROMPT.format(
-        starting=bankroll["starting"],
-        current=bankroll["current"],
+        balance=balance,
+        exposure=exposure,
         available=available,
+        dollar_pnl=dollar_pnl,
         proposed_bets_json=json.dumps(
             [
                 {
@@ -650,15 +649,10 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
         print(f"Bets already exist for {date}. Use --force to re-analyze or run 'results' first.")
         return
 
-    # Handle --force by reverting bankroll transactions
-    bankroll = get_bankroll()
+    # Handle --force by removing existing bets for this date
     if existing_date_bets and force:
         print(f"Removing {len(existing_date_bets)} existing bets for {date} (--force)")
         active = [b for b in active if b["date"] != date]
-        # Revert bankroll transactions for this date
-        bankroll = revert_bankroll_for_date(bankroll, date)
-        # Save immediately so revert persists even if we exit early
-        save_bankroll(bankroll)
         save_active_bets(active)
 
     # Load games
@@ -753,10 +747,17 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
         write_journal_pre_game(date, [], synthesis.get("skipped", []), synthesis.get("summary", ""))
         return
 
+    # Get Polymarket balance for sizing
+    print("Querying Polymarket balance...")
+    balance = get_polymarket_balance()
+    if balance is None:
+        print("Error: Could not get Polymarket balance. Set POLYMARKET_PRIVATE_KEY and POLYMARKET_FUNDER.")
+        return
+
     # Size bets
     print("Sizing bets...")
     sized_bets, sizing_skipped = await size_bets(
-        new_bets, bankroll, strategy, history["summary"]
+        new_bets, balance, strategy, history["summary"]
     )
 
     # Combine skipped lists for journal
@@ -765,22 +766,9 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
     if not sized_bets:
         print("All bets were vetoed by sizing.")
         write_journal_pre_game(date, [], all_skipped, synthesis.get("summary", ""))
-        save_bankroll(bankroll)  # Save even if no bets (for force revert)
         return
 
-    # Record bankroll transactions
-    for bet in sized_bets:
-        bankroll["transactions"].append({
-            "date": date,
-            "type": "bet",
-            "amount": -bet["amount"],  # Negative = deduction
-            "bet_id": bet["id"],
-            "description": f"{bet['matchup']} - {bet['bet_type']} {bet['pick']}",
-        })
-    bankroll["current"] -= sum(b["amount"] for b in sized_bets)
-
-    # Save everything
-    save_bankroll(bankroll)
+    # Save active bets
     save_active_bets(active + sized_bets)
     write_journal_pre_game(date, sized_bets, all_skipped, synthesis.get("summary", ""))
 
@@ -796,5 +784,6 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
             pick_str = bet['pick']
         print(f"  {bet['matchup']}: [{bet_type.upper()}] {pick_str} - ${bet['amount']:.2f}")
 
-    print(f"\nBankroll: ${bankroll['current']:.2f} (was ${bankroll['starting']:.2f})")
+    dollar_pnl = get_dollar_pnl()
+    print(f"\nBalance: ${balance:.2f} | Dollar P&L: ${dollar_pnl:+.2f}")
     print(f"See bets/journal/{date}.md for details")

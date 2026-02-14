@@ -1,10 +1,12 @@
-"""Place bets on Polymarket from active.json."""
+"""Place bets on Polymarket."""
 
 import os
 
 from dotenv import load_dotenv
+from typing import Optional
+
 from py_clob_client.client import ClobClient
-from py_clob_client.clob_types import MarketOrderArgs
+from py_clob_client.clob_types import AssetType, BalanceAllowanceParams, MarketOrderArgs
 from py_clob_client.constants import POLYGON
 
 from polymarket_helpers.gamma import fetch_nba_events, find_market
@@ -67,6 +69,23 @@ def sell_position(client: ClobClient, token_id: str, shares: float) -> dict:
     order_args = MarketOrderArgs(token_id=token_id, amount=shares, side="SELL")
     signed_order = client.create_market_order(order_args)
     return client.post_order(signed_order, orderType="FOK")
+
+
+def get_polymarket_balance() -> Optional[float]:
+    """Query USDC balance from Polymarket. Returns None if creds missing or API fails."""
+    load_dotenv()
+    private_key = os.environ.get("POLYMARKET_PRIVATE_KEY")
+    funder = os.environ.get("POLYMARKET_FUNDER")
+    if not private_key or not funder:
+        return None
+    try:
+        client = create_clob_client(private_key, funder)
+        result = client.get_balance_allowance(
+            BalanceAllowanceParams(asset_type=AssetType.COLLATERAL)
+        )
+        return float(result.get("balance", 0))
+    except Exception:
+        return None
 
 
 def run() -> None:

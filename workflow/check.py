@@ -13,14 +13,12 @@ from dotenv import load_dotenv
 
 from polymarket_helpers.gamma import fetch_nba_events
 from polymarket import create_clob_client, resolve_token_id, sell_position
-from .db import insert_bet as db_insert_bet
+from .db import get_dollar_pnl, insert_bet as db_insert_bet
 from .io import (
     JOURNAL_DIR,
     append_text,
     get_active_bets,
-    get_bankroll,
     save_active_bets,
-    save_bankroll,
 )
 from .llm import complete, complete_json
 from .prompts import (
@@ -131,9 +129,8 @@ def execute_close(
     client: Any,
     events: List[dict],
     active_bets: List[Dict[str, Any]],
-    bankroll: Dict[str, Any],
 ) -> bool:
-    """Execute a SELL order and update bankroll/records.
+    """Execute a SELL order and record to DB.
 
     Returns True if sell succeeded, False otherwise.
     """
@@ -159,19 +156,6 @@ def execute_close(
     cost_basis = bet["amount"]
     profit_loss_dollars = sell_proceeds - cost_basis
 
-    # Update bankroll — add sell proceeds back
-    bankroll["transactions"].append({
-        "date": bet["date"],
-        "type": "early_exit",
-        "amount": sell_proceeds,
-        "bet_id": bet["id"],
-        "description": (
-            f"EARLY EXIT: {bet['matchup']} "
-            f"(${profit_loss_dollars:+.2f})"
-        ),
-    })
-    bankroll["current"] += sell_proceeds
-
     # Record as completed bet in DB
     completed_bet = {
         **bet,
@@ -181,6 +165,7 @@ def execute_close(
         "actual_total": None,
         "actual_margin": None,
         "profit_loss": round(profit_loss_dollars * bet["units"] / bet["amount"], 2) if bet["amount"] else 0.0,
+        "dollar_pnl": round(profit_loss_dollars, 2),
         "reflection": (
             f"Early exit: {recommendation.get('reasoning', 'Edge invalidated')}. "
             f"P&L: ${profit_loss_dollars:+.2f} ({pnl_info['pnl_pct']:+.1f}%)"
@@ -375,7 +360,6 @@ async def run_check_workflow() -> None:
             print("Error: POLYMARKET_PRIVATE_KEY and POLYMARKET_FUNDER must be set for selling")
         else:
             client = create_clob_client(private_key, funder)
-            bankroll = get_bankroll()
 
             for rec in close_recs:
                 bet = rec["bet"]
@@ -384,15 +368,15 @@ async def run_check_workflow() -> None:
 
                 success = execute_close(
                     bet, pnl, rec["recommendation"],
-                    client, events, active_bets, bankroll,
+                    client, events, active_bets,
                 )
                 if success:
                     executions.append({"bet": bet, "pnl": pnl})
 
             # Save updated state
             save_active_bets(active_bets)
-            save_bankroll(bankroll)
-            print(f"\nBankroll: ${bankroll['current']:.2f}")
+            total_pnl = get_dollar_pnl()
+            print(f"\nDollar P&L: ${total_pnl:+.2f}")
     else:
         print("\nAll adverse positions recommended HOLD. No sells executed.")
 

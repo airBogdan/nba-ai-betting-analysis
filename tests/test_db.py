@@ -9,11 +9,15 @@ import pytest
 from workflow.db import (
     _categorize_edge,
     _get_conn,
+    get_active_bets_db,
     get_all_bets,
+    get_dollar_pnl,
     get_history,
+    get_open_exposure,
     get_recent_bets,
     get_summary,
     insert_bet,
+    save_active_bets_db,
 )
 
 
@@ -64,7 +68,7 @@ def db_path_with_json(tmp_path):
     history = {"bets": bets, "summary": {}}
     json_path = tmp_path / "history.json"
     json_path.write_text(json.dumps(history))
-    return tmp_path / "history.db"
+    return tmp_path / "nba.db"
 
 
 class TestSchema:
@@ -375,3 +379,221 @@ class TestGetHistory:
         history = get_history(db_path)
         assert history["bets"] == []
         assert history["summary"]["total_bets"] == 0
+
+
+# --- Active bets ---
+
+
+def _make_active_bet(**overrides):
+    """Create a minimal ActiveBet dict with defaults."""
+    base = {
+        "id": "active-001",
+        "game_id": "99999",
+        "matchup": "Team X @ Team Y",
+        "bet_type": "moneyline",
+        "pick": "Team Y",
+        "line": None,
+        "confidence": "medium",
+        "units": 1.0,
+        "reasoning": "Good edge",
+        "primary_edge": "ratings_edge",
+        "date": "2026-02-10",
+        "created_at": "2026-02-10T10:00:00+00:00",
+    }
+    base.update(overrides)
+    return base
+
+
+class TestActiveBetsSchema:
+    """Tests for active_bets table creation."""
+
+    def test_table_created(self, db_path):
+        conn = _get_conn(db_path)
+        tables = conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table'"
+        ).fetchall()
+        conn.close()
+        assert "active_bets" in [t[0] for t in tables]
+
+    def test_index_created(self, db_path):
+        conn = _get_conn(db_path)
+        indexes = conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='index' AND name = 'idx_active_date'"
+        ).fetchall()
+        conn.close()
+        assert len(indexes) == 1
+
+
+class TestActiveBetsCRUD:
+    """Tests for active bet save/load."""
+
+    def test_empty_by_default(self, db_path):
+        bets = get_active_bets_db(db_path)
+        assert bets == []
+
+    def test_save_and_load(self, db_path):
+        bets = [_make_active_bet(), _make_active_bet(id="active-002", pick="Team X")]
+        save_active_bets_db(bets, db_path)
+        loaded = get_active_bets_db(db_path)
+        assert len(loaded) == 2
+        assert loaded[0]["id"] == "active-001"
+        assert loaded[1]["id"] == "active-002"
+
+    def test_save_replaces_all(self, db_path):
+        save_active_bets_db([_make_active_bet()], db_path)
+        assert len(get_active_bets_db(db_path)) == 1
+        # Replace with different bet
+        save_active_bets_db([_make_active_bet(id="active-new")], db_path)
+        loaded = get_active_bets_db(db_path)
+        assert len(loaded) == 1
+        assert loaded[0]["id"] == "active-new"
+
+    def test_save_empty_clears_all(self, db_path):
+        save_active_bets_db([_make_active_bet()], db_path)
+        save_active_bets_db([], db_path)
+        assert get_active_bets_db(db_path) == []
+
+    def test_optional_fields_present(self, db_path):
+        bet = _make_active_bet(amount=50.0, odds_price=-110, poly_price=0.65, placed_polymarket=True)
+        save_active_bets_db([bet], db_path)
+        loaded = get_active_bets_db(db_path)[0]
+        assert loaded["amount"] == 50.0
+        assert loaded["odds_price"] == -110
+        assert loaded["poly_price"] == 0.65
+        assert loaded["placed_polymarket"] is True
+
+    def test_optional_fields_absent(self, db_path):
+        save_active_bets_db([_make_active_bet()], db_path)
+        loaded = get_active_bets_db(db_path)[0]
+        assert "amount" not in loaded
+        assert "odds_price" not in loaded
+        assert "poly_price" not in loaded
+        assert "placed_polymarket" not in loaded
+
+    def test_ordering_by_date_created(self, db_path):
+        bets = [
+            _make_active_bet(id="b2", date="2026-02-11", created_at="2026-02-11T10:00:00+00:00"),
+            _make_active_bet(id="b1", date="2026-02-10", created_at="2026-02-10T10:00:00+00:00"),
+            _make_active_bet(id="b3", date="2026-02-10", created_at="2026-02-10T11:00:00+00:00"),
+        ]
+        save_active_bets_db(bets, db_path)
+        loaded = get_active_bets_db(db_path)
+        assert [b["id"] for b in loaded] == ["b1", "b3", "b2"]
+
+
+class TestActiveBetsMigration:
+    """Tests for active.json → SQLite migration."""
+
+    def test_migrates_from_json(self, tmp_path):
+        bets = [
+            _make_active_bet(id="a1"),
+            _make_active_bet(id="a2", amount=25.0, poly_price=0.55),
+        ]
+        (tmp_path / "active.json").write_text(json.dumps(bets))
+        db_path = tmp_path / "test.db"
+        loaded = get_active_bets_db(db_path)
+        assert len(loaded) == 2
+        assert loaded[0]["id"] == "a1"
+        assert loaded[1]["poly_price"] == 0.55
+
+    def test_migration_renames_json(self, tmp_path):
+        (tmp_path / "active.json").write_text(json.dumps([_make_active_bet()]))
+        db_path = tmp_path / "test.db"
+        get_active_bets_db(db_path)
+        assert not (tmp_path / "active.json").exists()
+
+    def test_no_reimport_after_table_emptied(self, tmp_path):
+        """Resolved bets empty the table; stale JSON must not re-import."""
+        (tmp_path / "active.json").write_text(json.dumps([_make_active_bet()]))
+        db_path = tmp_path / "test.db"
+        assert len(get_active_bets_db(db_path)) == 1
+        # Simulate all bets resolved
+        save_active_bets_db([], db_path)
+        assert get_active_bets_db(db_path) == []
+
+    def test_no_json_no_error(self, db_path):
+        assert get_active_bets_db(db_path) == []
+
+    def test_empty_json_migrated(self, tmp_path):
+        (tmp_path / "active.json").write_text("[]")
+        db_path = tmp_path / "test.db"
+        assert get_active_bets_db(db_path) == []
+        # Empty JSON is still renamed to prevent future checks
+        assert not (tmp_path / "active.json").exists()
+
+
+class TestDollarPnl:
+    """Tests for dollar_pnl field on completed bets."""
+
+    def test_insert_with_dollar_pnl(self, db_path):
+        bet = _make_bet(amount=50.0, odds_price=-110, dollar_pnl=45.45)
+        insert_bet(bet, db_path)
+        bets = get_all_bets(db_path)
+        assert bets[0]["dollar_pnl"] == 45.45
+
+    def test_dollar_pnl_absent_for_legacy(self, db_path):
+        bet = _make_bet()  # No amount/odds_price/dollar_pnl
+        insert_bet(bet, db_path)
+        bets = get_all_bets(db_path)
+        assert "dollar_pnl" not in bets[0]
+
+    def test_negative_dollar_pnl(self, db_path):
+        bet = _make_bet(amount=30.0, odds_price=-110, result="loss", dollar_pnl=-30.0)
+        insert_bet(bet, db_path)
+        bets = get_all_bets(db_path)
+        assert bets[0]["dollar_pnl"] == -30.0
+
+
+class TestGetDollarPnl:
+    """Tests for get_dollar_pnl aggregate query."""
+
+    def test_empty_db_returns_zero(self, db_path):
+        assert get_dollar_pnl(db_path) == 0.0
+
+    def test_sums_across_bets(self, db_path):
+        insert_bet(_make_bet(id="b1", result="win", dollar_pnl=45.45, amount=50.0, odds_price=-110), db_path)
+        insert_bet(_make_bet(id="b2", result="loss", dollar_pnl=-30.0, amount=30.0, odds_price=-110,
+                             date="2026-02-02", created_at="2026-02-02T10:00:00+00:00"), db_path)
+        total = get_dollar_pnl(db_path)
+        assert total == pytest.approx(15.45, abs=0.01)
+
+    def test_ignores_null_dollar_pnl(self, db_path):
+        insert_bet(_make_bet(id="b1", dollar_pnl=20.0, amount=25.0, odds_price=-110), db_path)
+        insert_bet(_make_bet(id="b2", date="2026-02-02", created_at="2026-02-02T10:00:00+00:00"), db_path)
+        assert get_dollar_pnl(db_path) == 20.0
+
+
+class TestGetOpenExposure:
+    """Tests for get_open_exposure aggregate query."""
+
+    def test_empty_returns_zero(self, db_path):
+        assert get_open_exposure(db_path) == 0.0
+
+    def test_sums_active_bet_amounts(self, db_path):
+        save_active_bets_db([
+            _make_active_bet(id="a1", amount=25.0),
+            _make_active_bet(id="a2", amount=40.0),
+        ], db_path)
+        assert get_open_exposure(db_path) == 65.0
+
+    def test_ignores_null_amounts(self, db_path):
+        save_active_bets_db([
+            _make_active_bet(id="a1", amount=25.0),
+            _make_active_bet(id="a2"),  # No amount
+        ], db_path)
+        assert get_open_exposure(db_path) == 25.0
+
+
+class TestSummaryDollarPnl:
+    """Tests for net_dollar_pnl in summary."""
+
+    def test_empty_db(self, db_path):
+        summary = get_summary(db_path)
+        assert summary["net_dollar_pnl"] == 0.0
+
+    def test_includes_dollar_pnl(self, db_path):
+        insert_bet(_make_bet(id="b1", result="win", dollar_pnl=45.0, amount=50.0, odds_price=-110), db_path)
+        insert_bet(_make_bet(id="b2", result="loss", dollar_pnl=-30.0, amount=30.0, odds_price=-110,
+                             date="2026-02-02", created_at="2026-02-02T10:00:00+00:00"), db_path)
+        summary = get_summary(db_path)
+        assert summary["net_dollar_pnl"] == pytest.approx(15.0, abs=0.01)
