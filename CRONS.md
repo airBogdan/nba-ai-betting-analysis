@@ -34,7 +34,7 @@ Install with: `crontab -e` and paste the above, or pipe a file with `crontab cro
 ## How It Works
 
 - `run.sh` is a wrapper that activates the venv, loads `.env`, runs the command, and appends timestamped output to a dated log file in `logs/`.
-- `CRON_TZ=America/New_York` makes cron interpret all times as ET (handles EST/EDT automatically).
+- The server is in UTC. Each cron fires at both possible UTC offsets (EST and EDT) with a `TZ=America/New_York` guard so only the correct ET hour actually runs.
 - Each run is delimited by timestamps and exit codes in the log.
 
 ## Telegram Notifications

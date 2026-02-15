@@ -18,7 +18,11 @@ LABEL=$(echo "$*" | sed 's/[^a-zA-Z0-9_-]/_/g' | sed 's/__*/_/g' | cut -c1-60)
 DATE=$(TZ=America/New_York date +%Y-%m-%d)
 LOGFILE="$LOGS_DIR/${LABEL}_${DATE}.log"
 
-# Activate venv
+# Activate venv (abort if missing — running without it would cause import errors)
+if [ ! -f "$PROJECT_DIR/venv/bin/activate" ]; then
+    echo "ERROR: venv not found at $PROJECT_DIR/venv" >> "$LOGFILE"
+    exit 1
+fi
 source "$PROJECT_DIR/venv/bin/activate"
 
 # Load .env if present
@@ -48,8 +52,8 @@ send_telegram() {
     [ -z "${TELEGRAM_CHAT_ID:-}" ] && return
     local message="$1"
     curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+        --data-urlencode "text=$message" \
         -d chat_id="$TELEGRAM_CHAT_ID" \
-        -d text="$message" \
         -d parse_mode="Markdown" > /dev/null 2>&1
 }
 
@@ -80,7 +84,11 @@ case "$*" in
         if [ $EXIT_CODE -eq 0 ]; then
             SUMMARY=$(tail -25 "$LOGFILE" | head -20)
             send_telegram "$(printf '*Betting Results Complete* (%s)\n\n```\n%s\n```' "$DATE" "$SUMMARY")"
-            send_telegram_file "$PROJECT_DIR/bets/journal/${DATE}.md" "Journal — $DATE"
+            # Send the most recently modified journal file (results may process bets from any date)
+            JOURNAL=$(ls -t "$PROJECT_DIR/bets/journal/"*.md 2>/dev/null | head -1)
+            if [ -n "$JOURNAL" ]; then
+                send_telegram_file "$JOURNAL" "Journal — $(basename "$JOURNAL" .md)"
+            fi
         else
             send_telegram "$(printf '*Betting Results FAILED* (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
         fi
