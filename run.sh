@@ -7,7 +7,7 @@
 #
 # Logs are written to logs/<command_label>_<date>.log
 
-set -euo pipefail
+set -uo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 LOGS_DIR="$PROJECT_DIR/logs"

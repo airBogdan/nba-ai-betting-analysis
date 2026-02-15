@@ -11,13 +11,22 @@ All times are in **Eastern Time** (`CRON_TZ=America/New_York`).
 
 ## Crontab
 
-```cron
-CRON_TZ=America/New_York
+The server runs in UTC. Since ET shifts between UTC-5 (EST) and UTC-4 (EDT), each job is scheduled at both possible UTC hours with a guard that checks the actual ET hour before running.
 
-0 10 * * * /home/nonroot/projects/nba-ai-betting-analysis/run.sh python main.py
-30 10 * * * /home/nonroot/projects/nba-ai-betting-analysis/run.sh python betting.py analyze
-0 11 * * * /home/nonroot/projects/nba-ai-betting-analysis/run.sh python polymarket.py
-59 23 * * * /home/nonroot/projects/nba-ai-betting-analysis/run.sh python betting.py results
+```cron
+SHELL=/bin/bash
+
+# 10:00 AM ET — Generate matchup data
+0 14,15 * * * [ "$(TZ=America/New_York date +\%H)" = "10" ] && /home/nonroot/projects/nba-ai-betting-analysis/run.sh python main.py
+
+# 10:30 AM ET — LLM analysis and bet selection
+30 14,15 * * * [ "$(TZ=America/New_York date +\%H)" = "10" ] && /home/nonroot/projects/nba-ai-betting-analysis/run.sh python betting.py analyze
+
+# 11:00 AM ET — Place bets on Polymarket
+0 15,16 * * * [ "$(TZ=America/New_York date +\%H)" = "11" ] && /home/nonroot/projects/nba-ai-betting-analysis/run.sh python polymarket.py
+
+# 11:59 PM ET — Process game results
+59 3,4 * * * [ "$(TZ=America/New_York date +\%H)" = "23" ] && /home/nonroot/projects/nba-ai-betting-analysis/run.sh python betting.py results
 ```
 
 Install with: `crontab -e` and paste the above, or pipe a file with `crontab crontab.txt`.
@@ -30,7 +39,7 @@ Install with: `crontab -e` and paste the above, or pipe a file with `crontab cro
 
 ## Telegram Notifications
 
-`run.sh` sends a Telegram message after `betting.py analyze` completes (success or failure).
+`run.sh` sends a Telegram message after `betting.py analyze` and `betting.py results` complete (success or failure). On success it also sends `bets/active.json` (after analyze) and the daily journal entry (after results) as file attachments.
 
 Add to `.env`:
 
