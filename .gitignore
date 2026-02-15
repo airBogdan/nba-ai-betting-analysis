@@ -5,5 +5,6 @@ __pycache__/
 *.pyc
 *.db-wal
 *.db-shm
+logs/*.log
 /.claude/
 /.idea/
