@@ -8,6 +8,8 @@ from .types import ActiveBet, BetHistory
 
 BETS_DIR = Path(__file__).parent.parent / "bets"
 JOURNAL_DIR = BETS_DIR / "journal"
+PAPER_DIR = BETS_DIR / "paper"
+PAPER_JOURNAL_DIR = PAPER_DIR / "journal"
 OUTPUT_DIR = Path(__file__).parent.parent / "output"
 
 
@@ -140,4 +142,46 @@ def save_skips(date: str, new_skips: List[dict]) -> None:
     all_skips = [s for s in all_skips if s.get("date") != date]
     all_skips.extend(new_skips)
     save_skips_all(all_skips)
+
+
+# --- Paper trading IO ---
+
+
+def get_paper_trades() -> list:
+    """Load paper trades from bets/paper/trades.json."""
+    data = read_json(PAPER_DIR / "trades.json")
+    return data if isinstance(data, list) else []
+
+
+def save_paper_trades(trades: list) -> None:
+    """Save paper trades to bets/paper/trades.json."""
+    write_json(PAPER_DIR / "trades.json", trades)
+
+
+def get_paper_history() -> dict:
+    """Load paper trade history from bets/paper/history.json."""
+    data = read_json(PAPER_DIR / "history.json")
+    if isinstance(data, dict) and "trades" in data and "summary" in data:
+        return data
+    return {"trades": [], "summary": _empty_paper_summary()}
+
+
+def save_paper_history(history: dict) -> None:
+    """Save paper trade history to bets/paper/history.json."""
+    write_json(PAPER_DIR / "history.json", history)
+
+
+def _empty_paper_summary() -> dict:
+    """Return an empty PaperHistorySummary dict."""
+    return {
+        "total_trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "pushes": 0,
+        "win_rate": 0.0,
+        "net_units": 0.0,
+        "by_confidence": {},
+        "by_bet_type": {},
+        "by_skip_reason_category": {},
+    }
 

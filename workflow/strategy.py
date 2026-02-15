@@ -5,13 +5,14 @@ import re
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
-from .io import BETS_DIR, JOURNAL_DIR, get_history, read_text, write_text
+from .io import BETS_DIR, JOURNAL_DIR, get_history, get_paper_history, read_text, write_text
 from .llm import complete_json
 from .prompts import (
     MIN_ACTIONABLE_SAMPLE,
     SYSTEM_ANALYST,
     UPDATE_STRATEGY_PROMPT,
     format_history_summary,
+    format_paper_trade_insights,
 )
 
 MIN_BETS_FOR_STRATEGY = 15
@@ -239,12 +240,16 @@ async def generate_adjustments(
     """Generate targeted adjustments via LLM. Returns parsed JSON or None."""
     reflection_patterns = aggregate_reflections(recent_bets)
 
+    paper_history = get_paper_history()
+    paper_insights = format_paper_trade_insights(paper_history["summary"])
+
     prompt = UPDATE_STRATEGY_PROMPT.format(
         current_strategy=current,
         history_summary=format_history_summary(summary),
         recent_bets=format_recent_bets(recent_bets),
         recent_journals=recent_journals,
         reflection_patterns=reflection_patterns,
+        paper_trade_insights=paper_insights,
         wins=summary.get("wins", 0),
         losses=summary.get("losses", 0),
         roi=round(summary.get("roi", 0) * 100, 1),

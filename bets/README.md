@@ -23,6 +23,7 @@ python3.13 betting.py analyze
 - Analyzes all matchups for the date
 - Selects up to 3 bets (use `--max-bets N` to change)
 - Saves to `active.json` and `journal/YYYY-MM-DD.md`
+- Paper trades all skipped games via a contrarian LLM analyst (saved to `paper/`)
 
 ### 3. Place bets on Polymarket
 ```bash
@@ -49,6 +50,7 @@ python3.13 betting.py results
 ```
 - Fetches final scores from API
 - Evaluates bets and updates history
+- Resolves paper trade outcomes
 - Appends results to journal
 
 ### 6. Stats dashboard
@@ -61,7 +63,13 @@ Generates `dashboard.html` with performance charts (cumulative P&L, rolling win 
 ```bash
 python3.13 betting.py update-strategy
 ```
-Produces 1-3 targeted adjustments to `strategy.md` based on performance patterns.
+Produces 1-3 targeted adjustments to `strategy.md` based on performance patterns. Includes paper trade insights when 15+ paper trades exist.
+
+### 8. Update paper strategy (after 15+ paper trades)
+```bash
+python3.13 betting.py update-paper-strategy
+```
+Evolves the paper trading strategy independently. Surfaces insights about which skip categories have the most missed value.
 
 ## Files
 
@@ -73,3 +81,7 @@ Produces 1-3 targeted adjustments to `strategy.md` based on performance patterns
 - `strategy.md` - Evolving betting strategy
 - `dashboard.html` - Generated stats dashboard
 - `journal/` - Daily entries with analysis and results
+- `paper/trades.json` - Active paper trades (contrarian bets on skipped games)
+- `paper/history.json` - Resolved paper trades with summary stats
+- `paper/strategy.md` - Paper-specific evolving strategy
+- `paper/journal/` - Daily paper trade entries

@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from .io import BETS_DIR, JOURNAL_DIR, ensure_dir, write_json, write_text
+from .io import BETS_DIR, JOURNAL_DIR, PAPER_DIR, PAPER_JOURNAL_DIR, ensure_dir, write_json, write_text
 
 INITIAL_STRATEGY = """# NBA Betting Strategy
 
@@ -81,5 +81,38 @@ def run_init() -> None:
         print(f"Created {strategy_path}")
     else:
         print(f"Already exists: {strategy_path}")
+
+    # Initialize paper trading directory
+    ensure_dir(PAPER_DIR)
+    ensure_dir(PAPER_JOURNAL_DIR)
+
+    paper_trades_path = PAPER_DIR / "trades.json"
+    if not paper_trades_path.exists():
+        write_json(paper_trades_path, [])
+        print(f"Created {paper_trades_path}")
+
+    paper_history_path = PAPER_DIR / "history.json"
+    if not paper_history_path.exists():
+        write_json(paper_history_path, {
+            "trades": [],
+            "summary": {
+                "total_trades": 0,
+                "wins": 0,
+                "losses": 0,
+                "pushes": 0,
+                "win_rate": 0.0,
+                "net_units": 0.0,
+                "by_confidence": {},
+                "by_bet_type": {},
+                "by_skip_reason_category": {},
+            },
+        })
+        print(f"Created {paper_history_path}")
+
+    paper_strategy_path = PAPER_DIR / "strategy.md"
+    if not paper_strategy_path.exists():
+        from .paper import INITIAL_PAPER_STRATEGY
+        write_text(paper_strategy_path, INITIAL_PAPER_STRATEGY)
+        print(f"Created {paper_strategy_path}")
 
     print("\nInitialization complete.")

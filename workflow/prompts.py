@@ -11,6 +11,12 @@ and injury impact. Be objective and data-driven. Acknowledge uncertainty.
 Never force a bet - "no edge" is a valid conclusion."""
 
 
+SYSTEM_PAPER_ANALYST = """You are a contrarian NBA betting analyst. Your job is to find betting value
+in games that the primary analyst skipped. Challenge the skip reasoning — look for edges that were
+overlooked, underweighted, or dismissed too quickly. You MUST pick a bet for every game presented.
+"No bet" is NOT an option. Be data-driven and specific about your edge."""
+
+
 def compact_json(data: Any) -> str:
     """Serialize data to compact JSON, stripping None/empty values."""
     def _clean(obj):
@@ -238,6 +244,9 @@ UPDATE_STRATEGY_PROMPT = """Review the betting strategy and propose small, targe
 
 ## Recent Journal Entries
 {recent_journals}
+
+## Paper Trading Insights (games we skipped)
+{paper_trade_insights}
 
 ## Instructions
 Propose 0-3 SMALL, SPECIFIC adjustments to the strategy. These will compound over many runs.
@@ -501,6 +510,148 @@ Respond with JSON:
   "daily_exposure": 75.00,
   "sizing_notes": "Brief note on today's approach"
 }}"""
+
+
+PAPER_TRADE_PROMPT = """These games were SKIPPED by the primary analyst. Your job is to find the best
+bet in each one. You MUST pick exactly one bet per game — there are no skips in paper trading.
+
+## Skipped Games
+{skipped_games_json}
+
+## Your Paper Trading Strategy
+{paper_strategy}
+
+## Paper Trade History
+{paper_history_summary}
+
+## Instructions
+For each skipped game:
+1. Read the skip reason — understand WHY it was skipped
+2. Challenge that reasoning — what edge might the primary analyst have missed?
+3. Pick the BEST single bet (moneyline, spread, or total) based on available data
+4. Use only lines available in the Polymarket data if present
+5. Assign confidence honestly (low/medium/high) — many will be low, that's fine
+
+Respond with JSON:
+{{
+  "paper_trades": [
+    {{
+      "matchup": "Away @ Home",
+      "game_id": "...",
+      "bet_type": "moneyline" | "spread" | "total",
+      "pick": "Team Name" | "over" | "under",
+      "line": null | -4.5 | 224.5,
+      "confidence": "low" | "medium" | "high",
+      "reasoning": "Why this bet has value despite the skip",
+      "primary_edge": "Key factor",
+      "contrarian_argument": "What the primary analyst missed or underweighted"
+    }}
+  ],
+  "summary": "1-2 sentence summary of paper trade picks"
+}}"""
+
+
+UPDATE_PAPER_STRATEGY_PROMPT = """Review the paper trading strategy and propose adjustments.
+
+## Current Paper Strategy
+{current_strategy}
+
+## Paper Trade Performance ({wins}-{losses}, {win_rate:.1%} win rate, {net_units:+.1f} units)
+{history_summary}
+
+## Recent Paper Trades (last 20)
+{recent_trades}
+
+## Recent Paper Journal Entries
+{recent_journals}
+
+## Instructions
+Paper trading tracks games the primary analyst SKIPPED. Your goal is to get better at
+finding value in these skipped games. Analyze patterns:
+
+1. Which skip reasons lead to the most profitable paper trades?
+2. Which bet types work best on skipped games?
+3. Are there confidence levels that are consistently profitable?
+4. What contrarian edges keep showing up?
+
+Propose 0-3 targeted adjustments to improve paper trade selection.
+
+Respond with JSON:
+{{
+  "adjustments": [
+    {{
+      "section": "Section name to modify",
+      "updated_content": "Full replacement content",
+      "change_description": "What changed",
+      "reasoning": "Data-backed justification"
+    }}
+  ],
+  "insights_for_main_strategy": [
+    "Insight that could improve the main strategy's skip decisions"
+  ],
+  "summary": "1-sentence summary"
+}}"""
+
+
+MIN_PAPER_TRADES_FOR_INSIGHTS = 15
+
+
+def format_paper_history_summary(summary: dict) -> str:
+    """Format paper trade history summary for prompts."""
+    if summary.get("total_trades", 0) == 0:
+        return "No paper trade history yet."
+
+    pushes = summary.get("pushes", 0)
+    if pushes > 0:
+        record_str = f"{summary['wins']}-{summary['losses']}-{pushes}"
+    else:
+        record_str = f"{summary['wins']}-{summary['losses']}"
+
+    lines = [
+        f"Record: {record_str} ({summary['win_rate']:.1%})",
+        f"Net Units: {summary['net_units']:+.1f}",
+    ]
+
+    if summary.get("by_confidence"):
+        lines.append("\nBy Confidence:")
+        for conf, stats in summary["by_confidence"].items():
+            lines.append(f"  {conf}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%})")
+
+    if summary.get("by_bet_type"):
+        lines.append("\nBy Bet Type:")
+        for bt, stats in summary["by_bet_type"].items():
+            lines.append(f"  {bt}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%})")
+
+    if summary.get("by_skip_reason_category"):
+        lines.append("\nBy Skip Reason:")
+        for reason, stats in summary["by_skip_reason_category"].items():
+            lines.append(f"  {reason}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%})")
+
+    return "\n".join(lines)
+
+
+def format_paper_trade_insights(summary: dict) -> str:
+    """Format paper trade performance for inclusion in main strategy update."""
+    total = summary.get("total_trades", 0)
+    if total < MIN_PAPER_TRADES_FOR_INSIGHTS:
+        return f"Paper trading: Not enough data yet ({total} trades, need {MIN_PAPER_TRADES_FOR_INSIGHTS})."
+
+    wins = summary.get("wins", 0)
+    losses = summary.get("losses", 0)
+    net = summary.get("net_units", 0.0)
+
+    lines = [
+        f"Paper trading on skipped games: {wins}-{losses} ({summary.get('win_rate', 0):.1%}), {net:+.1f} units",
+    ]
+
+    by_reason = summary.get("by_skip_reason_category", {})
+    if by_reason:
+        lines.append("By skip reason:")
+        for reason, stats in sorted(by_reason.items(), key=lambda x: x[1].get("win_rate", 0), reverse=True):
+            n = stats["wins"] + stats["losses"]
+            lines.append(f"  {reason}: {stats['wins']}-{stats['losses']} ({stats['win_rate']:.1%}) — {n} trades")
+
+    return "\n".join(lines)
 
 
 def format_history_summary(summary: Dict[str, Any]) -> str:

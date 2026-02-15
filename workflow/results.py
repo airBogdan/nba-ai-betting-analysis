@@ -8,14 +8,19 @@ from helpers.utils import get_current_nba_season_year
 from .io import (
     JOURNAL_DIR,
     OUTPUT_DIR,
+    PAPER_JOURNAL_DIR,
     append_text,
     clear_output_dir,
     get_active_bets,
     get_dollar_pnl,
     get_history,
+    get_paper_history,
+    get_paper_trades,
     get_skips,
     save_active_bets,
     save_history,
+    save_paper_history,
+    save_paper_trades,
     save_skips_all,
 )
 from .llm import complete_json
@@ -463,6 +468,15 @@ async def run_results_workflow(date: Optional[str] = None) -> None:
     for skip_date in sorted(skip_dates):
         await _resolve_skips_for_date(skip_date, season)
 
+    # Resolve paper trade outcomes
+    try:
+        paper_trades = get_paper_trades()
+        paper_dates = set(t["date"] for t in paper_trades if "result" not in t)
+        for pt_date in sorted(paper_dates):
+            await _resolve_paper_trades_for_date(pt_date, season)
+    except Exception as e:
+        print(f"Paper trade resolution failed (non-fatal): {e}")
+
     # Load active bets
     active = get_active_bets()
     if not active:
@@ -644,3 +658,159 @@ async def _process_results_for_date(date: str, season: int) -> None:
         print(f"{len(unresolved)} bets still pending (games not finished)")
 
     print(f"\nSee bets/journal/{date}.md for details")
+
+
+# --- Paper trade resolution ---
+
+
+def _categorize_skip_reason(reason: str) -> str:
+    """Categorize skip reason for tracking patterns."""
+    reason_lower = reason.lower()
+    if any(w in reason_lower for w in ["injury", "injured", "missing", "out"]):
+        return "injury_uncertainty"
+    if any(w in reason_lower for w in ["coin flip", "coin-flip", "no edge", "no clear edge"]):
+        return "no_edge"
+    if any(w in reason_lower for w in ["uncertain", "unpredictable", "variance"]):
+        return "high_variance"
+    if any(w in reason_lower for w in ["kelly", "veto", "sizing"]):
+        return "sizing_veto"
+    return "other"
+
+
+def update_paper_history_with_trade(history: dict, trade: dict) -> None:
+    """Add a resolved paper trade to history and recompute summary."""
+    history["trades"].append(trade)
+    summary = history["summary"]
+
+    result = trade["result"]
+    profit_loss = trade.get("profit_loss", 0.0)
+
+    summary["total_trades"] = summary.get("total_trades", 0) + 1
+
+    if result == "win":
+        summary["wins"] = summary.get("wins", 0) + 1
+    elif result == "loss":
+        summary["losses"] = summary.get("losses", 0) + 1
+    elif result == "push":
+        summary["pushes"] = summary.get("pushes", 0) + 1
+
+    summary["net_units"] = summary.get("net_units", 0.0) + profit_loss
+
+    total = summary["total_trades"]
+    summary["win_rate"] = round(summary["wins"] / total, 3) if total > 0 else 0.0
+
+    # Update breakdowns
+    if result in ("win", "loss"):
+        result_key = "wins" if result == "win" else "losses"
+
+        # By confidence
+        conf = trade.get("confidence", "low")
+        by_conf = summary.setdefault("by_confidence", {})
+        entry = by_conf.setdefault(conf, {"wins": 0, "losses": 0, "win_rate": 0.0})
+        entry[result_key] += 1
+        ct = entry["wins"] + entry["losses"]
+        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
+
+        # By bet type
+        bt = trade.get("bet_type", "moneyline")
+        by_bt = summary.setdefault("by_bet_type", {})
+        entry = by_bt.setdefault(bt, {"wins": 0, "losses": 0, "win_rate": 0.0})
+        entry[result_key] += 1
+        ct = entry["wins"] + entry["losses"]
+        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
+
+        # By skip reason category
+        reason_cat = _categorize_skip_reason(trade.get("skip_reason", ""))
+        by_reason = summary.setdefault("by_skip_reason_category", {})
+        entry = by_reason.setdefault(reason_cat, {"wins": 0, "losses": 0, "win_rate": 0.0})
+        entry[result_key] += 1
+        ct = entry["wins"] + entry["losses"]
+        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
+
+
+async def _resolve_paper_trades_for_date(date: str, season: int) -> None:
+    """Resolve paper trade outcomes for a date."""
+    all_trades = get_paper_trades()
+    date_trades = [t for t in all_trades if t.get("date") == date and "result" not in t]
+    if not date_trades:
+        return
+
+    api_results = await get_games_by_date(season, date)
+    all_results = parse_game_results(api_results) if api_results else []
+    finished = [r for r in all_results if r["status"] == "finished"]
+    if not finished:
+        return
+
+    resolved = 0
+    paper_history = get_paper_history()
+
+    for trade in date_trades:
+        matched = None
+        gid = trade.get("game_id")
+        if gid:
+            matched = next((r for r in finished if r["game_id"] == str(gid)), None)
+        if not matched:
+            parts = trade["matchup"].split(" @ ")
+            if len(parts) == 2:
+                away, home = parts
+                matched = next(
+                    (r for r in finished if _teams_match(r["home_team"], home) and _teams_match(r["away_team"], away)),
+                    None,
+                )
+        if matched:
+            outcome, profit_loss = _evaluate_bet(trade, matched)
+            trade["result"] = outcome
+            trade["profit_loss"] = profit_loss
+            trade["winner"] = matched["winner"]
+            trade["final_score"] = _format_score(matched)
+            trade["actual_total"] = matched["home_score"] + matched["away_score"]
+            trade["actual_margin"] = matched["home_score"] - matched["away_score"]
+            update_paper_history_with_trade(paper_history, trade)
+            resolved += 1
+
+    if resolved:
+        save_paper_trades(all_trades)
+        save_paper_history(paper_history)
+        _append_paper_journal_results(date, [t for t in date_trades if "result" in t])
+        print(f"  Resolved {resolved} paper trade(s)")
+
+
+def _append_paper_journal_results(date: str, resolved_trades: List[dict]) -> None:
+    """Append results to paper journal entry."""
+    journal_path = PAPER_JOURNAL_DIR / f"{date}.md"
+    existing = ""
+    if journal_path.exists():
+        existing = journal_path.read_text()
+        if "## Results" in existing:
+            return  # Already appended
+
+    lines = []
+    if not existing:
+        lines.extend([f"# Paper Trading Journal - {date}", "", ""])
+
+    wins = sum(1 for t in resolved_trades if t["result"] == "win")
+    losses = sum(1 for t in resolved_trades if t["result"] == "loss")
+    net = sum(t.get("profit_loss", 0) for t in resolved_trades)
+
+    lines.extend(["## Results", "", f"**Record: {wins}-{losses} | Net: {net:+.1f} units**", ""])
+
+    for trade in resolved_trades:
+        bt = trade.get("bet_type", "moneyline")
+        pick = trade["pick"]
+        line = trade.get("line")
+        if bt == "spread" and line is not None:
+            pick_display = f"{pick} {line:+.1f}"
+        elif bt == "total" and line is not None:
+            pick_display = f"{pick} {line:.1f}"
+        else:
+            pick_display = pick
+
+        emoji = "+" if trade["result"] == "win" else "-"
+        lines.append(f"### {trade['matchup']} - {bt.upper()}")
+        lines.append(f"- Pick: {pick_display}")
+        lines.append(f"- Result: **{trade['result'].upper()}** ({emoji}{abs(trade.get('profit_loss', 0)):.1f}u)")
+        lines.append(f"- Final: {trade.get('final_score', 'N/A')}")
+        lines.append(f"- Skip reason: {trade.get('skip_reason', '')}")
+        lines.append("")
+
+    append_text(journal_path, "\n".join(lines))

@@ -21,6 +21,7 @@ python betting.py results                       # Process all active bets
 python betting.py update-strategy              # Evolve strategy from history
 python betting.py check                        # Re-evaluate open positions
 python betting.py stats                        # Generate HTML analytics dashboard
+python betting.py update-paper-strategy        # Evolve paper trading strategy
 python polymarket.py                            # Place bets on Polymarket
 ```
 
@@ -33,7 +34,7 @@ Optional: `INJURIES_API_KEY`, `THE_ODDS_API`, `POLYMARKET_PRIVATE_KEY` / `POLYMA
 ## Architecture
 
 - **Matchup pipeline**: `main.py` orchestrates `helpers/api/` (client, processors, injuries, odds), `helpers/teams.py`, `helpers/games.py`, `helpers/matchup.py` (core engine: snapshots, edges, totals, signals)
-- **Betting workflow**: `betting.py` CLI delegates to `workflow/` — `analyze.py` (pre-game), `results.py` (post-game), `strategy.py` (incremental LLM evolution), `check.py` (position re-eval), `stats.py` (dashboard), `llm.py`, `search.py`, `prompts.py`, `io.py`, `types.py`
+- **Betting workflow**: `betting.py` CLI delegates to `workflow/` — `analyze.py` (pre-game), `results.py` (post-game), `strategy.py` (incremental LLM evolution), `paper.py` (contrarian paper trades on skipped games), `check.py` (position re-eval), `stats.py` (dashboard), `llm.py`, `search.py`, `prompts.py`, `io.py`, `types.py`
 - **Polymarket**: `polymarket.py` + `polymarket_helpers/` (gamma.py, matching.py, odds.py)
 
 ## Output Locations
@@ -45,6 +46,10 @@ Optional: `INJURIES_API_KEY`, `THE_ODDS_API`, `POLYMARKET_PRIVATE_KEY` / `POLYMA
 - `bets/strategy.md` — Evolving betting strategy (LLM-maintained)
 - `bets/journal/` — Daily markdown entries
 - `bets/dashboard.html` — Generated analytics dashboard
+- `bets/paper/trades.json` — Paper trade picks + resolved outcomes
+- `bets/paper/history.json` — Paper trade history with summary stats
+- `bets/paper/strategy.md` — Paper trading strategy (LLM-maintained)
+- `bets/paper/journal/` — Daily paper trade markdown entries
 
 ## Key Conventions
 

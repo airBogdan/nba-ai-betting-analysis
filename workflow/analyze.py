@@ -36,6 +36,7 @@ from .prompts import (
 )
 from polymarket import get_polymarket_balance
 from polymarket_helpers.odds import poly_price_to_american
+from .paper import run_paper_trades
 from .types import ActiveBet, BetRecommendation, SelectedBet
 
 # Kelly Criterion parameters
@@ -763,6 +764,11 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
         print("No bets selected by analysis.")
         enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
         save_skips(date, enriched_skips)
+        if enriched_skips:
+            try:
+                await run_paper_trades(enriched_skips, date, games)
+            except Exception as e:
+                print(f"Paper trading failed (non-fatal): {e}")
         write_journal_pre_game(date, [], synthesis.get("skipped", []), synthesis.get("summary", ""))
         return
 
@@ -773,6 +779,11 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
         print("Error: Could not get Polymarket balance. Set POLYMARKET_PRIVATE_KEY and POLYMARKET_FUNDER.")
         enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
         save_skips(date, enriched_skips)
+        if enriched_skips:
+            try:
+                await run_paper_trades(enriched_skips, date, games)
+            except Exception as e:
+                print(f"Paper trading failed (non-fatal): {e}")
         return
 
     # Size bets
@@ -788,6 +799,13 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
     enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
     enriched_skips += [_enrich_skip(s, "sizing") for s in sizing_skipped]
     save_skips(date, enriched_skips)
+
+    # Paper trade skipped games (runs independently, doesn't affect real bets)
+    if enriched_skips:
+        try:
+            await run_paper_trades(enriched_skips, date, games)
+        except Exception as e:
+            print(f"Paper trading failed (non-fatal): {e}")
 
     if not sized_bets:
         print("All bets were vetoed by sizing.")

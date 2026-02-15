@@ -64,6 +64,9 @@ def main():
     # stats
     subparsers.add_parser("stats", help="Generate HTML stats dashboard")
 
+    # update-paper-strategy
+    subparsers.add_parser("update-paper-strategy", help="Update paper trading strategy from history")
+
     args = parser.parse_args()
 
     if args.command == "init":
@@ -109,6 +112,10 @@ def main():
         from workflow.stats import generate_dashboard
 
         generate_dashboard()
+    elif args.command == "update-paper-strategy":
+        from workflow.paper import run_paper_strategy_workflow
+
+        asyncio.run(run_paper_strategy_workflow())
 
 
 if __name__ == "__main__":

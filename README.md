@@ -49,7 +49,7 @@ LLM-powered bet selection and tracking system built on top of the matchup analys
 python betting.py init
 ```
 
-Creates the `bets/` directory with `active.json`, `history.json`, and `strategy.md`.
+Creates the `bets/` directory with `active.json`, `history.json`, `strategy.md`, and the `paper/` subdirectory for paper trading.
 
 ### Analyze games and select bets
 
@@ -57,7 +57,7 @@ Creates the `bets/` directory with `active.json`, `history.json`, and `strategy.
 python betting.py analyze
 ```
 
-Loads all matchup files from `output/`, condenses them, and sends them to an LLM along with the current strategy. The LLM evaluates each game and selects up to 3 bets with reasoning. Results are saved to `bets/active.json` and a daily journal entry in `bets/journal/`.
+Loads all matchup files from `output/`, condenses them, and sends them to an LLM along with the current strategy. The LLM evaluates each game and selects up to 3 bets with reasoning. Results are saved to `bets/active.json` and a daily journal entry in `bets/journal/`. Skipped games are automatically paper traded by a contrarian LLM analyst (see Paper Trading below).
 
 | Flag | Description |
 |------|-------------|
@@ -86,7 +86,7 @@ POLYMARKET_FUNDER=...       # Funder address for CLOB client
 python betting.py results
 ```
 
-Fetches final scores from the API, evaluates each active bet (win/loss/push), generates structured reflections on what went right or wrong, and moves everything to `bets/history.json`. Appends results to the daily journal. Clears `output/` after processing.
+Fetches final scores from the API, evaluates each active bet (win/loss/push), generates structured reflections on what went right or wrong, and moves everything to `bets/history.json`. Also resolves paper trade outcomes. Appends results to the daily journal. Clears `output/` after processing.
 
 | Flag | Description |
 |------|-------------|
@@ -122,7 +122,17 @@ The dashboard pulls from `bets/history.json` for bet performance and `bets/skips
 python betting.py update-strategy
 ```
 
-Requires 15+ completed bets. Aggregates performance patterns and reflections from history, then asks the LLM to produce 1-3 targeted adjustments to `bets/strategy.md`. Changes are appended to a change log for auditability. Previous strategy versions are archived (last 10 kept).
+Requires 15+ completed bets. Aggregates performance patterns and reflections from history, then asks the LLM to produce 1-3 targeted adjustments to `bets/strategy.md`. Paper trade insights are included when 15+ paper trades exist. Changes are appended to a change log for auditability. Previous strategy versions are archived (last 10 kept).
+
+### Paper trading
+
+The system automatically paper trades every skipped game using a contrarian LLM analyst that must find value in each one. Paper trades run after `analyze`, resolve during `results`, and track independently under `bets/paper/`.
+
+```bash
+python betting.py update-paper-strategy
+```
+
+Requires 15+ paper trades. Evolves the paper trading strategy and surfaces insights that could improve the main strategy's skip decisions. Paper trade performance is broken down by skip reason category (injury uncertainty, no edge, high variance, sizing veto) to identify which types of skipped games have the most missed value.
 
 ## Running Tests
 
@@ -150,6 +160,7 @@ workflow/
     results.py          # Post-game: scores -> evaluation -> history
     check.py            # Position monitoring and auto-close workflow
     strategy.py         # Strategy evolution from performance patterns
+    paper.py            # Contrarian paper trades on skipped games
     stats.py            # Analytics computation and HTML dashboard
     prompts.py          # LLM prompts and matchup condensing
     llm.py              # OpenRouter API client
@@ -168,5 +179,10 @@ bets/
     strategy.md         # Evolving betting strategy
     dashboard.html      # Generated stats dashboard
     journal/            # Daily analysis and results entries
+    paper/              # Paper trading (contrarian bets on skipped games)
+        trades.json     # Active paper trades
+        history.json    # Resolved trades with summary stats
+        strategy.md     # Paper-specific evolving strategy
+        journal/        # Daily paper trade entries
 tests/                  # pytest test suite
 ```

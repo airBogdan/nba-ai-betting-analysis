@@ -203,3 +203,51 @@ class BetHistory(TypedDict):
 
     bets: List[CompletedBet]
     summary: BetHistorySummary
+
+
+class _PaperTradeRequired(TypedDict):
+    """Required fields for PaperTrade."""
+
+    matchup: str
+    date: str
+    bet_type: Literal["moneyline", "spread", "total"]
+    pick: str
+    line: Optional[float]
+    confidence: Literal["low", "medium", "high"]
+    reasoning: str
+    primary_edge: str
+    skip_reason: str
+
+
+class PaperTrade(_PaperTradeRequired, total=False):
+    """Paper trade on a skipped game."""
+
+    game_id: str
+    result: Literal["win", "loss", "push"]
+    winner: str
+    final_score: str
+    actual_total: int
+    actual_margin: int
+    profit_loss: float
+    units: float
+
+
+class PaperHistorySummary(TypedDict):
+    """Summary statistics for paper trade history."""
+
+    total_trades: int
+    wins: int
+    losses: int
+    pushes: int
+    win_rate: float
+    net_units: float
+    by_confidence: Dict[str, ConfidenceStats]
+    by_bet_type: Dict[str, ConfidenceStats]
+    by_skip_reason_category: Dict[str, ConfidenceStats]
+
+
+class PaperHistory(TypedDict):
+    """Full paper trade history structure."""
+
+    trades: List[PaperTrade]
+    summary: PaperHistorySummary
