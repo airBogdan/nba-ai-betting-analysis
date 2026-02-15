@@ -42,4 +42,35 @@ echo "" >> "$LOGFILE"
 echo "===== Exit code: $EXIT_CODE =====" >> "$LOGFILE"
 echo "" >> "$LOGFILE"
 
+# Send Telegram notification if configured
+send_telegram() {
+    [ -z "${TELEGRAM_BOT_TOKEN:-}" ] && return
+    [ -z "${TELEGRAM_CHAT_ID:-}" ] && return
+    local message="$1"
+    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+        -d chat_id="$TELEGRAM_CHAT_ID" \
+        -d text="$message" \
+        -d parse_mode="Markdown" > /dev/null 2>&1
+}
+
+# Notify on specific commands
+case "$*" in
+    *"betting.py analyze"*)
+        if [ $EXIT_CODE -eq 0 ]; then
+            SUMMARY=$(tail -25 "$LOGFILE" | head -20)
+            send_telegram "$(printf '*Betting Analyze Complete* (%s)\n\n```\n%s\n```' "$DATE" "$SUMMARY")"
+        else
+            send_telegram "$(printf '*Betting Analyze FAILED* (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
+        fi
+        ;;
+    *"betting.py results"*)
+        if [ $EXIT_CODE -eq 0 ]; then
+            SUMMARY=$(tail -25 "$LOGFILE" | head -20)
+            send_telegram "$(printf '*Betting Results Complete* (%s)\n\n```\n%s\n```' "$DATE" "$SUMMARY")"
+        else
+            send_telegram "$(printf '*Betting Results FAILED* (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
+        fi
+        ;;
+esac
+
 exit $EXIT_CODE

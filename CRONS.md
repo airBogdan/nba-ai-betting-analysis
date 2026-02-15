@@ -28,6 +28,21 @@ Install with: `crontab -e` and paste the above, or pipe a file with `crontab cro
 - `CRON_TZ=America/New_York` makes cron interpret all times as ET (handles EST/EDT automatically).
 - Each run is delimited by timestamps and exit codes in the log.
 
+## Telegram Notifications
+
+`run.sh` sends a Telegram message after `betting.py analyze` completes (success or failure).
+
+Add to `.env`:
+
+```
+TELEGRAM_BOT_TOKEN=123456:ABC-DEF...
+TELEGRAM_CHAT_ID=your_chat_id
+```
+
+To get these:
+1. Create a bot via [@BotFather](https://t.me/BotFather) and copy the token.
+2. Send any message to your bot, then visit `https://api.telegram.org/bot<TOKEN>/getUpdates` to find your `chat_id`.
+
 ## Viewing Logs
 
 ```bash
