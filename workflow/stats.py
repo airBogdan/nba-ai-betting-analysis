@@ -1,0 +1,371 @@
+"""Analytics computation and HTML dashboard generation."""
+
+import html
+import json
+import webbrowser
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional
+
+from .io import BETS_DIR, get_history, get_skips
+from .results import _categorize_edge
+
+
+def _pick_side(bet: dict) -> Optional[str]:
+    """Determine if the pick was home or away. Returns None for totals."""
+    bet_type = bet.get("bet_type", "")
+    if bet_type == "total":
+        return None
+    matchup = bet.get("matchup", "")
+    parts = matchup.split(" @ ")
+    if len(parts) != 2:
+        return None
+    away, home = parts
+    pick = bet.get("pick", "")
+    pick_lower = pick.lower().strip()
+    if pick_lower and (pick_lower in home.lower() or home.lower() in pick_lower):
+        return "home"
+    if pick_lower and (pick_lower in away.lower() or away.lower() in pick_lower):
+        return "away"
+    return None
+
+
+def compute_overview(history: dict) -> dict:
+    """Compute overview card data from history."""
+    summary = history.get("summary", {})
+
+    wins = summary.get("wins", 0)
+    losses = summary.get("losses", 0)
+    pushes = summary.get("pushes", 0)
+    total = summary.get("total_bets", 0)
+    net_units = summary.get("net_units", 0.0)
+    net_dollars = summary.get("net_dollar_pnl", 0.0)
+    roi = summary.get("roi", 0.0)
+    streak = summary.get("current_streak", "")
+    win_rate = summary.get("win_rate", 0.0)
+    wagered = summary.get("total_units_wagered", 0.0)
+    avg_units = round(wagered / total, 2) if total > 0 else 0.0
+
+    return {
+        "wins": wins,
+        "losses": losses,
+        "pushes": pushes,
+        "total_bets": total,
+        "win_rate": win_rate,
+        "net_units": net_units,
+        "net_dollars": net_dollars,
+        "roi": roi,
+        "streak": streak,
+        "avg_units": avg_units,
+    }
+
+
+def compute_cumulative_pnl(bets: list) -> list:
+    """Compute cumulative P&L over time, aggregated by date."""
+    if not bets:
+        return []
+
+    # Sort by date
+    sorted_bets = sorted(bets, key=lambda b: b.get("date", ""))
+    cum_units = 0.0
+    cum_dollars = 0.0
+    by_date: Dict[str, dict] = {}
+
+    for bet in sorted_bets:
+        date = bet.get("date", "unknown")
+        cum_units += bet.get("profit_loss", 0.0)
+        cum_dollars += bet.get("dollar_pnl", 0.0)
+        by_date[date] = {
+            "date": date,
+            "cumulative_units": round(cum_units, 2),
+            "cumulative_dollars": round(cum_dollars, 2),
+        }
+
+    return list(by_date.values())
+
+
+def compute_rolling_win_rate(bets: list, window: int = 10) -> list:
+    """Compute rolling win rate over a window, excluding pushes."""
+    # Filter to win/loss only, maintain chronological order
+    wl_bets = [b for b in bets if b.get("result") in ("win", "loss")]
+    if not wl_bets:
+        return []
+
+    results = []
+    for i, bet in enumerate(wl_bets):
+        start = max(0, i - window + 1)
+        window_bets = wl_bets[start : i + 1]
+        wins = sum(1 for b in window_bets if b["result"] == "win")
+        rate = round(wins / len(window_bets), 3)
+        results.append({"bet_number": i + 1, "rolling_win_rate": rate})
+
+    return results
+
+
+def compute_breakdown_table(
+    bets: list, key_fn: Callable[[dict], Optional[str]]
+) -> list:
+    """Compute breakdown table grouped by key_fn."""
+    groups: Dict[str, dict] = {}
+
+    for bet in bets:
+        key = key_fn(bet)
+        if key is None:
+            continue
+        if key not in groups:
+            groups[key] = {"category": key, "wins": 0, "losses": 0, "pushes": 0, "net_units": 0.0, "units_wagered": 0.0}
+        entry = groups[key]
+        result = bet.get("result", "")
+        units = bet.get("units", 0.0)
+        pnl = bet.get("profit_loss", 0.0)
+
+        if result == "win":
+            entry["wins"] += 1
+            entry["units_wagered"] += units
+        elif result == "loss":
+            entry["losses"] += 1
+            entry["units_wagered"] += units
+        elif result == "push":
+            entry["pushes"] += 1
+        entry["net_units"] += pnl
+
+    rows = []
+    for entry in groups.values():
+        total = entry["wins"] + entry["losses"] + entry["pushes"]
+        wl = entry["wins"] + entry["losses"]
+        win_rate = round(entry["wins"] / wl, 3) if wl > 0 else 0.0
+        roi = round(entry["net_units"] / entry["units_wagered"], 3) if entry["units_wagered"] > 0 else 0.0
+        rows.append({
+            "category": entry["category"],
+            "wins": entry["wins"],
+            "losses": entry["losses"],
+            "pushes": entry["pushes"],
+            "total": total,
+            "win_rate": win_rate,
+            "net_units": round(entry["net_units"], 2),
+            "roi": roi,
+        })
+
+    return sorted(rows, key=lambda r: r["total"], reverse=True)
+
+
+def compute_all_breakdowns(bets: list) -> dict:
+    """Compute all breakdown tables."""
+    return {
+        "by_confidence": compute_breakdown_table(bets, lambda b: b.get("confidence")),
+        "by_edge_type": compute_breakdown_table(bets, lambda b: _categorize_edge(b.get("primary_edge", ""))),
+        "by_bet_type": compute_breakdown_table(bets, lambda b: b.get("bet_type")),
+        "by_pick_side": compute_breakdown_table(bets, _pick_side),
+    }
+
+
+def compute_skip_stats(skips: list) -> dict:
+    """Compute skip statistics."""
+    resolved = sum(1 for s in skips if s.get("outcome_resolved"))
+    return {
+        "total_skipped": len(skips),
+        "resolved": resolved,
+        "skips": skips,
+    }
+
+
+def _render_html(
+    overview: dict,
+    cumulative_pnl: list,
+    rolling_win_rate: list,
+    breakdowns: dict,
+    skip_stats: dict,
+) -> str:
+    """Render self-contained HTML dashboard."""
+    pnl_dates = json.dumps([p["date"] for p in cumulative_pnl])
+    pnl_units = json.dumps([p["cumulative_units"] for p in cumulative_pnl])
+    pnl_dollars = json.dumps([p["cumulative_dollars"] for p in cumulative_pnl])
+
+    rwr_numbers = json.dumps([r["bet_number"] for r in rolling_win_rate])
+    rwr_rates = json.dumps([r["rolling_win_rate"] for r in rolling_win_rate])
+
+    def _color(val: float) -> str:
+        if val > 0:
+            return "color: #22c55e"
+        if val < 0:
+            return "color: #ef4444"
+        return ""
+
+    def _esc(val: str) -> str:
+        return html.escape(str(val))
+
+    def _breakdown_rows(rows: list) -> str:
+        out = ""
+        for r in rows:
+            wr_pct = f"{r['win_rate'] * 100:.1f}%"
+            roi_pct = f"{r['roi'] * 100:.1f}%"
+            nu_style = _color(r["net_units"])
+            roi_style = _color(r["roi"])
+            out += (
+                f"<tr><td>{_esc(r['category'])}</td><td>{r['wins']}</td><td>{r['losses']}</td>"
+                f"<td>{r['pushes']}</td><td>{r['total']}</td><td>{wr_pct}</td>"
+                f"<td style=\"{nu_style}\">{r['net_units']:+.2f}</td>"
+                f"<td style=\"{roi_style}\">{roi_pct}</td></tr>\n"
+            )
+        return out
+
+    def _skip_rows(skips: list) -> str:
+        out = ""
+        for s in skips:
+            outcome = ""
+            if s.get("outcome_resolved"):
+                outcome = f"{_esc(s.get('final_score', ''))} ({_esc(s.get('winner', ''))})"
+            out += (
+                f"<tr><td>{_esc(s.get('date', ''))}</td><td>{_esc(s.get('matchup', ''))}</td>"
+                f"<td>{_esc(s.get('reason', ''))}</td><td>{_esc(s.get('source', ''))}</td>"
+                f"<td>{outcome}</td></tr>\n"
+            )
+        return out
+
+    nu_style = _color(overview["net_units"])
+    nd_style = _color(overview["net_dollars"])
+    roi_style = _color(overview["roi"])
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NBA Betting Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+  body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 24px; }}
+  h1 {{ text-align: center; margin-bottom: 24px; font-size: 1.8rem; }}
+  h2 {{ margin: 32px 0 16px; font-size: 1.3rem; border-bottom: 1px solid #334155; padding-bottom: 8px; }}
+  .cards {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }}
+  .card {{ background: #1e293b; border-radius: 8px; padding: 16px; text-align: center; }}
+  .card .label {{ font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }}
+  .card .value {{ font-size: 1.5rem; font-weight: 700; margin-top: 4px; }}
+  .chart-container {{ background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 24px; }}
+  table {{ width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 8px; overflow: hidden; margin-bottom: 24px; }}
+  th {{ background: #334155; padding: 10px 12px; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }}
+  td {{ padding: 8px 12px; border-top: 1px solid #334155; font-size: 0.9rem; }}
+  tr:hover {{ background: #253347; }}
+</style>
+</head>
+<body>
+<h1>NBA Betting Dashboard</h1>
+
+<div class="cards">
+  <div class="card"><div class="label">Record</div><div class="value">{overview['wins']}-{overview['losses']}-{overview['pushes']}</div></div>
+  <div class="card"><div class="label">Win Rate</div><div class="value">{overview['win_rate'] * 100:.1f}%</div></div>
+  <div class="card"><div class="label">Net Units</div><div class="value" style="{nu_style}">{overview['net_units']:+.2f}</div></div>
+  <div class="card"><div class="label">Net $</div><div class="value" style="{nd_style}">${overview['net_dollars']:+.2f}</div></div>
+  <div class="card"><div class="label">ROI</div><div class="value" style="{roi_style}">{overview['roi'] * 100:.1f}%</div></div>
+  <div class="card"><div class="label">Streak</div><div class="value">{overview['streak']}</div></div>
+  <div class="card"><div class="label">Avg Units</div><div class="value">{overview['avg_units']}</div></div>
+  <div class="card"><div class="label">Total Bets</div><div class="value">{overview['total_bets']}</div></div>
+</div>
+
+<h2>Cumulative P&amp;L</h2>
+<div class="chart-container"><canvas id="pnlChart"></canvas></div>
+
+<h2>Rolling Win Rate (10-bet window)</h2>
+<div class="chart-container"><canvas id="wrChart"></canvas></div>
+
+<h2>By Confidence</h2>
+<table>
+<tr><th>Level</th><th>W</th><th>L</th><th>P</th><th>Total</th><th>Win%</th><th>Net Units</th><th>ROI</th></tr>
+{_breakdown_rows(breakdowns['by_confidence'])}
+</table>
+
+<h2>By Edge Type</h2>
+<table>
+<tr><th>Edge</th><th>W</th><th>L</th><th>P</th><th>Total</th><th>Win%</th><th>Net Units</th><th>ROI</th></tr>
+{_breakdown_rows(breakdowns['by_edge_type'])}
+</table>
+
+<h2>By Bet Type</h2>
+<table>
+<tr><th>Type</th><th>W</th><th>L</th><th>P</th><th>Total</th><th>Win%</th><th>Net Units</th><th>ROI</th></tr>
+{_breakdown_rows(breakdowns['by_bet_type'])}
+</table>
+
+<h2>By Pick Side</h2>
+<table>
+<tr><th>Side</th><th>W</th><th>L</th><th>P</th><th>Total</th><th>Win%</th><th>Net Units</th><th>ROI</th></tr>
+{_breakdown_rows(breakdowns['by_pick_side'])}
+</table>
+
+<h2>Skipped Games ({skip_stats['total_skipped']} total, {skip_stats['resolved']} resolved)</h2>
+<table>
+<tr><th>Date</th><th>Matchup</th><th>Reason</th><th>Source</th><th>Outcome</th></tr>
+{_skip_rows(skip_stats['skips'])}
+</table>
+
+<script>
+new Chart(document.getElementById('pnlChart'), {{
+  type: 'line',
+  data: {{
+    labels: {pnl_dates},
+    datasets: [
+      {{ label: 'Units', data: {pnl_units}, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.3, yAxisID: 'y' }},
+      {{ label: 'Dollars', data: {pnl_dollars}, borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.1)', fill: true, tension: 0.3, yAxisID: 'y1' }}
+    ]
+  }},
+  options: {{
+    responsive: true,
+    interaction: {{ mode: 'index', intersect: false }},
+    scales: {{
+      x: {{ ticks: {{ color: '#94a3b8' }}, grid: {{ color: '#1e293b' }} }},
+      y: {{ position: 'left', title: {{ display: true, text: 'Units', color: '#94a3b8' }}, ticks: {{ color: '#94a3b8' }}, grid: {{ color: '#334155' }} }},
+      y1: {{ position: 'right', title: {{ display: true, text: 'Dollars', color: '#94a3b8' }}, ticks: {{ color: '#94a3b8' }}, grid: {{ drawOnChartArea: false }} }}
+    }},
+    plugins: {{ legend: {{ labels: {{ color: '#e2e8f0' }} }} }}
+  }}
+}});
+
+new Chart(document.getElementById('wrChart'), {{
+  type: 'line',
+  data: {{
+    labels: {rwr_numbers},
+    datasets: [
+      {{ label: 'Win Rate', data: {rwr_rates}, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', fill: true, tension: 0.3 }}
+    ]
+  }},
+  options: {{
+    responsive: true,
+    scales: {{
+      x: {{ title: {{ display: true, text: 'Bet #', color: '#94a3b8' }}, ticks: {{ color: '#94a3b8' }}, grid: {{ color: '#1e293b' }} }},
+      y: {{ min: 0, max: 1, title: {{ display: true, text: 'Win Rate', color: '#94a3b8' }}, ticks: {{ color: '#94a3b8', callback: function(v) {{ return (v * 100) + '%'; }} }}, grid: {{ color: '#334155' }} }}
+    }},
+    plugins: {{ legend: {{ labels: {{ color: '#e2e8f0' }} }} }}
+  }}
+}});
+</script>
+</body>
+</html>"""
+
+
+def generate_dashboard(output_path: Optional[str] = None) -> None:
+    """Generate HTML dashboard and open in browser."""
+    history = get_history()
+    bets = history.get("bets", [])
+    skips = get_skips()
+
+    if not bets:
+        print("No bet history found. Run some analyses first.")
+        return
+
+    overview = compute_overview(history)
+    cumulative_pnl = compute_cumulative_pnl(bets)
+    rolling_wr = compute_rolling_win_rate(bets)
+    breakdowns = compute_all_breakdowns(bets)
+    skip_stats = compute_skip_stats(skips)
+
+    html = _render_html(overview, cumulative_pnl, rolling_wr, breakdowns, skip_stats)
+
+    path = Path(output_path) if output_path else BETS_DIR / "dashboard.html"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(html)
+    print(f"Dashboard written to {path}")
+
+    try:
+        webbrowser.open(f"file://{path.resolve()}")
+    except Exception:
+        pass

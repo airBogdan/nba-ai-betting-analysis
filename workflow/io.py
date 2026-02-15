@@ -119,3 +119,25 @@ def get_open_exposure() -> float:
     active = get_active_bets()
     return sum(b.get("amount", 0.0) for b in active)
 
+
+SKIPS_PATH = BETS_DIR / "skips.json"
+
+
+def get_skips() -> List[dict]:
+    """Load skipped games from bets/skips.json."""
+    data = read_json(SKIPS_PATH)
+    return data if isinstance(data, list) else []
+
+
+def save_skips_all(skips: List[dict]) -> None:
+    """Save all skips to bets/skips.json."""
+    write_json(SKIPS_PATH, skips)
+
+
+def save_skips(date: str, new_skips: List[dict]) -> None:
+    """Append skips for a date, replacing any existing for that date (supports --force)."""
+    all_skips = get_skips()
+    all_skips = [s for s in all_skips if s.get("date") != date]
+    all_skips.extend(new_skips)
+    save_skips_all(all_skips)
+

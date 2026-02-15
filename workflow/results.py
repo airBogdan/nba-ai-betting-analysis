@@ -13,8 +13,10 @@ from .io import (
     get_active_bets,
     get_dollar_pnl,
     get_history,
+    get_skips,
     save_active_bets,
     save_history,
+    save_skips_all,
 )
 from .llm import complete_json
 from .prompts import REFLECT_BET_PROMPT, SYSTEM_ANALYST
@@ -403,6 +405,46 @@ def append_journal_post_game(date: str, completed: List[CompletedBet]) -> None:
     append_text(journal_path, "\n".join(lines))
 
 
+async def _resolve_skips_for_date(date: str, season: int) -> None:
+    """Fetch outcomes for skipped games on this date."""
+    all_skips = get_skips()
+    date_skips = [s for s in all_skips if s.get("date") == date and not s.get("outcome_resolved")]
+    if not date_skips:
+        return
+
+    api_results = await get_games_by_date(season, date)
+    all_results = parse_game_results(api_results) if api_results else []
+    finished = [r for r in all_results if r["status"] == "finished"]
+    if not finished:
+        return
+
+    resolved = 0
+    for skip in date_skips:
+        matched = None
+        gid = skip.get("game_id")
+        if gid:
+            matched = next((r for r in finished if r["game_id"] == gid), None)
+        if not matched:
+            parts = skip["matchup"].split(" @ ")
+            if len(parts) == 2:
+                away, home = parts
+                matched = next(
+                    (r for r in finished if _teams_match(r["home_team"], home) and _teams_match(r["away_team"], away)),
+                    None,
+                )
+        if matched:
+            skip["winner"] = matched["winner"]
+            skip["final_score"] = _format_score(matched)
+            skip["actual_total"] = matched["home_score"] + matched["away_score"]
+            skip["actual_margin"] = matched["home_score"] - matched["away_score"]
+            skip["outcome_resolved"] = True
+            resolved += 1
+
+    if resolved:
+        save_skips_all(all_skips)
+        print(f"  Resolved outcomes for {resolved} skipped game(s)")
+
+
 async def run_results_workflow(date: Optional[str] = None) -> None:
     """Run the post-game results workflow.
 
@@ -414,6 +456,12 @@ async def run_results_workflow(date: Optional[str] = None) -> None:
     if not season:
         print("Could not determine current NBA season")
         return
+
+    # Resolve skip outcomes for all dates that have unresolved skips
+    all_skips = get_skips()
+    skip_dates = set(s["date"] for s in all_skips if not s.get("outcome_resolved"))
+    for skip_date in sorted(skip_dates):
+        await _resolve_skips_for_date(skip_date, season)
 
     # Load active bets
     active = get_active_bets()

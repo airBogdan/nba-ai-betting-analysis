@@ -100,6 +100,22 @@ python betting.py check
 
 Monitors placed Polymarket positions by fetching live prices and computing P&L. Positions that have moved adversely by more than 10pp trigger a re-evaluation — searches for fresh context (injuries, lineup changes) via Perplexity, then asks the LLM whether to HOLD or CLOSE. Positions recommended for close are auto-sold on Polymarket with bankroll and history updated. Results are appended to the daily journal.
 
+### Stats dashboard
+
+```bash
+python betting.py stats
+```
+
+Generates a self-contained HTML dashboard at `bets/dashboard.html` and opens it in the browser. Includes:
+
+- Overview cards (record, win rate, ROI, net units/dollars, streak)
+- Cumulative P&L chart (dual y-axis: units + dollars) over time
+- Rolling win rate chart (10-bet window)
+- Breakdown tables by confidence level, edge type, bet type, and home/away pick side
+- Skipped games table with reasons and resolved outcomes
+
+The dashboard pulls from `bets/history.json` for bet performance and `bets/skips.json` for skip tracking data.
+
 ### Update strategy
 
 ```bash
@@ -134,6 +150,7 @@ workflow/
     results.py          # Post-game: scores -> evaluation -> history
     check.py            # Position monitoring and auto-close workflow
     strategy.py         # Strategy evolution from performance patterns
+    stats.py            # Analytics computation and HTML dashboard
     prompts.py          # LLM prompts and matchup condensing
     llm.py              # OpenRouter API client
     io.py               # File I/O for bets directory
@@ -146,8 +163,10 @@ bets/
     polymarket_helpers/  # Polymarket API client, matching, odds conversion
     active.json         # Open bets awaiting results
     history.json        # Completed bets with outcomes
+    skips.json          # Skipped games with reasons and outcomes
     bankroll.json       # Bankroll tracking (auto-created at $1000)
     strategy.md         # Evolving betting strategy
+    dashboard.html      # Generated stats dashboard
     journal/            # Daily analysis and results entries
 tests/                  # pytest test suite
 ```

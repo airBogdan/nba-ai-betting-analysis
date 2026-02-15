@@ -178,6 +178,26 @@ class BetHistorySummary(TypedDict):
     net_dollar_pnl: float
 
 
+class _SkippedGameRequired(TypedDict):
+    """Required fields for SkippedGame."""
+
+    matchup: str  # "Away @ Home"
+    reason: str  # Why skipped
+    date: str  # "YYYY-MM-DD"
+
+
+class SkippedGame(_SkippedGameRequired, total=False):
+    """Skipped game with optional outcome data."""
+
+    game_id: str  # API game ID for outcome lookup
+    source: str  # "synthesis" | "sizing"
+    winner: str  # Filled by results workflow
+    final_score: str  # "Away X @ Home Y"
+    actual_total: int
+    actual_margin: int
+    outcome_resolved: bool
+
+
 class BetHistory(TypedDict):
     """Full bet history structure."""
 

@@ -17,6 +17,7 @@ from .io import (
     get_open_exposure,
     read_text,
     save_active_bets,
+    save_skips,
     write_text,
 )
 from .llm import complete_json
@@ -561,13 +562,13 @@ async def size_bets(
                 bet.get("odds_price", -110), bet["confidence"], available
             )
             if kelly_max <= 0:
-                skipped.append({"matchup": bet["matchup"], "reason": "Kelly: no edge at these odds"})
+                skipped.append({"matchup": bet["matchup"], "reason": "Kelly: no edge at these odds", "game_id": bet["game_id"]})
                 continue
             bet["amount"] = min(round(decision["amount"], 2), round(kelly_max * 1.2, 2))
             sized_bets.append(bet)
         else:
             reason = decision.get("reasoning", "No reasoning") if decision else "No sizing decision"
-            skipped.append({"matchup": bet["matchup"], "reason": f"Vetoed: {reason}"})
+            skipped.append({"matchup": bet["matchup"], "reason": f"Vetoed: {reason}", "game_id": bet["game_id"]})
 
     return sized_bets, skipped
 
@@ -743,8 +744,25 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
     # Drop bets where no poly_price could be extracted (can't place on Polymarket)
     new_bets = [b for b in new_bets if b.get("poly_price") is not None]
 
+    # Helper to enrich skip dicts with date/source/game_id for persistence
+    matchup_to_game_id = {rec["matchup"]: rec["game_id"] for rec in recommendations}
+
+    def _enrich_skip(skip, source):
+        enriched = {
+            "matchup": skip.get("matchup", "Unknown"),
+            "reason": skip.get("reason", "No clear edge"),
+            "date": date,
+            "source": source,
+        }
+        gid = skip.get("game_id") or matchup_to_game_id.get(skip.get("matchup"))
+        if gid:
+            enriched["game_id"] = gid
+        return enriched
+
     if not new_bets:
         print("No bets selected by analysis.")
+        enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
+        save_skips(date, enriched_skips)
         write_journal_pre_game(date, [], synthesis.get("skipped", []), synthesis.get("summary", ""))
         return
 
@@ -753,6 +771,8 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
     balance = get_polymarket_balance()
     if balance is None:
         print("Error: Could not get Polymarket balance. Set POLYMARKET_PRIVATE_KEY and POLYMARKET_FUNDER.")
+        enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
+        save_skips(date, enriched_skips)
         return
 
     # Size bets
@@ -763,6 +783,11 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
 
     # Combine skipped lists for journal
     all_skipped = synthesis.get("skipped", []) + sizing_skipped
+
+    # Enrich and persist skips
+    enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
+    enriched_skips += [_enrich_skip(s, "sizing") for s in sizing_skipped]
+    save_skips(date, enriched_skips)
 
     if not sized_bets:
         print("All bets were vetoed by sizing.")

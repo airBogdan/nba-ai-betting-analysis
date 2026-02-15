@@ -51,7 +51,13 @@ python3.13 betting.py results
 - Evaluates bets and updates history
 - Appends results to journal
 
-### 6. Update strategy (after 15+ bets)
+### 6. Stats dashboard
+```bash
+python3.13 betting.py stats
+```
+Generates `dashboard.html` with performance charts (cumulative P&L, rolling win rate), breakdown tables (by confidence, edge type, bet type, home/away), and a skipped games table. Opens in browser automatically.
+
+### 7. Update strategy (after 15+ bets)
 ```bash
 python3.13 betting.py update-strategy
 ```
@@ -63,5 +69,7 @@ Produces 1-3 targeted adjustments to `strategy.md` based on performance patterns
 - `polymarket_helpers/` - Polymarket Gamma API client, team matching, odds conversion
 - `active.json` - Open bets awaiting results
 - `history.json` - Completed bets with outcomes
+- `skips.json` - Skipped games with reasons and resolved outcomes
 - `strategy.md` - Evolving betting strategy
+- `dashboard.html` - Generated stats dashboard
 - `journal/` - Daily entries with analysis and results

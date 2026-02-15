@@ -61,6 +61,9 @@ def main():
     # check
     subparsers.add_parser("check", help="Check open positions and auto-close if edge lost")
 
+    # stats
+    subparsers.add_parser("stats", help="Generate HTML stats dashboard")
+
     args = parser.parse_args()
 
     if args.command == "init":
@@ -102,6 +105,10 @@ def main():
         from workflow.check import run_check_workflow
 
         asyncio.run(run_check_workflow())
+    elif args.command == "stats":
+        from workflow.stats import generate_dashboard
+
+        generate_dashboard()
 
 
 if __name__ == "__main__":
