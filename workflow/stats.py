@@ -6,8 +6,8 @@ import webbrowser
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
-from .io import BETS_DIR, get_history, get_skips
-from .results import _categorize_edge
+from .io import BETS_DIR, get_history, get_paper_history, get_skips
+from .results import _categorize_edge, _categorize_skip_reason
 
 
 def _pick_side(bet: dict) -> Optional[str]:
@@ -168,12 +168,44 @@ def compute_skip_stats(skips: list) -> dict:
     }
 
 
+def compute_paper_overview(paper_history: dict) -> dict:
+    """Compute overview card data from paper trade history."""
+    summary = paper_history.get("summary", {})
+    wins = summary.get("wins", 0)
+    losses = summary.get("losses", 0)
+    pushes = summary.get("pushes", 0)
+    total = summary.get("total_trades", 0)
+    net_units = summary.get("net_units", 0.0)
+    win_rate = summary.get("win_rate", 0.0)
+
+    return {
+        "wins": wins,
+        "losses": losses,
+        "pushes": pushes,
+        "total_trades": total,
+        "win_rate": win_rate,
+        "net_units": net_units,
+    }
+
+
+def compute_paper_breakdowns(trades: list) -> dict:
+    """Compute paper trade breakdown tables."""
+    return {
+        "by_confidence": compute_breakdown_table(trades, lambda t: t.get("confidence")),
+        "by_bet_type": compute_breakdown_table(trades, lambda t: t.get("bet_type")),
+        "by_skip_reason": compute_breakdown_table(trades, lambda t: _categorize_skip_reason(t.get("skip_reason", ""))),
+    }
+
+
 def _render_html(
     overview: dict,
     cumulative_pnl: list,
     rolling_win_rate: list,
     breakdowns: dict,
     skip_stats: dict,
+    paper_overview: Optional[dict] = None,
+    paper_cumulative_pnl: Optional[list] = None,
+    paper_breakdowns: Optional[dict] = None,
 ) -> str:
     """Render self-contained HTML dashboard."""
     pnl_dates = json.dumps([p["date"] for p in cumulative_pnl])
@@ -220,6 +252,65 @@ def _render_html(
                 f"<td>{outcome}</td></tr>\n"
             )
         return out
+
+    # Paper trading HTML section (conditional)
+    paper_section = ""
+    paper_chart_js = ""
+    if paper_overview and paper_overview.get("total_trades", 0) > 0:
+        p_nu_style = _color(paper_overview["net_units"])
+        paper_section = f"""
+<h1>Paper Trading</h1>
+
+<div class="cards">
+  <div class="card"><div class="label">Record</div><div class="value">{paper_overview['wins']}-{paper_overview['losses']}-{paper_overview['pushes']}</div></div>
+  <div class="card"><div class="label">Win Rate</div><div class="value">{paper_overview['win_rate'] * 100:.1f}%</div></div>
+  <div class="card"><div class="label">Net Units</div><div class="value" style="{p_nu_style}">{paper_overview['net_units']:+.2f}</div></div>
+  <div class="card"><div class="label">Total Trades</div><div class="value">{paper_overview['total_trades']}</div></div>
+</div>
+
+<h2>Cumulative Units (Paper)</h2>
+<div class="chart-container"><canvas id="paperPnlChart"></canvas></div>
+
+<h2>By Confidence (Paper)</h2>
+<table>
+<tr><th>Level</th><th>W</th><th>L</th><th>P</th><th>Total</th><th>Win%</th><th>Net Units</th><th>ROI</th></tr>
+{_breakdown_rows(paper_breakdowns['by_confidence']) if paper_breakdowns else ''}
+</table>
+
+<h2>By Bet Type (Paper)</h2>
+<table>
+<tr><th>Type</th><th>W</th><th>L</th><th>P</th><th>Total</th><th>Win%</th><th>Net Units</th><th>ROI</th></tr>
+{_breakdown_rows(paper_breakdowns['by_bet_type']) if paper_breakdowns else ''}
+</table>
+
+<h2>By Skip Reason (Paper)</h2>
+<table>
+<tr><th>Reason</th><th>W</th><th>L</th><th>P</th><th>Total</th><th>Win%</th><th>Net Units</th><th>ROI</th></tr>
+{_breakdown_rows(paper_breakdowns['by_skip_reason']) if paper_breakdowns else ''}
+</table>
+"""
+        if paper_cumulative_pnl:
+            p_dates = json.dumps([p["date"] for p in paper_cumulative_pnl])
+            p_units = json.dumps([p["cumulative_units"] for p in paper_cumulative_pnl])
+            paper_chart_js = f"""
+new Chart(document.getElementById('paperPnlChart'), {{
+  type: 'line',
+  data: {{
+    labels: {p_dates},
+    datasets: [
+      {{ label: 'Units', data: {p_units}, borderColor: '#a855f7', backgroundColor: 'rgba(168,85,247,0.1)', fill: true, tension: 0.3 }}
+    ]
+  }},
+  options: {{
+    responsive: true,
+    scales: {{
+      x: {{ ticks: {{ color: '#94a3b8' }}, grid: {{ color: '#1e293b' }} }},
+      y: {{ title: {{ display: true, text: 'Units', color: '#94a3b8' }}, ticks: {{ color: '#94a3b8' }}, grid: {{ color: '#334155' }} }}
+    }},
+    plugins: {{ legend: {{ labels: {{ color: '#e2e8f0' }} }} }}
+  }}
+}});
+"""
 
     nu_style = _color(overview["net_units"])
     nd_style = _color(overview["net_dollars"])
@@ -298,6 +389,8 @@ def _render_html(
 {_skip_rows(skip_stats['skips'])}
 </table>
 
+{paper_section}
+
 <script>
 new Chart(document.getElementById('pnlChart'), {{
   type: 'line',
@@ -337,6 +430,8 @@ new Chart(document.getElementById('wrChart'), {{
     plugins: {{ legend: {{ labels: {{ color: '#e2e8f0' }} }} }}
   }}
 }});
+
+{paper_chart_js}
 </script>
 </body>
 </html>"""
@@ -358,7 +453,15 @@ def generate_dashboard(output_path: Optional[str] = None) -> None:
     breakdowns = compute_all_breakdowns(bets)
     skip_stats = compute_skip_stats(skips)
 
-    html = _render_html(overview, cumulative_pnl, rolling_wr, breakdowns, skip_stats)
+    paper_history = get_paper_history()
+    paper_trades = paper_history.get("trades", [])
+
+    paper_ov = compute_paper_overview(paper_history) if paper_trades else None
+    paper_pnl = compute_cumulative_pnl(paper_trades) if paper_trades else None
+    paper_bkd = compute_paper_breakdowns(paper_trades) if paper_trades else None
+
+    html = _render_html(overview, cumulative_pnl, rolling_wr, breakdowns, skip_stats,
+                        paper_ov, paper_pnl, paper_bkd)
 
     path = Path(output_path) if output_path else BETS_DIR / "dashboard.html"
     path.parent.mkdir(parents=True, exist_ok=True)

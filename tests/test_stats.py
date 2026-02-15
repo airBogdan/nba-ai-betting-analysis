@@ -12,6 +12,8 @@ from workflow.stats import (
     compute_breakdown_table,
     compute_cumulative_pnl,
     compute_overview,
+    compute_paper_breakdowns,
+    compute_paper_overview,
     compute_rolling_win_rate,
     compute_skip_stats,
     generate_dashboard,
@@ -328,3 +330,146 @@ class TestComputeAllBreakdowns:
         assert "by_edge_type" in result
         assert "by_bet_type" in result
         assert "by_pick_side" in result
+
+
+# --- Paper Trading Helpers ---
+
+def _make_paper_trade(**overrides) -> dict:
+    """Factory for paper trade dicts with sensible defaults."""
+    base = {
+        "matchup": "Celtics @ Lakers",
+        "date": "2026-02-10",
+        "bet_type": "moneyline",
+        "pick": "Lakers",
+        "confidence": "medium",
+        "skip_reason": "No clear edge",
+        "units": 1.0,
+        "result": "win",
+        "profit_loss": 1.0,
+    }
+    base.update(overrides)
+    return base
+
+
+def _make_paper_history(trades: list) -> dict:
+    """Build a paper history dict from a list of trades."""
+    resolved = [t for t in trades if "result" in t]
+    wins = sum(1 for t in resolved if t["result"] == "win")
+    losses = sum(1 for t in resolved if t["result"] == "loss")
+    pushes = sum(1 for t in resolved if t["result"] == "push")
+    total = wins + losses + pushes
+    net_units = sum(t.get("profit_loss", 0.0) for t in resolved)
+    return {
+        "trades": trades,
+        "summary": {
+            "total_trades": total,
+            "wins": wins,
+            "losses": losses,
+            "pushes": pushes,
+            "win_rate": round(wins / total, 3) if total > 0 else 0.0,
+            "net_units": round(net_units, 2),
+        },
+    }
+
+
+# --- TestComputePaperOverview ---
+
+class TestComputePaperOverview:
+    def test_standard_summary(self):
+        trades = [
+            _make_paper_trade(result="win", profit_loss=1.0),
+            _make_paper_trade(result="loss", profit_loss=-1.0),
+            _make_paper_trade(result="win", profit_loss=0.5),
+        ]
+        history = _make_paper_history(trades)
+        overview = compute_paper_overview(history)
+        assert overview["wins"] == 2
+        assert overview["losses"] == 1
+        assert overview["pushes"] == 0
+        assert overview["total_trades"] == 3
+        assert overview["net_units"] == 0.5
+
+    def test_empty_history(self):
+        history = _make_paper_history([])
+        overview = compute_paper_overview(history)
+        assert overview["total_trades"] == 0
+        assert overview["win_rate"] == 0.0
+        assert overview["net_units"] == 0.0
+
+
+# --- TestComputePaperBreakdowns ---
+
+class TestComputePaperBreakdowns:
+    def test_returns_all_keys(self):
+        trades = [_make_paper_trade()]
+        result = compute_paper_breakdowns(trades)
+        assert "by_confidence" in result
+        assert "by_bet_type" in result
+        assert "by_skip_reason" in result
+
+    def test_skip_reason_categorized(self):
+        trades = [
+            _make_paper_trade(skip_reason="No clear edge", result="win", profit_loss=1.0),
+            _make_paper_trade(skip_reason="Injury concerns for star player", result="loss", profit_loss=-1.0),
+            _make_paper_trade(skip_reason="Too uncertain and unpredictable", result="win", profit_loss=0.5),
+        ]
+        result = compute_paper_breakdowns(trades)
+        reasons = {r["category"] for r in result["by_skip_reason"]}
+        assert "no_edge" in reasons
+        assert "injury_uncertainty" in reasons
+        assert "high_variance" in reasons
+        # Raw strings should NOT appear
+        assert "No clear edge" not in reasons
+
+    def test_empty(self):
+        result = compute_paper_breakdowns([])
+        assert result["by_confidence"] == []
+        assert result["by_bet_type"] == []
+        assert result["by_skip_reason"] == []
+
+
+# --- TestGenerateDashboard (Paper Trading) ---
+
+class TestGenerateDashboardPaper:
+    def test_with_paper_trades(self, tmp_path):
+        bets = [_make_bet(result="win", profit_loss=1.0)]
+        history = _make_history(bets)
+        paper_trades = [
+            _make_paper_trade(result="win", profit_loss=1.0, date="2026-02-10"),
+            _make_paper_trade(result="loss", profit_loss=-0.5, date="2026-02-11"),
+        ]
+        paper_history = _make_paper_history(paper_trades)
+
+        output = tmp_path / "dashboard.html"
+
+        with (
+            patch("workflow.stats.get_history", return_value=history),
+            patch("workflow.stats.get_skips", return_value=[]),
+            patch("workflow.stats.get_paper_history", return_value=paper_history),
+            patch("workflow.stats.webbrowser"),
+        ):
+            generate_dashboard(str(output))
+
+        content = output.read_text()
+        assert "Paper Trading" in content
+        assert "paperPnlChart" in content
+        assert "1-1-0" in content  # paper record
+
+    def test_no_paper_trades(self, tmp_path):
+        bets = [_make_bet(result="win", profit_loss=1.0)]
+        history = _make_history(bets)
+        paper_history = _make_paper_history([])
+
+        output = tmp_path / "dashboard.html"
+
+        with (
+            patch("workflow.stats.get_history", return_value=history),
+            patch("workflow.stats.get_skips", return_value=[]),
+            patch("workflow.stats.get_paper_history", return_value=paper_history),
+            patch("workflow.stats.webbrowser"),
+        ):
+            generate_dashboard(str(output))
+
+        content = output.read_text()
+        assert "Paper Trading" not in content
+        assert "NBA Betting Dashboard" in content
