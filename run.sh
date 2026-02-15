@@ -53,12 +53,25 @@ send_telegram() {
         -d parse_mode="Markdown" > /dev/null 2>&1
 }
 
+send_telegram_file() {
+    [ -z "${TELEGRAM_BOT_TOKEN:-}" ] && return
+    [ -z "${TELEGRAM_CHAT_ID:-}" ] && return
+    local filepath="$1"
+    local caption="${2:-}"
+    [ ! -f "$filepath" ] && return
+    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
+        -F chat_id="$TELEGRAM_CHAT_ID" \
+        -F document=@"$filepath" \
+        -F caption="$caption" > /dev/null 2>&1
+}
+
 # Notify on specific commands
 case "$*" in
     *"betting.py analyze"*)
         if [ $EXIT_CODE -eq 0 ]; then
             SUMMARY=$(tail -25 "$LOGFILE" | head -20)
             send_telegram "$(printf '*Betting Analyze Complete* (%s)\n\n```\n%s\n```' "$DATE" "$SUMMARY")"
+            send_telegram_file "$PROJECT_DIR/bets/active.json" "Active bets — $DATE"
         else
             send_telegram "$(printf '*Betting Analyze FAILED* (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
         fi
@@ -67,6 +80,7 @@ case "$*" in
         if [ $EXIT_CODE -eq 0 ]; then
             SUMMARY=$(tail -25 "$LOGFILE" | head -20)
             send_telegram "$(printf '*Betting Results Complete* (%s)\n\n```\n%s\n```' "$DATE" "$SUMMARY")"
+            send_telegram_file "$PROJECT_DIR/bets/journal/${DATE}.md" "Journal — $DATE"
         else
             send_telegram "$(printf '*Betting Results FAILED* (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
         fi
