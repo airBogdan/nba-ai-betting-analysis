@@ -1,0 +1,36 @@
+[
+  {
+    "symbol": "BTC",
+    "title": "Bitcoin Up or Down - February 15, 5PM ET",
+    "side": "Down",
+    "candle_start": "2026-02-15T22:00:00Z",
+    "candle_end": "2026-02-15T23:00:00Z",
+    "entry_price": 0.8,
+    "edge": -0.1358,
+    "edge_size": 0.1358,
+    "net_edge": 0.1258,
+    "synth_probability": 0.6592,
+    "market_probability": 0.795,
+    "event_id": "208237",
+    "up_token_id": "36975300285441306768853019129575473926203889293603929638988990084956580351690",
+    "down_token_id": "34166585329577392410401795596062201623040447175760259738426958917391462785140",
+    "created_at": "2026-02-15T22:43:37Z"
+  },
+  {
+    "symbol": "SOL",
+    "title": "Solana Up or Down - February 15, 5PM ET",
+    "side": "Down",
+    "candle_start": "2026-02-15T22:00:00Z",
+    "candle_end": "2026-02-15T23:00:00Z",
+    "entry_price": 0.86,
+    "edge": -0.0668,
+    "edge_size": 0.0668,
+    "net_edge": 0.0568,
+    "synth_probability": 0.7882,
+    "market_probability": 0.855,
+    "event_id": "208240",
+    "up_token_id": "53308197543801045328481880012863607567061330972247503769557201399505496241466",
+    "down_token_id": "86213042174327263852186428802502009630238680105787116768102450374180820986272",
+    "created_at": "2026-02-15T22:43:37Z"
+  }
+]
