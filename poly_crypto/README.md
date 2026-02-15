@@ -8,6 +8,9 @@ Detects pricing edges between Synthdata's AI model and Polymarket's 1-hour crypt
 # Paper trading (scan + record + resolve in one pass)
 python -m poly_crypto
 
+# Dashboard — HTML analytics in browser
+python -m poly_crypto stats
+
 # Raw signal scan (no persistence)
 python poly_crypto/signals.py
 python poly_crypto/signals.py BTC
@@ -24,6 +27,7 @@ Each run does everything in one pass:
 Data stored in `poly_crypto/paper/`:
 - `trades.json` — open trades awaiting resolution
 - `history.json` — resolved trades with summary stats
+- `dashboard.html` — generated analytics dashboard
 
 ## Cron
 
