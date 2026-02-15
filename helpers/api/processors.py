@@ -66,10 +66,13 @@ def process_player_statistics(
     by_player: Dict[int, Dict[str, Any]] = {}
 
     for stat in raw_stats:
-        pid = stat["player"]["id"]
+        player = stat.get("player")
+        if not player or "id" not in player:
+            continue
+        pid = player["id"]
         if pid not in by_player:
             by_player[pid] = {
-                "name": f"{stat['player']['firstname']} {stat['player']['lastname']}",
+                "name": f"{player.get('firstname', '')} {player.get('lastname', '')}".strip(),
                 "games": []
             }
         by_player[pid]["games"].append(stat)
