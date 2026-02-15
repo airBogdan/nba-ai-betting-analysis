@@ -202,6 +202,79 @@ def get_active_candle_market(symbol: str, timeframe: str) -> CandleMarket | None
     return None
 
 
+def get_active_candle_markets_batch(
+    symbols: list[str], timeframe: str
+) -> dict[str, CandleMarket]:
+    """Get active candle markets for multiple symbols in a single API call.
+
+    Args:
+        symbols: List of crypto symbols (e.g. ["BTC", "ETH", "SOL"]).
+        timeframe: Candle timeframe (5M, 15M, 1H, 4H).
+
+    Returns:
+        Dict mapping symbol to its CandleMarket (only symbols with active markets).
+    """
+    timeframe = timeframe.upper()
+    tf_slug = TIMEFRAMES.get(timeframe)
+    if not tf_slug:
+        raise ValueError(f"Unknown timeframe: {timeframe}. Use one of {list(TIMEFRAMES)}")
+
+    # Build lookup of requested symbols
+    requested = {}
+    for sym in symbols:
+        sym = sym.upper()
+        slug = SYMBOLS.get(sym)
+        if slug:
+            requested[slug.lower()] = sym
+
+    if not requested:
+        return {}
+
+    api_limit = 100 if timeframe == "5M" else 40
+
+    try:
+        resp = requests.get(
+            f"{GAMMA_BASE_URL}/events",
+            params={
+                "tag_slug": tf_slug,
+                "closed": "false",
+                "active": "true",
+                "limit": str(api_limit),
+            },
+            timeout=10,
+        )
+        resp.raise_for_status()
+        events = resp.json()
+    except (requests.RequestException, ValueError) as e:
+        print(f"Error fetching crypto markets: {e}")
+        return {}
+
+    now = datetime.now(timezone.utc)
+    # Collect earliest future event per symbol
+    best: dict[str, tuple[str, dict]] = {}  # symbol -> (end_date, event)
+
+    for event in events:
+        event = _normalize_event(event)
+        end = _parse_iso(event.get("endDate", ""))
+        if not end or end <= now:
+            continue
+
+        tag_slugs = {t.get("slug", "").lower() for t in event.get("tags", [])}
+        for slug, sym in requested.items():
+            if slug in tag_slugs:
+                end_str = event.get("endDate", "")
+                if sym not in best or end_str < best[sym][0]:
+                    best[sym] = (end_str, event)
+
+    result: dict[str, CandleMarket] = {}
+    for sym, (_, event) in best.items():
+        cm = _extract_candle_market(event, sym, timeframe)
+        if cm:
+            result[sym] = cm
+
+    return result
+
+
 def get_upcoming_candle_markets(symbol: str, timeframe: str, count: int = 3) -> list[CandleMarket]:
     """Get multiple upcoming candle markets.
 

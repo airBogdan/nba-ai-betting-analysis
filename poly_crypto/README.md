@@ -10,10 +10,6 @@ python -m poly_crypto
 
 # Dashboard — HTML analytics in browser
 python -m poly_crypto stats
-
-# Raw signal scan (no persistence)
-python poly_crypto/signals.py
-python poly_crypto/signals.py BTC
 ```
 
 ## Paper Trading
