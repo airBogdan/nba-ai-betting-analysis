@@ -13,6 +13,9 @@ PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 LOGS_DIR="$PROJECT_DIR/logs"
 mkdir -p "$LOGS_DIR"
 
+# Clean up logs older than 30 days
+find "$LOGS_DIR" -name "*.log" -mtime +30 -delete 2>/dev/null
+
 # Build a log-friendly label from the arguments
 LABEL=$(echo "$*" | sed 's/[^a-zA-Z0-9_-]/_/g' | sed 's/__*/_/g' | cut -c1-60)
 DATE=$(TZ=America/New_York date +%Y-%m-%d)
@@ -53,8 +56,7 @@ send_telegram() {
     local message="$1"
     curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
         --data-urlencode "text=$message" \
-        -d chat_id="$TELEGRAM_CHAT_ID" \
-        -d parse_mode="Markdown" > /dev/null 2>&1
+        -d chat_id="$TELEGRAM_CHAT_ID" > /dev/null 2>&1
 }
 
 send_telegram_file() {
@@ -74,23 +76,23 @@ case "$*" in
     *"betting.py analyze"*)
         if [ $EXIT_CODE -eq 0 ]; then
             SUMMARY=$(tail -25 "$LOGFILE" | head -20)
-            send_telegram "$(printf '*Betting Analyze Complete* (%s)\n\n```\n%s\n```' "$DATE" "$SUMMARY")"
+            send_telegram "$(printf 'Betting Analyze Complete (%s)\n\n%s' "$DATE" "$SUMMARY")"
             send_telegram_file "$PROJECT_DIR/bets/active.json" "Active bets — $DATE"
         else
-            send_telegram "$(printf '*Betting Analyze FAILED* (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
+            send_telegram "$(printf 'Betting Analyze FAILED (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
         fi
         ;;
     *"betting.py results"*)
         if [ $EXIT_CODE -eq 0 ]; then
             SUMMARY=$(tail -25 "$LOGFILE" | head -20)
-            send_telegram "$(printf '*Betting Results Complete* (%s)\n\n```\n%s\n```' "$DATE" "$SUMMARY")"
+            send_telegram "$(printf 'Betting Results Complete (%s)\n\n%s' "$DATE" "$SUMMARY")"
             # Send the most recently modified journal file (results may process bets from any date)
             JOURNAL=$(ls -t "$PROJECT_DIR/bets/journal/"*.md 2>/dev/null | head -1)
             if [ -n "$JOURNAL" ]; then
                 send_telegram_file "$JOURNAL" "Journal — $(basename "$JOURNAL" .md)"
             fi
         else
-            send_telegram "$(printf '*Betting Results FAILED* (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
+            send_telegram "$(printf 'Betting Results FAILED (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
         fi
         ;;
 esac
