@@ -103,14 +103,21 @@ def _build_signal(synth: dict, market: dict, symbol: str) -> EdgeSignal:
 
 
 
-def scan_edges(threshold: float = EDGE_THRESHOLD) -> list[EdgeSignal]:
+def scan_edges(
+    threshold: float = EDGE_THRESHOLD,
+    traded_keys: set[str] | None = None,
+) -> list[EdgeSignal]:
     """Scan all supported assets for 1H candle edges.
 
     Uses a single Polymarket API call for all symbols.
+    Skips Synthdata calls for candles already in traded_keys.
 
     Returns:
         List of EdgeSignal dicts sorted by edge_size descending.
     """
+    if traded_keys is None:
+        traded_keys = set()
+
     # Single API call for all Polymarket markets
     markets = get_active_candle_markets_batch(SYNTH_SYMBOLS, "1H")
 
@@ -118,6 +125,10 @@ def scan_edges(threshold: float = EDGE_THRESHOLD) -> list[EdgeSignal]:
     for symbol in SYNTH_SYMBOLS:
         market = markets.get(symbol)
         if not market:
+            continue
+
+        # Skip paid Synthdata call if this candle is already traded
+        if f"{symbol}:{market['end_time']}" in traded_keys:
             continue
 
         synth = fetch_synth_hourly(symbol)

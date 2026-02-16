@@ -10,13 +10,13 @@ from typing import TypedDict
 import requests
 
 from poly_crypto.markets import GAMMA_BASE_URL
-from poly_crypto.signals import EdgeSignal, scan_edges
+from poly_crypto.signals import SYNTH_SYMBOLS, EdgeSignal, scan_edges
 
 PAPER_DIR = Path(__file__).parent / "paper"
 TRADES_FILE = PAPER_DIR / "trades.json"
 HISTORY_FILE = PAPER_DIR / "history.json"
 
-GRACE_PERIOD_HOURS = 2
+GRACE_PERIOD_HOURS = 48
 
 
 class CandlePaperTrade(TypedDict, total=False):
@@ -245,16 +245,28 @@ def _compute_summary(trades: list[CandlePaperTrade]) -> dict:
 
 def run_scan_and_trade() -> None:
     """Scan for edges, record paper trades, and resolve expired ones."""
-    signals = scan_edges()
+    print(f"--- {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')} ---")
 
     trades = _load_trades()
     existing_keys = {_dedup_key(t) for t in trades}
+
+    # Skip all API calls if every symbol already has an open trade for a future candle
+    now = datetime.now(timezone.utc)
+    symbols_with_active_trades = {
+        t["symbol"] for t in trades
+        if (_parse_utc(t.get("candle_end", "")) or datetime.min.replace(tzinfo=timezone.utc)) > now
+    }
+    if symbols_with_active_trades >= set(SYNTH_SYMBOLS):
+        print("All symbols traded for current candle. Skipping scan.")
+        _resolve_open_trades(trades)
+        return
+
+    signals = scan_edges(traded_keys=existing_keys)
 
     recorded = 0
     for signal in signals:
         key = f"{signal['symbol']}:{signal['candle_end']}"
         if key in existing_keys:
-            print(f"  SKIP {signal['symbol']} {signal['candle_end']} (already traded)")
             continue
 
         trade = _signal_to_trade(signal)
