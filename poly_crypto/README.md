@@ -28,33 +28,19 @@ Data stored in `poly_crypto/paper/`:
 ## Cron
 
 ```
-*/5 * * * * cd /path/to/nba && /path/to/venv/bin/python -m poly_crypto >> /var/log/crypto-edges.log 2>&1
+*/5 * * * * cd /Users/b/Projects/nba && venv/bin/python -m poly_crypto >> logs/crypto-edges.log 2>&1
 ```
 
 ## Output
 
 ```
-=== Crypto 1H Edge Scanner ===
-
-BTC | Bitcoin Up or Down - February 15, 2PM ET
-  Candle:  $68,473 -> $68,469 (currently Down)
-  Synth:   49.6% Up
-  Market:  56.5% Up
-  Edge:    -6.9% -> BET DOWN
-  Bid/Ask: 0.56 / 0.57 (spread 1.0%)
-  Net:     5.9% (edge after spread)
-  Tokens:  Up=...69098257  Down=...00550455
-
-ETH | No edge (synth=52.1% market=50.5% edge=1.6%)
-
-SOL | Synthdata unavailable
-
-No edges above threshold.
+  TRADE BTC Down | edge 6.9% net 5.9% | 2025-02-15T19:00:00Z
+  SKIP ETH 2025-02-15T19:00:00Z (already traded)
+1 new trade(s) recorded, 2 open total.
+  WIN BTC Down (actual: Down) | 2025-02-15T18:00:00Z
+  PENDING SOL Up | 2025-02-15T19:00:00Z (waiting for oracle)
+1 resolved, 1 still open.
 ```
-
-- **Edge**: synth probability minus market probability. Positive = bet Up, negative = bet Down.
-- **Net**: edge after subtracting the bid/ask spread — your real edge.
-- **Tokens**: Polymarket CLOB token IDs for placing orders.
 
 ## Market Discovery
 
