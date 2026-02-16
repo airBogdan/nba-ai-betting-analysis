@@ -2,10 +2,10 @@
 
 import collections
 import re
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
-from .io import BETS_DIR, JOURNAL_DIR, get_history, get_paper_history, read_text, write_text
+from .io import BETS_DIR, JOURNAL_DIR, get_history, get_paper_history, get_paper_insights, read_text, write_text
 from .llm import complete_json
 from .prompts import (
     MIN_ACTIONABLE_SAMPLE,
@@ -20,17 +20,14 @@ MAX_ADJUSTMENTS_PER_RUN = 3
 MAX_CHANGE_LOG_ENTRIES = 10
 
 
-def load_recent_journals(days: int = 7) -> str:
-    """Load journal entries from the last N days."""
+def load_recent_journals(count: int = 10) -> str:
+    """Load the last *count* journal entries by date."""
+    files = sorted(JOURNAL_DIR.glob("????-??-??.md"), reverse=True)[:count]
+
     entries = []
-    today = datetime.now()
-
-    for i in range(days):
-        date = today - timedelta(days=i)
-        date_str = date.strftime("%Y-%m-%d")
-        journal_path = JOURNAL_DIR / f"{date_str}.md"
-
-        content = read_text(journal_path)
+    for path in files:
+        date_str = path.stem
+        content = read_text(path)
         if content:
             entries.append(f"### {date_str}\n{content}")
 
@@ -48,8 +45,11 @@ def format_recent_bets(bets: List[dict]) -> str:
     lines = []
     for bet in bets:
         result_emoji = "W" if bet["result"] == "win" else "L"
+        bet_type = bet.get("bet_type", "moneyline")
+        line_str = f" {bet['line']}" if bet.get("line") is not None else ""
+        date = bet.get("date", "?")
         lines.append(
-            f"- [{result_emoji}] {bet['matchup']}: {bet['pick']} "
+            f"- [{result_emoji}] {date} {bet['matchup']}: {bet_type}{line_str} {bet['pick']} "
             f"({bet['confidence']}, {bet['units']}u) - {bet['primary_edge']}"
         )
         if bet.get("reflection"):
@@ -60,16 +60,26 @@ def format_recent_bets(bets: List[dict]) -> str:
 
 def aggregate_reflections(bets: List[dict]) -> str:
     """Aggregate structured reflections into a pattern summary."""
-    refs = [b["structured_reflection"] for b in bets if b.get("structured_reflection")]
-    if not refs:
+    bets_with_refs = [b for b in bets if b.get("structured_reflection")]
+    if not bets_with_refs:
         return "No structured reflections available yet."
 
+    refs = [b["structured_reflection"] for b in bets_with_refs]
     total = len(refs)
     edge_valid_count = sum(1 for r in refs if r.get("edge_valid"))
     edge_invalid_count = total - edge_valid_count
 
     # Process assessments
     assessments = collections.Counter(r.get("process_assessment", "sound") for r in refs)
+
+    # Edge validity by edge type
+    edge_by_type: Dict[str, Dict[str, int]] = collections.defaultdict(lambda: {"valid": 0, "invalid": 0})
+    for b in bets_with_refs:
+        edge_type = b.get("primary_edge", "unknown")
+        if b["structured_reflection"].get("edge_valid"):
+            edge_by_type[edge_type]["valid"] += 1
+        else:
+            edge_by_type[edge_type]["invalid"] += 1
 
     # Most common missed factors
     all_missed = []
@@ -95,8 +105,13 @@ def aggregate_reflections(bets: List[dict]) -> str:
         f"- Edge validity: {edge_valid_count}/{total} ({edge_valid_count/total:.0%}) edges were valid",
         f"- Edge invalid: {edge_invalid_count}/{total}",
         "",
-        "### Process Assessments",
+        "### Edge Validity by Type",
     ])
+    for etype, counts in sorted(edge_by_type.items()):
+        et = counts["valid"] + counts["invalid"]
+        lines.append(f"- {etype}: {counts['valid']}/{et} valid ({counts['valid']/et:.0%})")
+
+    lines.extend(["", "### Process Assessments"])
     for assessment, count in assessments.most_common():
         lines.append(f"- {assessment}: {count} ({count/total:.0%})")
 
@@ -231,9 +246,26 @@ def append_change_log(
 # --- LLM integration ---
 
 
+def _build_date_context(all_bets: List[dict]) -> str:
+    """Build a date context line from the bet history."""
+    today = datetime.now().strftime("%Y-%m-%d")
+    dates = sorted(b["date"] for b in all_bets if b.get("date"))
+    if not dates:
+        return f"Today: {today}. No bet dates available."
+    first, last = dates[0], dates[-1]
+    span = (datetime.strptime(last, "%Y-%m-%d") - datetime.strptime(first, "%Y-%m-%d")).days + 1
+    return (
+        f"Today: {today}. Data spans {first} to {last} "
+        f"({len(all_bets)} bets over {span} days). "
+        f"Be cautious about codifying patterns from short windows or unusual conditions "
+        f"(e.g. trade deadline, All-Star break, injury waves)."
+    )
+
+
 async def generate_adjustments(
     current: str,
     summary: dict,
+    all_bets: List[dict],
     recent_bets: List[dict],
     recent_journals: str,
 ) -> Optional[Dict[str, Any]]:
@@ -243,7 +275,16 @@ async def generate_adjustments(
     paper_history = get_paper_history()
     paper_insights = format_paper_trade_insights(paper_history["summary"])
 
+    # Append persisted insights from paper strategy reviews
+    saved_insights = get_paper_insights()
+    if saved_insights:
+        lines = ["\nActionable insights from paper trading analysis:"]
+        for entry in saved_insights:
+            lines.append(f"- [{entry['date']}] {entry['insight']}")
+        paper_insights += "\n".join(lines)
+
     prompt = UPDATE_STRATEGY_PROMPT.format(
+        date_context=_build_date_context(all_bets),
         current_strategy=current,
         history_summary=format_history_summary(summary),
         recent_bets=format_recent_bets(recent_bets),
@@ -276,11 +317,11 @@ async def run_strategy_workflow() -> None:
 
     print("Loading context...")
     recent_bets = history["bets"][-20:]
-    recent_journals = load_recent_journals(days=7)
+    recent_journals = load_recent_journals()
 
     print("Analyzing performance for adjustments...")
     result = await generate_adjustments(
-        current, history["summary"], recent_bets, recent_journals
+        current, history["summary"], history["bets"], recent_bets, recent_journals
     )
 
     if result is None:

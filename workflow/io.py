@@ -171,6 +171,22 @@ def save_paper_history(history: dict) -> None:
     write_json(PAPER_DIR / "history.json", history)
 
 
+MAX_PAPER_INSIGHTS = 10
+
+PAPER_INSIGHTS_PATH = PAPER_DIR / "insights.json"
+
+
+def get_paper_insights() -> list:
+    """Load paper trading insights for main strategy."""
+    data = read_json(PAPER_INSIGHTS_PATH)
+    return data if isinstance(data, list) else []
+
+
+def save_paper_insights(insights: list) -> None:
+    """Save paper trading insights, keeping the most recent entries."""
+    write_json(PAPER_INSIGHTS_PATH, insights[:MAX_PAPER_INSIGHTS])
+
+
 def _empty_paper_summary() -> dict:
     """Return an empty PaperHistorySummary dict."""
     return {

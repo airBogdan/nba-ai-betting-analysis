@@ -63,13 +63,13 @@ Generates `dashboard.html` with performance charts (cumulative P&L, rolling win 
 ```bash
 python3.13 betting.py update-strategy
 ```
-Produces 1-3 targeted adjustments to `strategy.md` based on performance patterns. Includes paper trade insights when 15+ paper trades exist.
+Produces 1-3 targeted adjustments to `strategy.md` based on performance patterns. Includes paper trade aggregate stats (when 15+ paper trades exist) and actionable insights saved by `update-paper-strategy`.
 
 ### 8. Update paper strategy (after 15+ paper trades)
 ```bash
 python3.13 betting.py update-paper-strategy
 ```
-Evolves the paper trading strategy independently. Surfaces insights about which skip categories have the most missed value.
+Evolves the paper trading strategy and saves actionable insights to `paper/insights.json`. These insights are automatically included in the next `update-strategy` run, creating a feedback loop where profitable patterns in skipped games flow back to the main strategy.
 
 ## Files
 
@@ -84,4 +84,5 @@ Evolves the paper trading strategy independently. Surfaces insights about which 
 - `paper/trades.json` - Active paper trades (contrarian bets on skipped games)
 - `paper/history.json` - Resolved paper trades with summary stats
 - `paper/strategy.md` - Paper-specific evolving strategy
+- `paper/insights.json` - Actionable insights for main strategy (persisted across runs)
 - `paper/journal/` - Daily paper trade entries

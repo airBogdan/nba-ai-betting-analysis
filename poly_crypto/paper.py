@@ -298,6 +298,7 @@ def _resolve_open_trades(trades: list[CandlePaperTrade]) -> None:
         end = _parse_utc(trade["candle_end"])
         if not end or end > now:
             still_open.append(trade)
+            print(f"  PENDING {trade['symbol']} {trade['side']} | {trade['candle_end']} (candle in progress)")
             continue
 
         hours_past = (now - end).total_seconds() / 3600

@@ -122,7 +122,7 @@ The dashboard pulls from `bets/history.json` for bet performance and `bets/skips
 python betting.py update-strategy
 ```
 
-Requires 15+ completed bets. Aggregates performance patterns and reflections from history, then asks the LLM to produce 1-3 targeted adjustments to `bets/strategy.md`. Paper trade insights are included when 15+ paper trades exist. Changes are appended to a change log for auditability. Previous strategy versions are archived (last 10 kept).
+Requires 15+ completed bets. Aggregates performance patterns and reflections from history, then asks the LLM to produce 1-3 targeted adjustments to `bets/strategy.md`. Includes paper trade aggregate stats (when 15+ paper trades exist) and any actionable insights persisted by `update-paper-strategy`. Changes are appended to a change log for auditability. Previous strategy versions are archived (last 10 kept).
 
 ### Paper trading
 
@@ -132,7 +132,7 @@ The system automatically paper trades every skipped game using a contrarian LLM 
 python betting.py update-paper-strategy
 ```
 
-Requires 15+ paper trades. Evolves the paper trading strategy and surfaces insights that could improve the main strategy's skip decisions. Paper trade performance is broken down by skip reason category (injury uncertainty, no edge, high variance, sizing veto) to identify which types of skipped games have the most missed value.
+Requires 15+ paper trades. Evolves the paper trading strategy and persists actionable insights to `bets/paper/insights.json`, which are automatically included in the next `update-strategy` run. This creates a feedback loop: profitable patterns discovered in skipped games flow back to the main strategy so those games stop being skipped. Paper trade performance is broken down by skip reason category (injury uncertainty, no edge, high variance, sizing veto) to identify which types of skipped games have the most missed value.
 
 ## Running Tests
 
@@ -183,6 +183,7 @@ bets/
         trades.json     # Active paper trades
         history.json    # Resolved trades with summary stats
         strategy.md     # Paper-specific evolving strategy
+        insights.json   # Actionable insights for main strategy
         journal/        # Daily paper trade entries
 tests/                  # pytest test suite
 ```

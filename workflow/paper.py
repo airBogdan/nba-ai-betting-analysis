@@ -1,14 +1,16 @@
 """Paper trading workflow for skipped games."""
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from .io import (
     PAPER_DIR,
     PAPER_JOURNAL_DIR,
     get_paper_history,
+    get_paper_insights,
     get_paper_trades,
     read_text,
+    save_paper_insights,
     save_paper_trades,
     write_text,
 )
@@ -193,20 +195,34 @@ async def run_paper_strategy_workflow() -> None:
     recent_trades = paper_history["trades"][-20:]
 
     # Load paper journal entries
-    recent_journals = _load_paper_journals(days=7)
+    recent_journals = _load_paper_journals()
 
     # Format recent trades
     trade_lines = []
     for t in recent_trades:
         result_emoji = "W" if t.get("result") == "win" else "L"
+        bet_type = t.get("bet_type", "moneyline")
+        line_str = f" {t['line']}" if t.get("line") is not None else ""
+        date = t.get("date", "?")
         trade_lines.append(
-            f"- [{result_emoji}] {t['matchup']}: {t['pick']} "
+            f"- [{result_emoji}] {date} {t['matchup']}: {bet_type}{line_str} {t['pick']} "
             f"({t.get('confidence', 'low')}, {t.get('units', 0.5)}u) - "
             f"Skip reason: {t.get('skip_reason', 'unknown')}"
         )
     recent_trades_str = "\n".join(trade_lines) if trade_lines else "No recent trades."
 
+    # Date context
+    all_trades = paper_history["trades"]
+    dates = sorted(t["date"] for t in all_trades if t.get("date"))
+    today = datetime.now().strftime("%Y-%m-%d")
+    if dates:
+        span = (datetime.strptime(dates[-1], "%Y-%m-%d") - datetime.strptime(dates[0], "%Y-%m-%d")).days + 1
+        date_context = f"Today: {today}. Data spans {dates[0]} to {dates[-1]} ({len(all_trades)} trades over {span} days)."
+    else:
+        date_context = f"Today: {today}."
+
     prompt = UPDATE_PAPER_STRATEGY_PROMPT.format(
+        date_context=date_context,
         current_strategy=current,
         history_summary=format_paper_history_summary(summary),
         recent_trades=recent_trades_str,
@@ -221,6 +237,17 @@ async def run_paper_strategy_workflow() -> None:
     if not result:
         print("Paper strategy analysis failed.")
         return
+
+    # Persist insights for main strategy update (before early return)
+    new_insights = result.get("insights_for_main_strategy", [])
+    if new_insights:
+        date_str = datetime.now().strftime("%Y-%m-%d")
+        existing = get_paper_insights()
+        entries = [{"date": date_str, "insight": i} for i in new_insights]
+        save_paper_insights(entries + existing)
+        print("Insights saved for main strategy:")
+        for insight in new_insights:
+            print(f"  * {insight}")
 
     required_keys = {"section", "updated_content", "change_description", "reasoning"}
     adjustments = [
@@ -240,26 +267,17 @@ async def run_paper_strategy_workflow() -> None:
     updated = append_change_log(updated, adjustments, date_str)
     write_text(PAPER_DIR / "strategy.md", updated)
 
-    print(f"Applied {len(adjustments)} paper strategy adjustment(s):")
+    print(f"\nApplied {len(adjustments)} paper strategy adjustment(s):")
     for adj in adjustments:
         print(f"  - [{adj['section']}] {adj['change_description']}")
 
-    # Surface insights for main strategy
-    insights = result.get("insights_for_main_strategy", [])
-    if insights:
-        print("\nInsights for main strategy:")
-        for insight in insights:
-            print(f"  * {insight}")
 
-
-def _load_paper_journals(days: int = 7) -> str:
-    """Load paper journal entries from last N days."""
+def _load_paper_journals(count: int = 10) -> str:
+    """Load the last *count* paper journal entries by date."""
+    files = sorted(PAPER_JOURNAL_DIR.glob("????-??-??.md"), reverse=True)[:count]
     entries = []
-    today = datetime.now()
-    for i in range(days):
-        date = today - timedelta(days=i)
-        date_str = date.strftime("%Y-%m-%d")
-        content = read_text(PAPER_JOURNAL_DIR / f"{date_str}.md")
+    for path in files:
+        content = read_text(path)
         if content:
-            entries.append(f"### {date_str}\n{content}")
+            entries.append(f"### {path.stem}\n{content}")
     return "\n\n".join(entries) if entries else "No recent paper journal entries."

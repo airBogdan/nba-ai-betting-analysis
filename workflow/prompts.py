@@ -230,6 +230,9 @@ Respond with JSON:
 
 UPDATE_STRATEGY_PROMPT = """Review the betting strategy and propose small, targeted adjustments based on actual results.
 
+## Context
+{date_context}
+
 ## Current Strategy
 {current_strategy}
 
@@ -552,6 +555,9 @@ Respond with JSON:
 
 
 UPDATE_PAPER_STRATEGY_PROMPT = """Review the paper trading strategy and propose adjustments.
+
+## Context
+{date_context}
 
 ## Current Paper Strategy
 {current_strategy}
