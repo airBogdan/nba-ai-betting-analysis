@@ -8,3 +8,4 @@ __pycache__/
 logs/*.log
 /.claude/
 /.idea/
+/synth-data-1.1.5/
