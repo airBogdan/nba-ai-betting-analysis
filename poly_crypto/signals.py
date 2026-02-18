@@ -10,7 +10,7 @@ from poly_crypto.markets import get_active_candle_markets_batch, _parse_iso
 
 SYNTHDATA_BASE_URL = "https://api.synthdata.co"
 SYNTH_SYMBOLS = ["BTC", "ETH", "SOL"]
-EDGE_THRESHOLD = 0.06
+EDGE_THRESHOLD = 0.09
 
 
 class EdgeSignal(TypedDict):

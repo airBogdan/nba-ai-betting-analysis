@@ -250,18 +250,22 @@ def run_scan_and_trade() -> None:
     trades = _load_trades()
     existing_keys = {_dedup_key(t) for t in trades}
 
-    # Skip all API calls if every symbol already has an open trade for a future candle
+    # Skip scan if we already have an open trade for a future candle
     now = datetime.now(timezone.utc)
-    symbols_with_active_trades = {
-        t["symbol"] for t in trades
-        if (_parse_utc(t.get("candle_end", "")) or datetime.min.replace(tzinfo=timezone.utc)) > now
-    }
-    if symbols_with_active_trades >= set(SYNTH_SYMBOLS):
-        print("All symbols traded for current candle. Skipping scan.")
+    has_active_trade = any(
+        (_parse_utc(t.get("candle_end", "")) or datetime.min.replace(tzinfo=timezone.utc)) > now
+        for t in trades
+    )
+    if has_active_trade:
+        print("Active trade for current candle. Skipping scan.")
         _resolve_open_trades(trades)
         return
 
     signals = scan_edges(traded_keys=existing_keys)
+
+    # One asset per candle: pick the highest net_edge signal only
+    if signals:
+        signals = [max(signals, key=lambda s: s["net_edge"])]
 
     recorded = 0
     for signal in signals:
