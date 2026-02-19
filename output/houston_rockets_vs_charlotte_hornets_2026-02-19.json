@@ -1,0 +1,632 @@
+{
+  "matchup": {
+    "team1": "Charlotte Hornets",
+    "team2": "Houston Rockets",
+    "home_team": "Charlotte Hornets"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Charlotte Hornets",
+      "record": "26-29",
+      "conf_rank": 9,
+      "games": 60,
+      "ppg": 116.1,
+      "opp_ppg": 114.4,
+      "ortg": 113.1,
+      "drtg": 111.3,
+      "apg": 26.4,
+      "rpg": 46.3,
+      "topg": 16.2,
+      "net_rating": 1.75,
+      "fgp": 46.0,
+      "tpp": 37.3,
+      "last_ten": "9-1",
+      "last_ten_pct": 0.9,
+      "home_record": "12-14",
+      "away_record": "14-15",
+      "home_win_pct": 0.462,
+      "away_win_pct": 0.483,
+      "pace": 102.8,
+      "recent_ppg": 112.3,
+      "recent_margin": 5.0,
+      "sos": 0.483,
+      "sos_adjusted_net_rating": 1.58
+    },
+    "team2": {
+      "name": "Houston Rockets",
+      "record": "33-20",
+      "conf_rank": 4,
+      "games": 57,
+      "ppg": 115.8,
+      "opp_ppg": 110.6,
+      "ortg": 114.9,
+      "drtg": 109.5,
+      "apg": 24.9,
+      "rpg": 48.6,
+      "topg": 15.5,
+      "net_rating": 5.4,
+      "fgp": 47.5,
+      "tpp": 37.4,
+      "last_ten": "6-4",
+      "last_ten_pct": 0.6,
+      "home_record": "18-7",
+      "away_record": "15-13",
+      "home_win_pct": 0.72,
+      "away_win_pct": 0.536,
+      "pace": 101.0,
+      "recent_ppg": 104.1,
+      "recent_margin": -0.4,
+      "sos": 0.5,
+      "sos_adjusted_net_rating": 5.4
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 7,
+      "streak": "W1",
+      "games_last_7_days": 1,
+      "recent_opponent_avg_win_pct": 0.483,
+      "quality_wins": 3,
+      "quality_losses": 1
+    },
+    "team2": {
+      "days_rest": 7,
+      "streak": "L1",
+      "games_last_7_days": 1,
+      "recent_opponent_avg_win_pct": 0.5,
+      "quality_wins": 1,
+      "quality_losses": 2
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-30",
+        "vs_win_pct": 0.464,
+        "result": "W",
+        "score": "110-107",
+        "home": true,
+        "margin": 3,
+        "date": "2026-02-12"
+      },
+      {
+        "vs": "Detroit Pistons",
+        "vs_record": "40-13",
+        "vs_win_pct": 0.755,
+        "result": "L",
+        "score": "104-110",
+        "home": true,
+        "margin": -6,
+        "date": "2026-02-10"
+      },
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-30",
+        "vs_win_pct": 0.464,
+        "result": "W",
+        "score": "126-119",
+        "home": false,
+        "margin": 7,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "33-20",
+        "vs_win_pct": 0.623,
+        "result": "W",
+        "score": "109-99",
+        "home": false,
+        "margin": 10,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "New Orleans Pelicans",
+        "vs_record": "15-41",
+        "vs_win_pct": 0.268,
+        "result": "W",
+        "score": "102-95",
+        "home": true,
+        "margin": 7,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "San Antonio Spurs",
+        "vs_record": "38-16",
+        "vs_win_pct": 0.704,
+        "result": "W",
+        "score": "111-106",
+        "home": true,
+        "margin": 5,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-35",
+        "vs_win_pct": 0.352,
+        "result": "W",
+        "score": "123-121",
+        "home": false,
+        "margin": 2,
+        "date": "2026-01-30"
+      },
+      {
+        "vs": "Memphis Grizzlies",
+        "vs_record": "20-33",
+        "vs_win_pct": 0.377,
+        "result": "W",
+        "score": "112-97",
+        "home": false,
+        "margin": 15,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Philadelphia 76ers",
+        "vs_record": "30-24",
+        "vs_win_pct": 0.556,
+        "result": "W",
+        "score": "130-93",
+        "home": true,
+        "margin": 37,
+        "date": "2026-01-26"
+      },
+      {
+        "vs": "Washington Wizards",
+        "vs_record": "14-39",
+        "vs_win_pct": 0.264,
+        "result": "W",
+        "score": "119-115",
+        "home": true,
+        "margin": 4,
+        "date": "2026-01-24"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "LA Clippers",
+        "vs_record": "26-28",
+        "vs_win_pct": 0.481,
+        "result": "L",
+        "score": "102-105",
+        "home": true,
+        "margin": -3,
+        "date": "2026-02-12"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "26-28",
+        "vs_win_pct": 0.481,
+        "result": "W",
+        "score": "102-95",
+        "home": true,
+        "margin": 7,
+        "date": "2026-02-11"
+      },
+      {
+        "vs": "Oklahoma City Thunder",
+        "vs_record": "42-14",
+        "vs_win_pct": 0.75,
+        "result": "W",
+        "score": "112-106",
+        "home": false,
+        "margin": 6,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Charlotte Hornets",
+        "vs_record": "26-29",
+        "vs_win_pct": 0.473,
+        "result": "L",
+        "score": "99-109",
+        "home": true,
+        "margin": -10,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Boston Celtics",
+        "vs_record": "35-19",
+        "vs_win_pct": 0.648,
+        "result": "L",
+        "score": "93-114",
+        "home": true,
+        "margin": -21,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Indiana Pacers",
+        "vs_record": "15-40",
+        "vs_win_pct": 0.273,
+        "result": "W",
+        "score": "118-114",
+        "home": false,
+        "margin": 4,
+        "date": "2026-02-03"
+      },
+      {
+        "vs": "Dallas Mavericks",
+        "vs_record": "19-35",
+        "vs_win_pct": 0.352,
+        "result": "W",
+        "score": "111-107",
+        "home": true,
+        "margin": 4,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Atlanta Hawks",
+        "vs_record": "26-30",
+        "vs_win_pct": 0.464,
+        "result": "W",
+        "score": "104-86",
+        "home": false,
+        "margin": 18,
+        "date": "2026-01-30"
+      },
+      {
+        "vs": "San Antonio Spurs",
+        "vs_record": "38-16",
+        "vs_win_pct": 0.704,
+        "result": "L",
+        "score": "99-111",
+        "home": true,
+        "margin": -12,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Memphis Grizzlies",
+        "vs_record": "20-33",
+        "vs_win_pct": 0.377,
+        "result": "W",
+        "score": "108-99",
+        "home": true,
+        "margin": 9,
+        "date": "2026-01-27"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Miles Bridges",
+          "ppg": 18.1,
+          "plus_minus": -0.3,
+          "games": 58
+        },
+        {
+          "name": "K. Knueppel",
+          "ppg": 18.3,
+          "plus_minus": 1.3,
+          "games": 59
+        },
+        {
+          "name": "Brandon Miller",
+          "ppg": 20.0,
+          "plus_minus": 4.2,
+          "games": 42
+        },
+        {
+          "name": "LaMelo Ball",
+          "ppg": 19.1,
+          "plus_minus": 4.5,
+          "games": 49
+        },
+        {
+          "name": "Moussa Diabate",
+          "ppg": 8.5,
+          "plus_minus": 2.9,
+          "games": 55
+        },
+        {
+          "name": "S. James",
+          "ppg": 5.4,
+          "plus_minus": -1.1,
+          "games": 58
+        }
+      ],
+      "availability_concerns": [
+        "Grant Williams (14/60 games)",
+        "Tidjane Salaun (37/60 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Miller 20.0, Ball 19.1, Knueppel 18.3",
+      "playmaker": "LaMelo Ball 7.2 APG",
+      "hot_hand": "Williams +4.6 (limited: 14 games)",
+      "star_dependency": 17.2,
+      "depth_rating": "balanced (4.8 MPG std dev)",
+      "bench_scoring": 40.5,
+      "injuries": [
+        {
+          "player": "Miles Bridges",
+          "status": "Out",
+          "reason": "League Suspension",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Moussa Diabate",
+          "status": "Out",
+          "reason": "League Suspension",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Liam McNeeley",
+          "status": "Out",
+          "reason": "Injury/Illness - Left Ankle; Sprain",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Coby White",
+          "status": "Out",
+          "reason": "Injury/Illness - Left Calf; Strain",
+          "report_time": "07PM"
+        }
+      ]
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Amen Thompson",
+          "ppg": 17.6,
+          "plus_minus": 5.4,
+          "games": 55
+        },
+        {
+          "name": "Kevin Durant",
+          "ppg": 25.5,
+          "plus_minus": 5.1,
+          "games": 52
+        },
+        {
+          "name": "Jabari Smith Jr.",
+          "ppg": 15.3,
+          "plus_minus": 3.7,
+          "games": 55
+        },
+        {
+          "name": "Alperen Sengun",
+          "ppg": 20.2,
+          "plus_minus": 4.2,
+          "games": 49
+        },
+        {
+          "name": "Tari Eason",
+          "ppg": 12.2,
+          "plus_minus": 2.5,
+          "games": 34
+        },
+        {
+          "name": "Reed Sheppard",
+          "ppg": 12.8,
+          "plus_minus": 2.9,
+          "games": 57
+        }
+      ],
+      "availability_concerns": [
+        "Tari Eason (34/57 games)",
+        "Steven Adams (34/57 games)",
+        "Dorian Finney-Smith (20/57 games)",
+        "Aaron Holiday (39/57 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Durant 25.5, Sengun 20.2, Thompson 17.6",
+      "playmaker": "Alperen Sengun 6.4 APG",
+      "hot_hand": "Adams +6.4 (limited: 34 games)",
+      "star_dependency": 22.0,
+      "depth_rating": "star-dependent (8.0 MPG std dev)",
+      "bench_scoring": 33.5,
+      "injuries": [
+        {
+          "player": "Steven Adams",
+          "status": "Out",
+          "reason": "Injury/Illness - Left Ankle; Surgery",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Tristen Newton",
+          "status": "Out",
+          "reason": "G League - Two- Way",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Fred VanVleet",
+          "status": "Out",
+          "reason": "Injury/Illness - Right Knee; ACL Repair",
+          "report_time": "07PM"
+        }
+      ]
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 5,
+      "team1_wins_all_time": 2,
+      "team2_wins_all_time": 3,
+      "team1_win_pct": 0.4,
+      "team1_home_wins": 0,
+      "team1_home_losses": 2,
+      "team1_away_wins": 2,
+      "team1_away_losses": 1,
+      "avg_point_diff": 0.6,
+      "team1_avg_points": 108.3,
+      "team2_avg_points": 107.7,
+      "last_5_games": [
+        "Charlotte Hornets",
+        "Houston Rockets",
+        "Charlotte Hornets",
+        "Houston Rockets",
+        "Houston Rockets"
+      ],
+      "recent_trend": "balanced",
+      "close_games": 1,
+      "blowouts": 1
+    },
+    "patterns": {
+      "avg_total": 216.0,
+      "home_win_pct": 0.079,
+      "high_scoring_pct": 0.16,
+      "close_game_pct": 0.16
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 2,
+      "team2_wins_last_2_seasons": 1,
+      "last_winner": "Charlotte Hornets",
+      "home_team_home_record": "0-1",
+      "games_last_2_seasons": 3
+    },
+    "quarters": {
+      "avg_q1_total": 53.4,
+      "avg_q2_total": 54.3,
+      "avg_q3_total": 57.1,
+      "avg_q4_total": 51.2,
+      "avg_first_half": 107.7,
+      "avg_second_half": 108.3,
+      "team1_q1_avg": 25.3,
+      "team2_q1_avg": 28.1,
+      "team1_q4_avg": 25.2,
+      "team2_q4_avg": 26.0,
+      "halftime_leader_wins_pct": 0.8
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 42.6,
+        "avg_tpp": 37.2,
+        "avg_rebounds": 46.0,
+        "avg_assists": 21.4,
+        "avg_turnovers": 18.3,
+        "avg_disruption": 16.9
+      },
+      "team2": {
+        "avg_fgp": 45.4,
+        "avg_tpp": 35.8,
+        "avg_rebounds": 44.3,
+        "avg_assists": 24.7,
+        "avg_turnovers": 15.1,
+        "avg_disruption": 17.7
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 225.9,
+    "total_diff_from_h2h": 15.9,
+    "team1_h2h_scoring_diff": 7.8,
+    "team2_h2h_scoring_diff": 8.1,
+    "margin_volatility": 11.4,
+    "h2h_total_variance": 17.8,
+    "pace_adjusted_total": 232.3,
+    "defense_factor": 110.4,
+    "recent_scoring_trend": -12.5,
+    "injury_adjusted_total": 213.9
+  },
+  "comparison": {
+    "ppg": 0.3,
+    "net_rating": -3.65,
+    "form": 0.3,
+    "turnovers": -0.7,
+    "rebounds": -2.3,
+    "fgp": -1.5,
+    "three_pt_pct": -0.1,
+    "pace": 1.8,
+    "combined_pace": 101.9,
+    "weighted_form": 5.4,
+    "adjusted_net_rating": -3.82
+  },
+  "signals": [
+    "Houston Rockets starts faster (+2.8 Q1 avg in H2H)",
+    "Halftime leader wins 80% in this matchup",
+    "Charlotte Hornets injury concerns: Grant Williams (14/60 games), Tidjane Salaun (37/60 games)",
+    "Houston Rockets injury concerns: Tari Eason (34/57 games), Steven Adams (34/57 games)",
+    "Charlotte Hornets hot form (9-1 L10)",
+    "Houston Rockets significantly better net rating (+3.6)",
+    "Lower-scoring matchup (only 16% H2H games over 220)",
+    "Both teams scoring below season avg in recent games (-12.5 combined)",
+    "High-variance H2H (\u00b117.8 pts std dev in totals)",
+    "Charlotte Hornets FG% suppressed vs Houston Rockets: 42.6% H2H vs 46.0% season",
+    "Charlotte Hornets more careless vs Houston Rockets: 18.3 H2H vs 16.2 season TOV",
+    "Houston Rockets struggles on boards vs Charlotte Hornets: 44.3 H2H vs 48.6 season",
+    "Houston Rockets scoring -11.7 PPG below season avg recently \u2014 bounce-back likely"
+  ],
+  "api_game_id": 16320,
+  "odds": {
+    "spread": {
+      "home": {
+        "line": 4.5,
+        "price": -114
+      },
+      "away": {
+        "line": -4.5,
+        "price": -106
+      }
+    },
+    "total": {
+      "line": 216.5,
+      "over": -108,
+      "under": -112
+    },
+    "moneyline": {
+      "home": 148,
+      "away": -176
+    },
+    "alternate_spreads": [
+      {
+        "line": 3.5,
+        "price": 100
+      },
+      {
+        "line": 2.5,
+        "price": 114
+      },
+      {
+        "line": 5.5,
+        "price": -130
+      },
+      {
+        "line": 6.5,
+        "price": -146
+      }
+    ],
+    "alternate_totals": [
+      {
+        "line": 215.5,
+        "price": -120
+      },
+      {
+        "line": 214.5,
+        "price": -136
+      },
+      {
+        "line": 217.5,
+        "price": 100
+      },
+      {
+        "line": 218.5,
+        "price": 110
+      }
+    ]
+  },
+  "search_context": "### Injury Report\n\n**Houston Rockets**\n\n- **Steven Adams** \u2014 Out: Left ankle surgery[3]\n- **Fred VanVleet** \u2014 Out: Right ACL repair[3]\n- **Tristen Newton** \u2014 Out: G League assignment[3]\n\n**Charlotte Hornets**\n\n- **Miles Bridges** \u2014 Out: League suspension[3]\n- **Moussa Diabate** \u2014 Out: League suspension[3]\n- **Coby White** \u2014 Out: Left calf strain[3]\n- **Liam McNeeley** \u2014 Out: Left ankle sprain[3]\n- **LaMelo Ball** \u2014 Available: Not listed on injury report despite recent car accident[6]\n\n### Betting Lines\n\nNo current consensus spread, moneyline odds, or over/under total information available in search results.\n\n### Line Movement\n\nNo line movement data available in search results.\n\n### Recent News\n\nThe Rockets are returning from All-Star break and currently sit at No. 4 in the Western Conference, one full game back from Denver.[3] Kevin Durant has performed as an offensive superstar, averaging 24.7 points per game, while Alperen Sengun contributes 17.1 points and 9.1 rebounds.[1]\n\nThe Hornets have been one of the hottest teams in the league, winning nine consecutive games prior to the All-Star break and climbing to the ninth seed in the Eastern Conference with a 26-29 record.[3] LaMelo Ball (18.6 PPG, 6.4 APG), Brandon Miller (20.5 PPG), and rookie Kon Knueppel (18 PPG) form a potent offensive trio.[1] The Hornets recently defeated Atlanta 110-107 on February 11.[4]\n\nThe Hornets will be notably impacted by suspensions to Miles Bridges and Moussa Diabate stemming from a bench-clearing brawl with the Pistons.[3]\n\n### Additional Context\nI cannot provide the analysis you've requested because the search results lack the specific information needed to address your research focus.\n\n## Missing Data\n\n**Rockets' Post-All-Star Break Trends:** The search results do not contain information about Houston's offensive efficiency or pace of play since the All-Star break. The only recent performance data available shows the Rockets are 6-4 in their last 10 games and have won four road games in a row[1], but this does not isolate post-All-Star break metrics.\n\n**Bridges and Diabate Suspensions:** The search results do not mention any suspensions involving Miles Bridges or Moussa Diabate. While Bridges appears in game footage from the February 5 matchup[4], there is no information about current suspension status or its impact on Charlotte's bench production. Without confirmation of these suspensions and their timing, I cannot analyze how bench production has shifted.\n\n**Charlotte's Bench Production Analysis:** The search results provide overall team statistics but do not break down bench versus starter contributions, making it impossible to assess how Charlotte's bench has performed or changed.\n\n## Available Context\n\nThe search results do confirm that Charlotte is on a nine-game winning streak (as of February 5)[4] and that the Hornets have a 9-1 record in their last 10 games[8]. However, this does not address the specific question of whether bench production changes have sustained this momentum.\n\nTo complete your analysis, you would need access to:\n- Detailed box scores and bench/starter splits from Rockets games post-All-Star break\n- Current injury/suspension reports for both teams\n- Offensive efficiency and pace metrics for Houston since the break\n- Bench scoring trends for Charlotte with and without the players in question\n\n### Player & Team News\n# Player-Focused News Report: Rockets @ Hornets\n\n## Player Form & Streaks\n\n**Charlotte's Momentum:** The Hornets are riding a **W1 streak** and have gone **9-1 over their last 10 games**, showing significant improvement after a rocky start to the season.[6] LaMelo Ball will be crucial to maintaining this form, though he's dealing with off-court distractions after a car crash during the All-Star break.[1]\n\n**Houston's Recent Struggles:** The Rockets enter on an **L1 streak** despite holding a strong **6-4 record over their last 10 games**.[6] Kevin Durant (25.8 PPG) remains their primary offensive engine, but the team is navigating potential locker room tension following allegations about burner account activity on social media.[1]\n\n## Rotation & Role Changes\n\nBrandon Miller is expected to see increased minutes in this matchup after dealing with early foul trouble in the previous meeting between these teams.[1] The Hornets' offense will lean more heavily on Miller, LaMelo Ball, and Kon Knueppel to compensate for the absence of Miles Bridges.\n\n## Returning Players & Ramp-Ups\n\nDorian Finney-Smith (knee) has been cleared from the injury report and is available for Houston's game against Charlotte.[5]\n\n## Matchup Storylines\n\n**Moussa Diabate as a Defensive Anchor:** Though suspended for this game, the search results highlight that Diabate creates significant matchup problems for Houston's Alperen Sengun due to his defensive versatility against slower-footed centers. His absence will allow Sengun more comfortable matchups against Ryan Kalkbrenner, Grant Williams, and PJ Hall.[1]\n\n**Durant's Dominance in Previous Meeting:** In the Hornets' 109-99 victory over Houston earlier this season, Kevin Durant was the only Rocket to truly get going with 31 points, while Jabari Smith added 17. Alperen Sengun and Amen Thompson contributed minimally.[1] The Hornets will need to replicate that defensive approach, though without Bridges' impact, the task becomes more difficult.\n\n**Offensive Firepower Mismatch:** Houston's depth\u2014particularly with Durant, Sengun, and Smith\u2014contrasts with Charlotte's more guard-oriented attack centered on Ball and Knueppel. The Hornets' previous success came partly from limiting role player contributions; repeating that will be essential.[1]",
+  "injury_impact": {
+    "team1": {
+      "out_players": [
+        {
+          "name": "Miles Bridges",
+          "ppg": 18.1,
+          "status": "Out"
+        },
+        {
+          "name": "Moussa Diabate",
+          "ppg": 8.5,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 26.6,
+      "adjusted_ppg_loss": 12.0
+    },
+    "team2": {
+      "out_players": [],
+      "missing_ppg": 0,
+      "adjusted_ppg_loss": 0.0
+    },
+    "total_reduction": 12.0,
+    "missing_ppg_diff": -12.0
+  }
+}

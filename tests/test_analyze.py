@@ -9,7 +9,6 @@ from workflow.analyze import (
     _fallback_sizing,
     CONFIDENCE_WIN_PROB,
     KELLY_FRACTION,
-    KELLY_MAX_BET_FRACTION,
 )
 
 
@@ -36,20 +35,20 @@ class TestAmericanOddsToDecimal:
 class TestHalfKellyAmount:
     """Tests for Half Kelly bet sizing."""
 
-    def test_medium_conf_standard_odds_hits_cap(self):
-        # -110, medium (57%): kelly=9.7%, half=4.8% → capped at 3%
+    def test_medium_conf_standard_odds(self):
+        # -110, medium (57%): kelly=9.7%, half=4.8%
         amount = _half_kelly_amount(-110, "medium", 1000.0)
-        assert amount == 30.0
+        assert 45.0 < amount < 55.0
 
     def test_low_conf_standard_odds(self):
         # -110, low (54%): kelly=3.4%, half=1.7%
         amount = _half_kelly_amount(-110, "low", 1000.0)
         assert 15.0 < amount < 20.0
 
-    def test_high_conf_standard_odds_hits_cap(self):
-        # -110, high (65%): massive kelly → capped at 3%
+    def test_high_conf_standard_odds(self):
+        # -110, high (65%): kelly=25.6%, half=12.8%
         amount = _half_kelly_amount(-110, "high", 1000.0)
-        assert amount == 30.0
+        assert 120.0 < amount < 135.0
 
     def test_no_edge_heavy_favorite(self):
         # -250, high: breakeven=71.4%, our 65% → no edge
@@ -64,10 +63,10 @@ class TestHalfKellyAmount:
         amount = _half_kelly_amount(-150, "high", 1000.0)
         assert amount > 0
 
-    def test_underdog_hits_cap(self):
-        # +200, high: huge kelly → capped at 3%
+    def test_underdog_high_conf(self):
+        # +200, high (65%): kelly=47.5%, half=23.75%
         amount = _half_kelly_amount(+200, "high", 1000.0)
-        assert amount == 30.0
+        assert amount == pytest.approx(237.5, abs=1.0)
 
     def test_zero_available(self):
         assert _half_kelly_amount(-110, "high", 0.0) == 0.0
@@ -112,7 +111,7 @@ class TestFallbackSizing:
         ]
         result = _fallback_sizing(bets, 1000.0)
         assert len(result) == 1
-        assert result[0]["amount"] == 30.0  # 3% cap at -110 default
+        assert result[0]["amount"] == pytest.approx(132.5, abs=1.0)  # half-kelly at -110 default, high conf
 
 
 class TestExtractPolyAndOddsPrice:

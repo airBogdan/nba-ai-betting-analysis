@@ -651,7 +651,7 @@ async def _process_results_for_date(date: str, season: int) -> None:
     matched: List[Tuple[ActiveBet, GameResult, str, float]] = []  # (bet, result, outcome, profit_loss)
 
     # Cache box scores per game_id for player prop bets (avoid duplicate API calls)
-    box_score_cache: Dict[str, list[dict]] = {}
+    box_score_cache: Dict[str, Optional[list[dict]]] = {}
 
     for bet in date_bets:
         result = match_bet_to_result(bet, finished)

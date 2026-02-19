@@ -1,0 +1,647 @@
+{
+  "matchup": {
+    "team1": "Philadelphia 76ers",
+    "team2": "Atlanta Hawks",
+    "home_team": "Philadelphia 76ers"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Philadelphia 76ers",
+      "record": "30-24",
+      "conf_rank": 6,
+      "games": 58,
+      "ppg": 115.3,
+      "opp_ppg": 115.9,
+      "ortg": 112.0,
+      "drtg": 112.4,
+      "apg": 24.5,
+      "rpg": 43.3,
+      "topg": 14.2,
+      "net_rating": -0.41,
+      "fgp": 45.7,
+      "tpp": 34.5,
+      "last_ten": "6-4",
+      "last_ten_pct": 0.6,
+      "home_record": "15-14",
+      "away_record": "15-10",
+      "home_win_pct": 0.517,
+      "away_win_pct": 0.6,
+      "pace": 103.1,
+      "recent_ppg": 110.1,
+      "recent_margin": -10.9,
+      "sos": 0.471,
+      "sos_adjusted_net_rating": -0.7
+    },
+    "team2": {
+      "name": "Atlanta Hawks",
+      "record": "26-30",
+      "conf_rank": 10,
+      "games": 60,
+      "ppg": 117.3,
+      "opp_ppg": 119.3,
+      "ortg": 111.4,
+      "drtg": 113.0,
+      "apg": 30.4,
+      "rpg": 42.6,
+      "topg": 14.6,
+      "net_rating": -1.57,
+      "fgp": 47.1,
+      "tpp": 36.2,
+      "last_ten": "5-5",
+      "last_ten_pct": 0.5,
+      "home_record": "10-15",
+      "away_record": "16-15",
+      "home_win_pct": 0.4,
+      "away_win_pct": 0.516,
+      "pace": 105.6,
+      "recent_ppg": 115.3,
+      "recent_margin": -4.5,
+      "sos": 0.479,
+      "sos_adjusted_net_rating": -1.78
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 7,
+      "streak": "L2",
+      "games_last_7_days": 1,
+      "recent_opponent_avg_win_pct": 0.471,
+      "quality_wins": 2,
+      "quality_losses": 2
+    },
+    "team2": {
+      "days_rest": 7,
+      "streak": "L3",
+      "games_last_7_days": 1,
+      "recent_opponent_avg_win_pct": 0.479,
+      "quality_wins": 3,
+      "quality_losses": 2
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "New York Knicks",
+        "vs_record": "35-20",
+        "vs_win_pct": 0.636,
+        "result": "L",
+        "score": "89-138",
+        "home": true,
+        "margin": -49,
+        "date": "2026-02-12"
+      },
+      {
+        "vs": "Portland Trail Blazers",
+        "vs_record": "27-29",
+        "vs_win_pct": 0.482,
+        "result": "L",
+        "score": "118-135",
+        "home": false,
+        "margin": -17,
+        "date": "2026-02-10"
+      },
+      {
+        "vs": "Phoenix Suns",
+        "vs_record": "32-23",
+        "vs_win_pct": 0.582,
+        "result": "W",
+        "score": "109-103",
+        "home": false,
+        "margin": 6,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "33-21",
+        "vs_win_pct": 0.611,
+        "result": "L",
+        "score": "115-119",
+        "home": false,
+        "margin": -4,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Golden State Warriors",
+        "vs_record": "29-26",
+        "vs_win_pct": 0.527,
+        "result": "W",
+        "score": "113-94",
+        "home": false,
+        "margin": 19,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "26-28",
+        "vs_win_pct": 0.481,
+        "result": "W",
+        "score": "128-113",
+        "home": false,
+        "margin": 15,
+        "date": "2026-02-03"
+      },
+      {
+        "vs": "New Orleans Pelicans",
+        "vs_record": "15-41",
+        "vs_win_pct": 0.268,
+        "result": "W",
+        "score": "124-114",
+        "home": true,
+        "margin": 10,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-44",
+        "vs_win_pct": 0.214,
+        "result": "W",
+        "score": "113-111",
+        "home": true,
+        "margin": 2,
+        "date": "2026-01-30"
+      },
+      {
+        "vs": "Milwaukee Bucks",
+        "vs_record": "23-30",
+        "vs_win_pct": 0.434,
+        "result": "W",
+        "score": "139-122",
+        "home": true,
+        "margin": 17,
+        "date": "2026-01-28"
+      },
+      {
+        "vs": "Charlotte Hornets",
+        "vs_record": "26-29",
+        "vs_win_pct": 0.473,
+        "result": "L",
+        "score": "93-130",
+        "home": false,
+        "margin": -37,
+        "date": "2026-01-26"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Charlotte Hornets",
+        "vs_record": "26-29",
+        "vs_win_pct": 0.473,
+        "result": "L",
+        "score": "107-110",
+        "home": false,
+        "margin": -3,
+        "date": "2026-02-12"
+      },
+      {
+        "vs": "Minnesota Timberwolves",
+        "vs_record": "34-22",
+        "vs_win_pct": 0.607,
+        "result": "L",
+        "score": "116-138",
+        "home": false,
+        "margin": -22,
+        "date": "2026-02-10"
+      },
+      {
+        "vs": "Charlotte Hornets",
+        "vs_record": "26-29",
+        "vs_win_pct": 0.473,
+        "result": "L",
+        "score": "119-126",
+        "home": true,
+        "margin": -7,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "18-38",
+        "vs_win_pct": 0.321,
+        "result": "W",
+        "score": "121-119",
+        "home": true,
+        "margin": 2,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Miami Heat",
+        "vs_record": "29-27",
+        "vs_win_pct": 0.518,
+        "result": "W",
+        "score": "127-115",
+        "home": false,
+        "margin": 12,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Indiana Pacers",
+        "vs_record": "15-40",
+        "vs_win_pct": 0.273,
+        "result": "L",
+        "score": "124-129",
+        "home": false,
+        "margin": -5,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Houston Rockets",
+        "vs_record": "33-20",
+        "vs_win_pct": 0.623,
+        "result": "L",
+        "score": "86-104",
+        "home": true,
+        "margin": -18,
+        "date": "2026-01-30"
+      },
+      {
+        "vs": "Boston Celtics",
+        "vs_record": "35-19",
+        "vs_win_pct": 0.648,
+        "result": "W",
+        "score": "117-106",
+        "home": false,
+        "margin": 11,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Indiana Pacers",
+        "vs_record": "15-40",
+        "vs_win_pct": 0.273,
+        "result": "W",
+        "score": "132-116",
+        "home": true,
+        "margin": 16,
+        "date": "2026-01-26"
+      },
+      {
+        "vs": "Phoenix Suns",
+        "vs_record": "32-23",
+        "vs_win_pct": 0.582,
+        "result": "W",
+        "score": "110-103",
+        "home": true,
+        "margin": 7,
+        "date": "2026-01-24"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Tyrese Maxey",
+          "ppg": 28.2,
+          "plus_minus": 1.8,
+          "games": 56
+        },
+        {
+          "name": "V. Edgecombe",
+          "ppg": 15.0,
+          "plus_minus": 0.8,
+          "games": 53
+        },
+        {
+          "name": "Kelly Oubre Jr.",
+          "ppg": 13.4,
+          "plus_minus": -1.4,
+          "games": 36
+        },
+        {
+          "name": "Joel Embiid",
+          "ppg": 26.2,
+          "plus_minus": 4.4,
+          "games": 32
+        },
+        {
+          "name": "Paul George",
+          "ppg": 16.0,
+          "plus_minus": 3.6,
+          "games": 27
+        },
+        {
+          "name": "Quentin Grimes",
+          "ppg": 12.9,
+          "plus_minus": 0.7,
+          "games": 49
+        }
+      ],
+      "availability_concerns": [
+        "Kelly Oubre Jr. (36/58 games)",
+        "Joel Embiid (32/58 games)",
+        "Paul George (27/58 games)",
+        "Kennedy Chandler (4/58 games)",
+        "Jared McCain (37/58 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Maxey 28.2, Embiid 26.2, George 16.0",
+      "playmaker": "Tyrese Maxey 6.5 APG",
+      "hot_hand": "Embiid +4.4 (limited: 32 games)",
+      "star_dependency": 24.5,
+      "depth_rating": "star-dependent (6.5 MPG std dev)",
+      "bench_scoring": 44.9,
+      "injuries": [
+        {
+          "player": "MarJon Beauchamp",
+          "status": "Doubtful",
+          "reason": "G League - Two- Way",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Johni Broome",
+          "status": "Doubtful",
+          "reason": "G League - On Assignment",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Joel Embiid",
+          "status": "Out",
+          "reason": "Injury/Illness - Right Knee; Injury Management; Right Shin Soreness",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Paul George",
+          "status": "Out",
+          "reason": "League Suspension",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Kelly Oubre Jr.",
+          "status": "Available",
+          "reason": "Injury/Illness - Left Knee; Injury Recovery - Brace",
+          "report_time": "07PM"
+        }
+      ]
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Jalen Johnson",
+          "ppg": 23.0,
+          "plus_minus": 0.5,
+          "games": 52
+        },
+        {
+          "name": "Dyson Daniels",
+          "ppg": 11.5,
+          "plus_minus": 0.5,
+          "games": 55
+        },
+        {
+          "name": "Nickeil Alexander-Walker",
+          "ppg": 19.9,
+          "plus_minus": -0.9,
+          "games": 56
+        },
+        {
+          "name": "Onyeka Okongwu",
+          "ppg": 15.8,
+          "plus_minus": -2.9,
+          "games": 53
+        },
+        {
+          "name": "CJ McCollum",
+          "ppg": 18.7,
+          "plus_minus": 1.0,
+          "games": 16
+        },
+        {
+          "name": "Trae Young",
+          "ppg": 17.3,
+          "plus_minus": -4.1,
+          "games": 13
+        }
+      ],
+      "availability_concerns": [
+        "CJ McCollum (16/60 games)",
+        "Trae Young (13/60 games)",
+        "Kristaps Porzingis (20/60 games)",
+        "Corey Kispert (16/60 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Johnson 23.0, Alexander-Walker 19.9, McCollum 18.7",
+      "playmaker": "Trae Young 8.8 APG (limited: 13 games)",
+      "hot_hand": "Porzingis +2.2 (limited: 20 games)",
+      "star_dependency": 19.6,
+      "depth_rating": "balanced (4.8 MPG std dev)",
+      "bench_scoring": 63.7,
+      "injuries": [
+        {
+          "player": "RayJ Dennis",
+          "status": "Doubtful",
+          "reason": "G League - Two- Way",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Nikola Djurisic",
+          "status": "Out",
+          "reason": "Not With Team",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Caleb Houstan",
+          "status": "Doubtful",
+          "reason": "G League - Two- Way",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Jonathan Kuminga",
+          "status": "Out",
+          "reason": "Injury/Illness - Left Knee; Bone Bruise",
+          "report_time": "07PM"
+        }
+      ]
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 11,
+      "team1_wins_all_time": 4,
+      "team2_wins_all_time": 7,
+      "team1_win_pct": 0.364,
+      "team1_home_wins": 2,
+      "team1_home_losses": 3,
+      "team1_away_wins": 2,
+      "team1_away_losses": 4,
+      "avg_point_diff": -3.9,
+      "team1_avg_points": 121.8,
+      "team2_avg_points": 125.6,
+      "last_5_games": [
+        "Atlanta Hawks",
+        "Atlanta Hawks",
+        "Philadelphia 76ers",
+        "Atlanta Hawks",
+        "Atlanta Hawks"
+      ],
+      "recent_trend": "team2_hot",
+      "close_games": 1,
+      "blowouts": 1
+    },
+    "patterns": {
+      "avg_total": 247.4,
+      "home_win_pct": 0.516,
+      "high_scoring_pct": 0.92,
+      "close_game_pct": 0.26
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 1,
+      "team2_wins_last_2_seasons": 5,
+      "last_winner": "Atlanta Hawks",
+      "home_team_home_record": "0-2",
+      "games_last_2_seasons": 6
+    },
+    "quarters": {
+      "avg_q1_total": 58.9,
+      "avg_q2_total": 57.4,
+      "avg_q3_total": 60.7,
+      "avg_q4_total": 57.6,
+      "avg_first_half": 116.3,
+      "avg_second_half": 118.3,
+      "team1_q1_avg": 28.1,
+      "team2_q1_avg": 30.8,
+      "team1_q4_avg": 29.3,
+      "team2_q4_avg": 28.3,
+      "halftime_leader_wins_pct": 0.55
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 43.5,
+        "avg_tpp": 34.1,
+        "avg_rebounds": 44.7,
+        "avg_assists": 25.5,
+        "avg_turnovers": 14.1,
+        "avg_disruption": 16.5
+      },
+      "team2": {
+        "avg_fgp": 46.5,
+        "avg_tpp": 40.7,
+        "avg_rebounds": 50.6,
+        "avg_assists": 31.5,
+        "avg_turnovers": 17.6,
+        "avg_disruption": 13.4
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 237.8,
+    "total_diff_from_h2h": -14.8,
+    "team1_h2h_scoring_diff": -6.5,
+    "team2_h2h_scoring_diff": -8.3,
+    "margin_volatility": 3.8,
+    "h2h_total_variance": 22.4,
+    "pace_adjusted_total": 233.1,
+    "defense_factor": 112.7,
+    "recent_scoring_trend": -2.6,
+    "injury_adjusted_total": 218.8
+  },
+  "comparison": {
+    "ppg": -2.0,
+    "net_rating": 1.16,
+    "form": 0.1,
+    "turnovers": 0.4,
+    "rebounds": 0.7,
+    "fgp": -1.4,
+    "three_pt_pct": -1.7,
+    "pace": -2.5,
+    "combined_pace": 104.3,
+    "weighted_form": -6.4,
+    "adjusted_net_rating": 1.08
+  },
+  "signals": [
+    "Philadelphia 76ers missing 24% of offense with key players limited",
+    "Atlanta Hawks lost 3 straight",
+    "Atlanta Hawks starts faster (+2.7 Q1 avg in H2H)",
+    "Philadelphia 76ers injury concerns: Kelly Oubre Jr. (36/58 games), Joel Embiid (32/58 games)",
+    "Atlanta Hawks injury concerns: CJ McCollum (16/60 games), Trae Young (13/60 games)",
+    "Atlanta Hawks 5-1 in recent H2H",
+    "Atlanta Hawks won 4+ of last 5 H2H meetings",
+    "High-scoring matchup (92% H2H games over 220)",
+    "High-variance H2H (\u00b122.4 pts std dev in totals)",
+    "Atlanta Hawks hot from 3 vs Philadelphia 76ers: 40.7% H2H vs 36.2% season",
+    "Atlanta Hawks more careless vs Philadelphia 76ers: 17.6 H2H vs 14.6 season TOV",
+    "Atlanta Hawks dominates boards vs Philadelphia 76ers: 50.6 H2H vs 42.6 season",
+    "Philadelphia 76ers scoring -5.2 PPG below season avg recently \u2014 bounce-back likely"
+  ],
+  "api_game_id": 16322,
+  "odds": {
+    "spread": {
+      "home": {
+        "line": -1.5,
+        "price": -108
+      },
+      "away": {
+        "line": 1.5,
+        "price": -112
+      }
+    },
+    "total": {
+      "line": 238.5,
+      "over": -110,
+      "under": -110
+    },
+    "moneyline": {
+      "home": -116,
+      "away": -102
+    },
+    "alternate_spreads": [
+      {
+        "line": -2.5,
+        "price": 108
+      },
+      {
+        "line": -3.5,
+        "price": 122
+      },
+      {
+        "line": 1.5,
+        "price": -140
+      },
+      {
+        "line": 2.5,
+        "price": -160
+      }
+    ],
+    "alternate_totals": [
+      {
+        "line": 237.5,
+        "price": -120
+      },
+      {
+        "line": 236.5,
+        "price": -132
+      },
+      {
+        "line": 239.5,
+        "price": -102
+      },
+      {
+        "line": 240.5,
+        "price": 106
+      }
+    ]
+  },
+  "search_context": "### Injury Report\n\n**Philadelphia 76ers**\n\n| Player | Status | Injury |\n|--------|--------|--------|\n| Joel Embiid | Out | Right knee injury management and right shin soreness[2] |\n| Paul George | Out | 25-game suspension for violating the league's Anti-Drug program[3] |\n| Quentin Grimes | Questionable | Illness[3] |\n| Kelly Oubre Jr. | Available | Left knee (playing with brace)[2] |\n\n**Atlanta Hawks**\n\n| Player | Status | Injury |\n|--------|--------|--------|\n| Jonathan Kuminga | Out | Left knee bone bruise[2][5] |\n| N'Faly Dante | Out | Knee injury[3] |\n\n### Betting Lines\n\nNo betting line information is available in the provided search results.\n\n### Line Movement\n\nNo line movement data is available in the provided search results.\n\n### Recent News\n\nThe **76ers (30-24)** will operate without their star center Joel Embiid, placing increased offensive responsibility on **Tyrese Maxey**, who is averaging 25.6 points and 6.3 assists per game[4]. The team also remains without Paul George due to his suspension. Philadelphia suffered a significant defeat on February 11, losing 138 points to an opponent[2].\n\nThe **Hawks (26-30)** will be missing **Jonathan Kuminga** due to a left knee bone bruise[5]. Despite their lower seed position, Atlanta has dominated the season series, winning both matchups against Philadelphia, including a 142-134 double-overtime victory in November and a 120-point win on December 14[2].\n\nBoth teams enter the game following recent losses[2].\n\n### Additional Context\n# Philadelphia 76ers Offensive Analysis: Without Embiid and Paul George\n\n## Current Roster Status\n\n**Joel Embiid (knee)** is sidelined and his availability following the All-Star break is uncertain[7]. **Paul George is out via suspension**[7]. The 76ers return from the All-Star break on Thursday at home against the Atlanta Hawks[1].\n\n## Tyrese Maxey's Usage and Performance as Primary Ball-Handler\n\n**Usage Rate and Minutes:** Maxey's usage rate has reached **30.4% in the 2025-26 season** (16th in the NBA), his highest on record[6]. He is averaging **39.9 minutes per game**[6], with one source reporting **38.6 minutes per game** leading the NBA by over a minute[1]. This represents a significant increase from his career average usage rate of 25.4%[6].\n\n**Scoring and Efficiency:** Maxey is averaging **career highs of 28.9 points per game** while shooting **46.9% overall and 37.9% from three-point range**[2]. Over his last eight games, he averaged **27.3 points, 6.3 assists, 3.8 rebounds, and 1.8 steals in 35.9 minutes per game**[7]. He has reached 30 points in 22 games this season[8].\n\n**Three-Point Volume:** Maxey is attempting **8.8 three-pointers per game** and shooting **38.2% from deep**[7], with a **3-point attempt rate of 41.1%**[7].\n\n## Performance Decline and Fatigue Concerns\n\nDespite strong overall statistics, Maxey has experienced **a sharp decline in both three-point shooting efficiency and scoring since the start of 2026**[1]. This decline is attributed partly to defensive coverages and partly to **fatigue from his league-leading minutes load**[1].\n\n## Offensive Efficiency Context\n\nThe 76ers' **offensive rating stands at 115.7** (15th in the NBA)[9], with a **net rating of 0.3** (17th in the NBA)[9]. When operating without Embiid and George, the team's offensive structure becomes heavily dependent on Maxey's playmaking and scoring, as evidenced by his elevated usage rate and minutes.\n\n## Key Structural Consideration\n\nMaxey's role as the **No. 1 option** means the 76ers' offensive execution without their two stars relies significantly on his ability to generate offense while managing fatigue from unsustainable minutes. The Hawks' defensive approach can target this structural dependency, particularly given their previous success against Philadelphia this season[1].\n\n### Player & Team News\n# Player-Focused News Report: Hawks vs. 76ers\n\n## Player Form & Streaks\n\n**Atlanta Hawks:** The Hawks enter this matchup struggling, having lost five of their last seven games before the All-Star break.[2] Jalen Johnson has remained consistent as a two-way threat, posting 19 points, 13 rebounds, and nine assists in their most recent loss to Charlotte on Feb. 11.[2] Dyson Daniels showed strong shooting efficiency in that same game with 21 points on 9-of-12 shooting, though the team couldn't secure the win.[2] CJ McCollum contributed 17 points and eight assists off the bench in that contest.[2]\n\n**Philadelphia 76ers:** The 76ers closed their pre-break stretch with two consecutive losses, including a season-low 89 points in a blowout to the Knicks on Feb. 11.[2] Tyrese Maxey led that effort with 32 points despite the team's overall offensive struggles.[2]\n\n## Rotation & Role Changes\n\nThe Hawks have made a roster adjustment, converting Caleb Houstan's two-way contract into a standard deal on Wednesday.[4] This move suggests increased availability for depth rotation purposes heading into the second half.\n\n## Returning Players & Ramp-Ups\n\n**Philadelphia 76ers:** Quentin Grimes (illness) is not listed on the injury report ahead of Thursday's game, clearing him to return to action after missing time.[4]\n\n## Matchup Storylines\n\nThis is the third of four meetings between these teams this season.[2] The Hawks have dominated the season series thus far, winning 142-134 in double overtime in Philadelphia in late November and securing a three-point victory at home in mid-December.[2] The 76ers will need to contain Jalen Johnson, who has been a consistent offensive and rebounding force for Atlanta.[4]",
+  "injury_impact": {
+    "team1": {
+      "out_players": [
+        {
+          "name": "Joel Embiid",
+          "ppg": 26.2,
+          "status": "Out"
+        },
+        {
+          "name": "Paul George",
+          "ppg": 16.0,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 42.2,
+      "adjusted_ppg_loss": 19.0
+    },
+    "team2": {
+      "out_players": [],
+      "missing_ppg": 0,
+      "adjusted_ppg_loss": 0.0
+    },
+    "total_reduction": 19.0,
+    "missing_ppg_diff": -19.0
+  }
+}
