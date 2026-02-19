@@ -49,7 +49,7 @@ def main():
     analyze = subparsers.add_parser("analyze", help="Pre-game analysis")
     analyze.add_argument("--date", "-d", help="YYYY-MM-DD (optional, extracts from output folder)")
     analyze.add_argument("--max-bets", "-m", type=int, default=4)
-    analyze.add_argument("--max-props", "-p", type=int, default=3)
+    analyze.add_argument("--max-props", "-p", type=int, default=4)
     analyze.add_argument("--force", "-f", action="store_true", help="Re-analyze even if bets exist")
 
     # results

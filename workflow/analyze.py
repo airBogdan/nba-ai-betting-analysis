@@ -757,7 +757,7 @@ def write_journal_pre_game(
     write_text(journal_path, "\n".join(lines))
 
 
-async def run_analyze_workflow(date: str, max_bets: int = 4, force: bool = False, max_props: int = 3) -> None:
+async def run_analyze_workflow(date: str, max_bets: int = 4, force: bool = False, max_props: int = 4) -> None:
     """Run the pre-game analysis workflow."""
     # Check for existing bets on this date (before any API calls)
     active = get_active_bets()
