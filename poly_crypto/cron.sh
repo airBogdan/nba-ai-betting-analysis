@@ -31,12 +31,42 @@ fi
 
 cd "$PROJECT_DIR"
 
+send_telegram() {
+    [ -z "${TELEGRAM_BOT_TOKEN:-}" ] && return
+    [ -z "${TELEGRAM_CHAT_ID:-}" ] && return
+    local message="$1"
+    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+        --data-urlencode "text=$message" \
+        -d chat_id="$TELEGRAM_CHAT_ID" > /dev/null 2>&1
+}
+
 echo "===== $(date -u '+%Y-%m-%d %H:%M:%S UTC') =====" >> "$LOGFILE"
 
-python -m poly_crypto >> "$LOGFILE" 2>&1
-EXIT_CODE=$?
+RESULTS=""
 
-echo "===== Exit code: $EXIT_CODE =====" >> "$LOGFILE"
+# Daily up/down
+DAILY_OUT=$(python -m poly_crypto daily 2>&1)
+DAILY_EXIT=$?
+echo "$DAILY_OUT" >> "$LOGFILE"
+echo "--- daily exit: $DAILY_EXIT ---" >> "$LOGFILE"
+DAILY_RESULTS=$(echo "$DAILY_OUT" | grep -E '^\s+(WIN|LOSS) ')
+if [ -n "$DAILY_RESULTS" ]; then
+    RESULTS="${RESULTS}Daily Up/Down\n${DAILY_RESULTS}\n\n"
+fi
+
+# Range brackets
+RANGE_OUT=$(python -m poly_crypto range 2>&1)
+RANGE_EXIT=$?
+echo "$RANGE_OUT" >> "$LOGFILE"
+echo "--- range exit: $RANGE_EXIT ---" >> "$LOGFILE"
+RANGE_RESULTS=$(echo "$RANGE_OUT" | grep -E '^\s+(WIN|LOSS) ')
+if [ -n "$RANGE_RESULTS" ]; then
+    RESULTS="${RESULTS}Range Brackets\n${RANGE_RESULTS}"
+fi
+
 echo "" >> "$LOGFILE"
 
-exit $EXIT_CODE
+# Send Telegram if any trades resolved
+if [ -n "$RESULTS" ]; then
+    send_telegram "$(printf "Crypto Results (%s)\n\n%b" "$DATE" "$RESULTS")"
+fi

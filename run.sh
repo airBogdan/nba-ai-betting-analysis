@@ -75,21 +75,25 @@ send_telegram_file() {
 case "$*" in
     *"betting.py analyze"*)
         if [ $EXIT_CODE -eq 0 ]; then
-            SUMMARY=$(tail -25 "$LOGFILE" | head -20)
-            send_telegram "$(printf 'Betting Analyze Complete (%s)\n\n%s' "$DATE" "$SUMMARY")"
-            send_telegram_file "$PROJECT_DIR/bets/active.json" "Active bets — $DATE"
+            ACTIVE="$PROJECT_DIR/bets/active.json"
+            if [ -f "$ACTIVE" ] && [ "$(cat "$ACTIVE")" != "[]" ]; then
+                SUMMARY=$(grep -v '^===== \|^Command: \|^$' "$LOGFILE" | tail -20)
+                send_telegram "$(printf 'Betting Analyze Complete (%s)\n\n%s' "$DATE" "$SUMMARY")"
+                send_telegram_file "$ACTIVE" "Active bets — $DATE"
+            fi
         else
             send_telegram "$(printf 'Betting Analyze FAILED (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
         fi
         ;;
     *"betting.py results"*)
         if [ $EXIT_CODE -eq 0 ]; then
-            SUMMARY=$(tail -25 "$LOGFILE" | head -20)
-            send_telegram "$(printf 'Betting Results Complete (%s)\n\n%s' "$DATE" "$SUMMARY")"
-            # Send the most recently modified journal file (results may process bets from any date)
-            JOURNAL=$(ls -t "$PROJECT_DIR/bets/journal/"*.md 2>/dev/null | head -1)
-            if [ -n "$JOURNAL" ]; then
-                send_telegram_file "$JOURNAL" "Journal — $(basename "$JOURNAL" .md)"
+            if ! grep -q "No active bets" "$LOGFILE"; then
+                SUMMARY=$(grep -v '^===== \|^Command: \|^$' "$LOGFILE" | tail -20)
+                send_telegram "$(printf 'Betting Results Complete (%s)\n\n%s' "$DATE" "$SUMMARY")"
+                JOURNAL=$(ls -t "$PROJECT_DIR/bets/journal/"*.md 2>/dev/null | head -1)
+                if [ -n "$JOURNAL" ]; then
+                    send_telegram_file "$JOURNAL" "Journal — $(basename "$JOURNAL" .md)"
+                fi
             fi
         else
             send_telegram "$(printf 'Betting Results FAILED (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
