@@ -4,13 +4,12 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from workflow.analyze import (
+from workflow.analyze.injuries import (
     INJURY_REPLACEMENT_FACTOR,
-    _names_match,
-    _normalize_name,
     _extract_injuries_from_search,
     compute_injury_impact,
 )
+from workflow.names import names_match as _names_match, normalize_name as _normalize_name
 
 
 class TestNormalizeName:
@@ -158,7 +157,7 @@ class TestExtractInjuriesFromSearch:
             {"team": "Portland Trail Blazers", "player": "Deni Avdija", "status": "Out"},
             {"team": "Memphis Grizzlies", "player": "Ja Morant", "status": "Out"},
         ]
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=mock_result):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=mock_result):
             result = await _extract_injuries_from_search(
                 "some search context", "Portland Trail Blazers", "Memphis Grizzlies"
             )
@@ -171,19 +170,19 @@ class TestExtractInjuriesFromSearch:
             {"team": "Team A", "player": "P1", "status": "Out"},
             {"team": "Team A", "player": "P2", "status": "Questionable"},  # Should be filtered
         ]
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=mock_result):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=mock_result):
             result = await _extract_injuries_from_search("ctx", "Team A", "Team B")
         assert len(result) == 1
 
     @pytest.mark.asyncio
     async def test_handles_none_response(self):
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=None):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=None):
             result = await _extract_injuries_from_search("ctx", "Team A", "Team B")
         assert result == []
 
     @pytest.mark.asyncio
     async def test_handles_non_list_response(self):
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value={"error": "bad"}):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value={"error": "bad"}):
             result = await _extract_injuries_from_search("ctx", "Team A", "Team B")
         assert result == []
 
@@ -194,13 +193,13 @@ class TestExtractInjuriesFromSearch:
             {"team": "Team A", "status": "Out"},  # missing player
             {"player": "P3", "status": "Out"},  # missing team
         ]
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=mock_result):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=mock_result):
             result = await _extract_injuries_from_search("ctx", "Team A", "Team B")
         assert len(result) == 1
 
     @pytest.mark.asyncio
     async def test_uses_haiku_model(self):
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=[]) as mock_llm:
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=[]) as mock_llm:
             await _extract_injuries_from_search("ctx", "Team A", "Team B")
             _, kwargs = mock_llm.call_args
             assert kwargs["model"] == "anthropic/claude-haiku-4.5"

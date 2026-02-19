@@ -11,7 +11,8 @@ from polymarket_helpers.gamma import extract_player_props, find_prop_market
 from polymarket_helpers.matching import prop_pick_to_outcome
 from workflow.polymarket_prices import extract_poly_price_for_prop
 from workflow.results import _find_player_stat, _evaluate_prop_bet
-from workflow.analyze import create_prop_bet, load_props_for_date
+from workflow.analyze.bets import create_prop_bet
+from workflow.analyze.gamedata import load_props_for_date
 from workflow.io import get_voids, VOIDS_PATH
 
 
@@ -458,7 +459,7 @@ class TestLoadPropsForDate:
         # Also write a non-props file (should be excluded)
         (output_dir / "lakers_vs_celtics_2026-02-17.json").write_text(json.dumps({"matchup": {}}))
 
-        with patch("workflow.analyze.OUTPUT_DIR", output_dir):
+        with patch("workflow.analyze.gamedata.OUTPUT_DIR", output_dir):
             result = load_props_for_date("2026-02-17")
 
         assert len(result) == 1
@@ -468,7 +469,7 @@ class TestLoadPropsForDate:
         output_dir = tmp_path / "output"
         output_dir.mkdir()
 
-        with patch("workflow.analyze.OUTPUT_DIR", output_dir):
+        with patch("workflow.analyze.gamedata.OUTPUT_DIR", output_dir):
             result = load_props_for_date("2026-02-17")
 
         assert result == []

@@ -5,11 +5,9 @@ from unittest.mock import patch
 
 import pytest
 
-from workflow.analyze import (
-    compute_injury_impact,
-    create_active_bet,
-    format_matchup_string,
-)
+from workflow.analyze.bets import create_active_bet
+from workflow.analyze.gamedata import format_matchup_string
+from workflow.analyze.injuries import compute_injury_impact
 from workflow.io import (
     _empty_summary,
     get_active_bets,

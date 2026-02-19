@@ -11,7 +11,8 @@ from datetime import date
 from polymarket_helpers.gamma import extract_polymarket_odds, fetch_nba_events
 from polymarket_helpers.matching import event_matches_matchup
 from polymarket_helpers.odds import poly_price_to_american, american_to_implied_probability
-from workflow.analyze import _extract_poly_and_odds_price, load_games_for_date
+from workflow.analyze.sizing import _extract_poly_and_odds_price
+from workflow.analyze.gamedata import load_games_for_date
 from workflow.polymarket_prices import extract_poly_price_for_bet, fetch_polymarket_prices
 
 # Team name mapping from Polymarket short names to full names

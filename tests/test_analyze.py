@@ -2,7 +2,7 @@
 
 import pytest
 
-from workflow.analyze import (
+from workflow.analyze.sizing import (
     _american_odds_to_decimal,
     _extract_poly_and_odds_price,
     _half_kelly_amount,

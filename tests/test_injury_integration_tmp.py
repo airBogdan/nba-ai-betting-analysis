@@ -5,12 +5,12 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from workflow.analyze import (
+from workflow.analyze.injuries import (
     INJURY_REPLACEMENT_FACTOR,
     _extract_and_compute_injuries,
     compute_injury_impact,
-    _normalize_name,
 )
+from workflow.names import normalize_name as _normalize_name
 
 
 def _make_game(
@@ -162,8 +162,8 @@ class TestExtractAndComputeIntegration:
             {"team": "Memphis Grizzlies", "player": "Ja Morant", "status": "Out"},
         ]
 
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
-            with patch("workflow.analyze._save_game_file"):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
+            with patch("workflow.analyze.injuries._save_game_file"):
                 await _extract_and_compute_injuries([game])
 
         # injury_impact should be attached
@@ -198,8 +198,8 @@ class TestExtractAndComputeIntegration:
             {"team": "Boston Celtics", "player": "Star", "status": "Out"},
         ]
 
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
-            with patch("workflow.analyze._save_game_file"):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
+            with patch("workflow.analyze.injuries._save_game_file"):
                 await _extract_and_compute_injuries([game])
 
         reduction = round(30.0 * (1 - INJURY_REPLACEMENT_FACTOR), 1)
@@ -222,8 +222,8 @@ class TestExtractAndComputeIntegration:
             {"team": "Boston Celtics", "player": "Jayson Tatum", "status": "Out"},
         ]
 
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
-            with patch("workflow.analyze._save_game_file"):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
+            with patch("workflow.analyze.injuries._save_game_file"):
                 await _extract_and_compute_injuries([game])
 
         impact = game["injury_impact"]
@@ -249,8 +249,8 @@ class TestExtractAndComputeIntegration:
             {"team": "Boston Celtics", "player": "Jayson Tatum", "status": "Out"},
         ]
 
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
-            with patch("workflow.analyze._save_game_file"):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
+            with patch("workflow.analyze.injuries._save_game_file"):
                 await _extract_and_compute_injuries([game])
 
         impact = game["injury_impact"]
@@ -270,8 +270,8 @@ class TestExtractAndComputeIntegration:
         )
 
         # complete_json should NOT be called (no search context)
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock) as mock_llm:
-            with patch("workflow.analyze._save_game_file"):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock) as mock_llm:
+            with patch("workflow.analyze.injuries._save_game_file"):
                 await _extract_and_compute_injuries([game])
             mock_llm.assert_not_called()
 
@@ -290,8 +290,8 @@ class TestExtractAndComputeIntegration:
 
         llm_extraction = []  # No injuries found
 
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
-            with patch("workflow.analyze._save_game_file") as mock_save:
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
+            with patch("workflow.analyze.injuries._save_game_file") as mock_save:
                 await _extract_and_compute_injuries([game])
                 mock_save.assert_not_called()
 
@@ -309,8 +309,8 @@ class TestExtractAndComputeIntegration:
             search_context="Star is out.",
         )
 
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value={"error": "bad"}):
-            with patch("workflow.analyze._save_game_file"):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value={"error": "bad"}):
+            with patch("workflow.analyze.injuries._save_game_file"):
                 await _extract_and_compute_injuries([game])
 
         # Should still have impact from API injury
@@ -336,8 +336,8 @@ class TestExtractAndComputeIntegration:
                 return [{"team": "Boston Celtics", "player": "Star1", "status": "Out"}]
             return [{"team": "LA Lakers", "player": "Star2", "status": "Out"}]
 
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, side_effect=fake_extract):
-            with patch("workflow.analyze._save_game_file"):
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, side_effect=fake_extract):
+            with patch("workflow.analyze.injuries._save_game_file"):
                 await _extract_and_compute_injuries([game1, game2])
 
         assert "injury_impact" in game1
@@ -354,7 +354,7 @@ class TestExtractAndComputeIntegration:
         )
         llm_extraction = [{"team": "Boston Celtics", "player": "Star", "status": "Out"}]
 
-        with patch("workflow.analyze.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
-            with patch("workflow.analyze._save_game_file") as mock_save:
+        with patch("workflow.analyze.injuries.complete_json", new_callable=AsyncMock, return_value=llm_extraction):
+            with patch("workflow.analyze.injuries._save_game_file") as mock_save:
                 await _extract_and_compute_injuries([game])
                 mock_save.assert_called_once_with(game)

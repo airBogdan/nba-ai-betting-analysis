@@ -219,7 +219,7 @@ class TestPaperTradeIntegration:
     @pytest.mark.asyncio
     async def test_analyze_imports_paper_trades(self):
         """run_analyze_workflow should import run_paper_trades."""
-        from workflow.analyze import run_paper_trades as imported
+        from workflow.analyze.pipeline import run_paper_trades as imported
         assert imported is not None
 
 
