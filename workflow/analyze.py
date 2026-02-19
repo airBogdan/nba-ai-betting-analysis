@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from .io import (
     BETS_DIR,
     JOURNAL_DIR,
+    append_text,
     get_active_bets,
     get_dollar_pnl,
     get_history,
@@ -21,14 +22,22 @@ from .io import (
     write_text,
 )
 from .llm import complete_json
-from .polymarket_prices import extract_poly_price_for_bet, fetch_polymarket_prices
+from .polymarket_prices import (
+    extract_poly_price_for_bet,
+    extract_poly_price_for_prop,
+    fetch_polymarket_player_props,
+    fetch_polymarket_prices,
+)
 from .prompts import (
     ANALYZE_GAME_PROMPT,
+    ANALYZE_PLAYER_PROPS_PROMPT,
     EXTRACT_INJURIES_PROMPT,
     POLYMARKET_ODDS_SECTION,
     SIZING_PROMPT,
     SYNTHESIZE_BETS_PROMPT,
+    SYNTHESIZE_PLAYER_PROPS_PROMPT,
     SYSTEM_ANALYST,
+    SYSTEM_PROPS_ANALYST,
     SYSTEM_SIZING,
     compact_json,
     format_analyses_for_synthesis,
@@ -36,6 +45,7 @@ from .prompts import (
 )
 from polymarket import get_polymarket_balance
 from polymarket_helpers.odds import poly_price_to_american
+from .names import normalize_name, names_match
 from .paper import run_paper_trades
 from .types import ActiveBet, BetRecommendation, SelectedBet
 
@@ -48,39 +58,9 @@ KELLY_MAX_BET_FRACTION = 0.03  # 3% of available balance per bet
 INJURY_REPLACEMENT_FACTOR = 0.55  # Replacement players recover ~55% of missing PPG
 HAIKU_MODEL = "anthropic/claude-haiku-4.5"
 
-# Name normalization
-_SUFFIXES = re.compile(r"\s+(jr\.?|sr\.?|ii|iii|iv)$", re.IGNORECASE)
-
-
-def _normalize_name(name: str) -> str:
-    """Normalize a player name for comparison."""
-    name = name.strip().lower()
-    name = _SUFFIXES.sub("", name)
-    # Remove periods (e.g., "P.J." → "pj")
-    name = name.replace(".", "")
-    return name
-
-
-def _names_match(name_a: str, name_b: str) -> bool:
-    """Check if two player names refer to the same person.
-
-    Handles: exact match, suffix stripping, initial matching (e.g., "C. Coward" → "Cedric Coward").
-    """
-    a = _normalize_name(name_a)
-    b = _normalize_name(name_b)
-    if a == b:
-        return True
-
-    # Initial matching: "k knueppel" matches "kyle knueppel"
-    parts_a = a.split()
-    parts_b = b.split()
-    if len(parts_a) >= 2 and len(parts_b) >= 2 and parts_a[-1] == parts_b[-1]:
-        # Last names match — check if first name is an initial
-        if len(parts_a[0]) == 1 and parts_b[0].startswith(parts_a[0]):
-            return True
-        if len(parts_b[0]) == 1 and parts_a[0].startswith(parts_b[0]):
-            return True
-    return False
+# Name normalization — delegated to workflow.names (shared module)
+_normalize_name = normalize_name
+_names_match = names_match
 
 
 async def _extract_injuries_from_search(
@@ -191,10 +171,12 @@ OUTPUT_DIR = Path(__file__).parent.parent / "output"
 
 
 def load_games_for_date(date: str) -> List[Dict[str, Any]]:
-    """Load matchup files for a specific date."""
+    """Load matchup files for a specific date (excludes props_ files)."""
     games = []
     pattern = f"*_{date}.json"
     for path in OUTPUT_DIR.glob(pattern):
+        if path.name.startswith("props_"):
+            continue
         try:
             data = json.loads(path.read_text())
             data["_file"] = path.name
@@ -202,6 +184,19 @@ def load_games_for_date(date: str) -> List[Dict[str, Any]]:
         except (json.JSONDecodeError, OSError) as e:
             print(f"Error loading {path}: {e}")
     return games
+
+
+def load_props_for_date(date: str) -> List[Dict[str, Any]]:
+    """Load props files for a specific date."""
+    props = []
+    pattern = f"props_*_{date}.json"
+    for path in OUTPUT_DIR.glob(pattern):
+        try:
+            data = json.loads(path.read_text())
+            props.append(data)
+        except (json.JSONDecodeError, OSError) as e:
+            print(f"Error loading props {path}: {e}")
+    return props
 
 
 def extract_game_id(filename: str) -> str:
@@ -400,7 +395,7 @@ async def synthesize_bets(
 
 
 VALID_CONFIDENCE = {"low", "medium", "high"}
-VALID_BET_TYPES = {"moneyline", "spread", "total"}
+VALID_BET_TYPES = {"moneyline", "spread", "total", "player_prop"}
 CONFIDENCE_TO_UNITS = {"low": 0.5, "medium": 1.0, "high": 2.0}
 
 
@@ -458,6 +453,122 @@ def create_active_bet(selected: SelectedBet, date: str) -> ActiveBet:
         "date": date,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
+
+
+def _normalize_prop_pick(raw: str) -> Optional[str]:
+    """Normalize LLM-generated over/under pick to canonical form.
+
+    Returns "over", "under", or None if unrecognizable.
+    """
+    val = raw.lower().strip()
+    if val in ("over", "yes", "o"):
+        return "over"
+    if val in ("under", "no", "u"):
+        return "under"
+    return None
+
+
+VALID_PROP_TYPES = {"points", "rebounds", "assists"}
+
+
+def create_prop_bet(selected: dict, date: str) -> Optional[ActiveBet]:
+    """Create an ActiveBet for a player prop from a synthesis selection.
+
+    Returns None if the pick value is unrecognizable or prop type is unsupported.
+    """
+    prop_type = selected.get("prop_type", "")
+    if prop_type not in VALID_PROP_TYPES:
+        print(f"  Skipping prop with unsupported type: {prop_type!r}")
+        return None
+
+    pick = _normalize_prop_pick(selected.get("pick", ""))
+    if pick is None:
+        print(f"  Skipping prop with unrecognized pick: {selected.get('pick')!r}")
+        return None
+
+    raw_confidence = selected.get("confidence", "low")
+    confidence = _normalize_confidence(raw_confidence)
+    units = _normalize_units(selected.get("units", 0.5), confidence)
+
+    bet: ActiveBet = {
+        "id": str(uuid.uuid4()),
+        "game_id": selected.get("game_id", "unknown"),
+        "matchup": selected.get("matchup", "Unknown @ Unknown"),
+        "bet_type": "player_prop",
+        "pick": pick,
+        "line": selected.get("line"),
+        "confidence": confidence,
+        "units": units,
+        "reasoning": selected.get("reasoning", "No reasoning provided"),
+        "primary_edge": selected.get("primary_edge", "Unknown"),
+        "date": date,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "prop_type": selected.get("prop_type", "points"),
+        "player_name": selected.get("player_name", "Unknown"),
+    }
+    return bet
+
+
+async def analyze_player_props(
+    props_data: Dict[str, Any],
+    prop_markets: list[dict],
+    game_id: str,
+    matchup_str: str,
+    strategy: Optional[str],
+    search_context: Optional[str],
+    props_search_context: Optional[str],
+) -> Optional[dict]:
+    """Analyze player props for a single game with the LLM."""
+    # Team names from props data (team1 = home per main.py convention)
+    home_team = props_data.get("home_team", props_data.get("team1", "Home"))
+    team1 = props_data.get("team1", "")
+    team2 = props_data.get("team2", "")
+    away_team = team2 if team1 == home_team else team1
+
+    # Only send stats for players that have prop markets (reduce noise)
+    prop_names = [m.get("player_name", "") for m in prop_markets]
+
+    def _has_prop(player: dict) -> bool:
+        return any(names_match(player.get("name", ""), pn) for pn in prop_names)
+
+    home_players = [p for p in props_data.get("team1_players", []) if _has_prop(p)]
+    away_players = [p for p in props_data.get("team2_players", []) if _has_prop(p)]
+
+    prompt = ANALYZE_PLAYER_PROPS_PROMPT.format(
+        matchup=matchup_str,
+        game_id=game_id,
+        home_team=home_team,
+        away_team=away_team,
+        home_players_json=compact_json(home_players),
+        away_players_json=compact_json(away_players),
+        prop_markets_json=compact_json(prop_markets),
+        search_context=search_context or "No search context available.",
+        props_search_context=props_search_context or "No props-specific context available.",
+        strategy=strategy or "No strategy defined yet.",
+    )
+
+    result = await complete_json(prompt, system=SYSTEM_PROPS_ANALYST)
+    if result:
+        result["game_id"] = game_id
+        result["matchup"] = matchup_str
+    return result
+
+
+async def synthesize_player_props(
+    recommendations: list[dict],
+    strategy: Optional[str],
+    history_summary: Dict[str, Any],
+    max_props: int,
+) -> Optional[dict]:
+    """Synthesize prop recommendations into final selections."""
+    prompt = SYNTHESIZE_PLAYER_PROPS_PROMPT.format(
+        max_props=max_props,
+        recommendations_json=json.dumps(recommendations, indent=2),
+        strategy=strategy or "No strategy defined yet.",
+        history_summary=format_history_summary(history_summary),
+    )
+
+    return await complete_json(prompt, system=SYSTEM_PROPS_ANALYST)
 
 
 def _extract_sizing_strategy(strategy: Optional[str]) -> str:
@@ -608,7 +719,11 @@ def write_journal_pre_game(
             line = bet.get('line')
 
             # Format the pick display based on bet type
-            if bet_type == "spread" and line is not None:
+            if bet_type == "player_prop":
+                player = bet.get('player_name', '?')
+                prop = bet.get('prop_type', '?')
+                pick_display = f"{player} {prop} {pick} {line}" if line else f"{player} {prop} {pick}"
+            elif bet_type == "spread" and line is not None:
                 pick_display = f"{pick} {line:+.1f}"
             elif bet_type == "total" and line is not None:
                 pick_display = f"{pick} {line:.1f}"
@@ -643,7 +758,7 @@ def write_journal_pre_game(
     write_text(journal_path, "\n".join(lines))
 
 
-async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False) -> None:
+async def run_analyze_workflow(date: str, max_bets: int = 4, force: bool = False, max_props: int = 3) -> None:
     """Run the pre-game analysis workflow."""
     # Check for existing bets on this date (before any API calls)
     active = get_active_bets()
@@ -674,9 +789,11 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
     print("Computing injury impact...")
     await _extract_and_compute_injuries(games)
 
-    # Phase 1.7: Fetch Polymarket prices
+    # Phase 1.7: Fetch Polymarket prices (single event fetch, shared with props)
     print("Fetching Polymarket prices...")
-    await asyncio.to_thread(fetch_polymarket_prices, games, date)
+    from polymarket_helpers.gamma import fetch_nba_events
+    polymarket_events = await asyncio.to_thread(fetch_nba_events, date)
+    await asyncio.to_thread(fetch_polymarket_prices, games, date, polymarket_events)
     # Drop games with no Polymarket market
     games = [g for g in games if g.get("polymarket_odds")]
     if not games:
@@ -760,19 +877,7 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
             enriched["game_id"] = gid
         return enriched
 
-    if not new_bets:
-        print("No bets selected by analysis.")
-        enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
-        save_skips(date, enriched_skips)
-        if enriched_skips:
-            try:
-                await run_paper_trades(enriched_skips, date, games)
-            except Exception as e:
-                print(f"Paper trading failed (non-fatal): {e}")
-        write_journal_pre_game(date, [], synthesis.get("skipped", []), synthesis.get("summary", ""))
-        return
-
-    # Get Polymarket balance for sizing
+    # Get Polymarket balance (needed for game-level and props sizing)
     print("Querying Polymarket balance...")
     balance = get_polymarket_balance()
     if balance is None:
@@ -786,11 +891,14 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
                 print(f"Paper trading failed (non-fatal): {e}")
         return
 
-    # Size bets
-    print("Sizing bets...")
-    sized_bets, sizing_skipped = await size_bets(
-        new_bets, balance, strategy, history["summary"]
-    )
+    # Size game-level bets (skip sizing if none to size)
+    sized_bets: List[ActiveBet] = []
+    sizing_skipped: List[Dict[str, str]] = []
+    if new_bets:
+        print("Sizing bets...")
+        sized_bets, sizing_skipped = await size_bets(
+            new_bets, balance, strategy, history["summary"]
+        )
 
     # Combine skipped lists for journal
     all_skipped = synthesis.get("skipped", []) + sizing_skipped
@@ -807,27 +915,266 @@ async def run_analyze_workflow(date: str, max_bets: int = 3, force: bool = False
         except Exception as e:
             print(f"Paper trading failed (non-fatal): {e}")
 
-    if not sized_bets:
-        print("All bets were vetoed by sizing.")
-        write_journal_pre_game(date, [], all_skipped, synthesis.get("summary", ""))
-        return
-
-    # Save active bets
-    save_active_bets(active + sized_bets)
+    # Save game-level bets and journal
+    if sized_bets:
+        save_active_bets(active + sized_bets)
     write_journal_pre_game(date, sized_bets, all_skipped, synthesis.get("summary", ""))
 
-    # Print summary with amounts
-    print(f"\nPlaced {len(sized_bets)} bets (${sum(b['amount'] for b in sized_bets):.2f} total):")
-    for bet in sized_bets:
-        bet_type = bet['bet_type']
-        if bet_type == "spread" and bet.get('line') is not None:
-            pick_str = f"{bet['pick']} {bet['line']:+.1f}"
-        elif bet_type == "total" and bet.get('line') is not None:
-            pick_str = f"{bet['pick']} {bet['line']:.1f}"
-        else:
-            pick_str = bet['pick']
-        print(f"  {bet['matchup']}: [{bet_type.upper()}] {pick_str} - ${bet['amount']:.2f}")
+    if sized_bets:
+        print(f"\nPlaced {len(sized_bets)} bets (${sum(b['amount'] for b in sized_bets):.2f} total):")
+        for bet in sized_bets:
+            bet_type = bet['bet_type']
+            if bet_type == "spread" and bet.get('line') is not None:
+                pick_str = f"{bet['pick']} {bet['line']:+.1f}"
+            elif bet_type == "total" and bet.get('line') is not None:
+                pick_str = f"{bet['pick']} {bet['line']:.1f}"
+            else:
+                pick_str = bet['pick']
+            print(f"  {bet['matchup']}: [{bet_type.upper()}] {pick_str} - ${bet['amount']:.2f}")
 
-    dollar_pnl = get_dollar_pnl()
-    print(f"\nBalance: ${balance:.2f} | Dollar P&L: ${dollar_pnl:+.2f}")
-    print(f"See bets/journal/{date}.md for details")
+        dollar_pnl = get_dollar_pnl()
+        print(f"\nBalance: ${balance:.2f} | Dollar P&L: ${dollar_pnl:+.2f}")
+        print(f"See bets/journal/{date}.md for details")
+    elif new_bets:
+        print("All bets were vetoed by sizing.")
+    else:
+        print("No game-level bets selected by analysis.")
+
+    # --- Player Props Pipeline (only on games without a game-level bet) ---
+    if max_props > 0:
+        game_ids_with_bets = {b["game_id"] for b in sized_bets}
+        try:
+            await _run_props_pipeline(
+                date, games, game_lookup, polymarket_events,
+                strategy, history, balance, max_props, game_ids_with_bets,
+            )
+        except Exception as e:
+            print(f"Player props pipeline failed (non-fatal): {e}")
+
+
+async def _run_props_pipeline(
+    date: str,
+    games: List[Dict[str, Any]],
+    game_lookup: Dict[str, Dict[str, Any]],
+    polymarket_events: list[dict],
+    strategy: Optional[str],
+    history: dict,
+    balance: float,
+    max_props: int,
+    exclude_game_ids: set[str] | None = None,
+) -> None:
+    """Run the player props analysis pipeline.
+
+    Args:
+        exclude_game_ids: Game IDs that already have game-level bets.
+            Props on these games are skipped to avoid correlated exposure.
+    """
+    from .search import search_player_props
+
+    # 1. Load props data from output/props_*.json
+    props_data_list = load_props_for_date(date)
+    if not props_data_list:
+        print("\nNo props data files found, skipping player props.")
+        return
+
+    # 2. Fetch prop markets from pre-fetched events
+    print("\nFetching player prop markets...")
+    prop_markets = await asyncio.to_thread(
+        fetch_polymarket_player_props, games, date, polymarket_events
+    )
+    if not prop_markets:
+        print("No player prop markets available.")
+        return
+
+    # Exclude games that already have game-level bets (avoid correlated exposure)
+    if exclude_game_ids:
+        excluded = {gid for gid in prop_markets if gid in exclude_game_ids}
+        if excluded:
+            prop_markets = {gid: m for gid, m in prop_markets.items() if gid not in exclude_game_ids}
+            print(f"Excluding {len(excluded)} game(s) with game-level bets from props")
+        if not prop_markets:
+            print("No prop markets remaining after excluding games with bets.")
+            return
+
+    total_props = sum(len(v) for v in prop_markets.values())
+    print(f"Found {total_props} prop markets across {len(prop_markets)} games")
+
+    # Build props_data lookup by game_id
+    props_by_game: Dict[str, Dict[str, Any]] = {}
+    for pd in props_data_list:
+        gid = str(pd.get("api_game_id", ""))
+        if gid:
+            props_by_game[gid] = pd
+
+    # 3. Props-specific Perplexity search per game (concurrent)
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_LLM_CALLS)
+
+    async def search_props_for_game(game_id: str, markets: list[dict]) -> tuple[str, Optional[str]]:
+        game = game_lookup.get(game_id, {})
+        matchup = game.get("matchup", {})
+        matchup_str = format_matchup_string(matchup) if matchup else "Unknown"
+        async with semaphore:
+            result = await search_player_props(matchup_str, markets)
+        return game_id, result
+
+    print("Running props-specific search...")
+    search_tasks = [
+        search_props_for_game(gid, markets)
+        for gid, markets in prop_markets.items()
+    ]
+    search_results_raw = await asyncio.gather(*search_tasks, return_exceptions=True)
+
+    props_search: Dict[str, Optional[str]] = {}
+    for r in search_results_raw:
+        if isinstance(r, Exception):
+            print(f"  Props search error: {r}")
+        else:
+            gid, ctx = r
+            props_search[gid] = ctx
+
+    # 4. Analyze player props per game (concurrent)
+    print("Analyzing player props...")
+
+    async def analyze_props_for_game(game_id: str) -> Optional[dict]:
+        pd = props_by_game.get(game_id)
+        if not pd:
+            return None
+        markets = prop_markets.get(game_id, [])
+        if not markets:
+            return None
+        game = game_lookup.get(game_id, {})
+        matchup = game.get("matchup", {})
+        matchup_str = format_matchup_string(matchup) if matchup else "Unknown"
+        search_ctx = game.get("search_context")
+        props_ctx = props_search.get(game_id)
+        async with semaphore:
+            return await analyze_player_props(
+                pd, markets, game_id, matchup_str, strategy, search_ctx, props_ctx
+            )
+
+    analysis_tasks = [analyze_props_for_game(gid) for gid in prop_markets]
+    analysis_results = await asyncio.gather(*analysis_tasks, return_exceptions=True)
+
+    prop_recommendations = []
+    for r in analysis_results:
+        if isinstance(r, Exception):
+            print(f"  Props analysis error: {r}")
+        elif r and r.get("prop_recommendations"):
+            prop_recommendations.append(r)
+
+    if not prop_recommendations:
+        print("No prop recommendations from analysis.")
+        return
+
+    total_recs = sum(len(r.get("prop_recommendations", [])) for r in prop_recommendations)
+    print(f"Got {total_recs} prop recommendations across {len(prop_recommendations)} games")
+
+    # 5. Synthesize across games
+    print("Synthesizing prop selections...")
+    synthesis = await synthesize_player_props(
+        prop_recommendations, strategy, history["summary"], max_props
+    )
+    if not synthesis:
+        print("Props synthesis failed.")
+        return
+
+    selected = synthesis.get("selected_props", [])
+    if not selected:
+        print("No props selected.")
+        return
+
+    # Build lookup from original recommendations to recover authoritative game_id/matchup
+    # (don't trust LLM to transcribe these correctly)
+    _prop_origin: Dict[tuple, tuple] = {}  # (norm_name, prop_type, line) -> (game_id, matchup)
+    for rec in prop_recommendations:
+        gid = rec.get("game_id", "")
+        mup = rec.get("matchup", "")
+        for p in rec.get("prop_recommendations", []):
+            key = (normalize_name(p.get("player_name", "")), p.get("prop_type", ""), p.get("line"))
+            _prop_origin[key] = (gid, mup)
+
+    # 6. Create prop bets and attach Polymarket prices
+    prop_bets = []
+    for sel in selected:
+        # Recover game_id and matchup from original recommendations
+        lookup_key = (normalize_name(sel.get("player_name", "")), sel.get("prop_type", ""), sel.get("line"))
+        origin = _prop_origin.get(lookup_key)
+        if origin:
+            sel["game_id"] = origin[0]
+            sel["matchup"] = origin[1]
+
+        bet = create_prop_bet(sel, date)
+        if bet is None:
+            continue
+        game_id = bet["game_id"]
+        markets = prop_markets.get(game_id, [])
+        poly_price = extract_poly_price_for_prop(
+            markets, bet.get("prop_type", ""), bet.get("player_name", ""),
+            bet.get("line"), bet["pick"],
+        )
+        if poly_price is not None:
+            bet["poly_price"] = poly_price
+            bet["odds_price"] = poly_price_to_american(poly_price)
+            prop_bets.append(bet)
+        else:
+            print(f"  Dropping prop (no Polymarket price): {bet.get('player_name')} {bet.get('prop_type')}")
+
+    if not prop_bets:
+        print("No placeable prop bets (all missing Polymarket prices).")
+        return
+
+    # 7. Size prop bets (reuses existing sizing — exposure includes game-level bets)
+    print("Sizing prop bets...")
+    sized_props, props_skipped = await size_bets(
+        prop_bets, balance, strategy, history["summary"]
+    )
+
+    if not sized_props:
+        print("All prop bets vetoed by sizing.")
+        return
+
+    # 8. Save prop bets to active.json
+    current_active = get_active_bets()
+    save_active_bets(current_active + sized_props)
+
+    # Print summary
+    print(f"\nPlaced {len(sized_props)} prop bets (${sum(b['amount'] for b in sized_props):.2f} total):")
+    for bet in sized_props:
+        print(f"  {bet['matchup']}: {bet.get('player_name', '?')} {bet.get('prop_type', '?')} "
+              f"{bet['pick']} {bet.get('line', '?')} - ${bet['amount']:.2f}")
+
+    # Append prop bets to pre-game journal
+    journal_path = JOURNAL_DIR / f"{date}.md"
+    lines = ["### Player Prop Bets", ""]
+    total_wagered = sum(b.get("amount", 0) for b in sized_props)
+    if total_wagered > 0:
+        lines.append(f"**Total wagered: ${total_wagered:.2f}**")
+        lines.append("")
+    for bet in sized_props:
+        player = bet.get("player_name", "?")
+        prop = bet.get("prop_type", "?")
+        pick = bet["pick"]
+        line = bet.get("line")
+        pick_display = f"{player} {prop} {pick} {line}" if line else f"{player} {prop} {pick}"
+        lines.append(f"**{bet.get('matchup', 'Unknown')}** - PLAYER_PROP")
+        lines.append(f"- Pick: {pick_display} ({bet.get('confidence', 'unknown')} confidence)")
+        amount = bet.get("amount")
+        if amount:
+            lines.append(f"- Amount: ${amount:.2f}")
+        else:
+            lines.append(f"- Units: {bet.get('units', '?')}")
+        lines.append(f"- Edge: {bet.get('primary_edge', 'Unknown')}")
+        lines.append(f"- Reasoning: {bet.get('reasoning', 'No reasoning provided')}")
+        lines.append("")
+    # Insert before the --- separator so props appear inside pre-game section
+    content = read_text(journal_path)
+    props_block = "\n".join(lines)
+    if content:
+        stripped = content.rstrip()
+        if stripped.endswith("---"):
+            base = stripped[:-3].rstrip()
+            write_text(journal_path, base + "\n\n" + props_block + "---\n")
+        else:
+            append_text(journal_path, "\n" + props_block)
+    else:
+        append_text(journal_path, props_block)

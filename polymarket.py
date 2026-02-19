@@ -9,8 +9,13 @@ from py_clob_client.client import ClobClient
 from py_clob_client.clob_types import AssetType, BalanceAllowanceParams, MarketOrderArgs
 from py_clob_client.constants import POLYGON
 
-from polymarket_helpers.gamma import fetch_nba_events, find_market
-from polymarket_helpers.matching import parse_matchup, event_matches_matchup, pick_matches_outcome
+from polymarket_helpers.gamma import fetch_nba_events, find_market, find_prop_market
+from polymarket_helpers.matching import (
+    parse_matchup,
+    event_matches_matchup,
+    pick_matches_outcome,
+    prop_pick_to_outcome,
+)
 from polymarket_helpers.odds import format_price_comparison
 from workflow.io import get_active_bets, save_active_bets
 
@@ -27,6 +32,23 @@ def resolve_token_id(bet: dict, events: list[dict]) -> tuple[str, float] | None:
 
     for event in events:
         if not event_matches_matchup(event.get("title", ""), away, home):
+            continue
+
+        # Player prop bets use a different market lookup
+        if bet.get("bet_type") == "player_prop":
+            market = find_prop_market(
+                event, bet.get("prop_type", ""), bet.get("player_name", ""), bet.get("line")
+            )
+            if not market:
+                continue
+            outcomes = market["outcomes"]
+            prices = [float(p) for p in market["outcomePrices"]]
+            token_ids = market["clobTokenIds"]
+            # Map over/under to Yes/No for Polymarket props
+            target = prop_pick_to_outcome(bet["pick"])
+            for i, outcome in enumerate(outcomes):
+                if outcome.lower() == target.lower():
+                    return token_ids[i], prices[i]
             continue
 
         market = find_market(event, bet["bet_type"], bet.get("line"))
@@ -124,7 +146,10 @@ def run() -> None:
         print(f"\n{date}: {len(events)} event(s), {len(date_bets)} bet(s)")
 
         for bet in date_bets:
-            label = f"{bet['matchup']} | {bet['bet_type']} {bet['pick']}"
+            if bet.get("bet_type") == "player_prop":
+                label = f"{bet['matchup']} | {bet.get('player_name', '?')} {bet.get('prop_type', '?')} {bet['pick']} {bet.get('line', '?')}"
+            else:
+                label = f"{bet['matchup']} | {bet['bet_type']} {bet['pick']}"
             result = resolve_token_id(bet, events)
 
             if not result:

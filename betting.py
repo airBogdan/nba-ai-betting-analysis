@@ -48,7 +48,8 @@ def main():
     # analyze
     analyze = subparsers.add_parser("analyze", help="Pre-game analysis")
     analyze.add_argument("--date", "-d", help="YYYY-MM-DD (optional, extracts from output folder)")
-    analyze.add_argument("--max-bets", "-m", type=int, default=3)
+    analyze.add_argument("--max-bets", "-m", type=int, default=4)
+    analyze.add_argument("--max-props", "-p", type=int, default=3)
     analyze.add_argument("--force", "-f", action="store_true", help="Re-analyze even if bets exist")
 
     # results
@@ -87,7 +88,7 @@ def main():
         from workflow.analyze import run_analyze_workflow
 
         for date in dates:
-            asyncio.run(run_analyze_workflow(date, args.max_bets, args.force))
+            asyncio.run(run_analyze_workflow(date, args.max_bets, args.force, args.max_props))
     elif args.command == "results":
         if args.date:
             validate_date(args.date)

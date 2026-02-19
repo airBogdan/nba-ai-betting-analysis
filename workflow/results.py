@@ -3,7 +3,7 @@
 import asyncio
 from typing import Any, Dict, List, Optional, Tuple
 
-from helpers.api import get_game_by_id, get_games_by_date
+from helpers.api import get_game_by_id, get_game_player_stats, get_games_by_date
 from helpers.utils import get_current_nba_season_year
 from .io import (
     JOURNAL_DIR,
@@ -22,8 +22,10 @@ from .io import (
     save_paper_history,
     save_paper_trades,
     save_skips_all,
+    save_void,
 )
 from .llm import complete_json
+from .names import names_match
 from .prompts import REFLECT_BET_PROMPT, SYSTEM_ANALYST
 from .types import ActiveBet, CompletedBet, GameResult
 
@@ -285,6 +287,9 @@ def _evaluate_bet(bet: ActiveBet, result: GameResult) -> tuple:
         else:
             return "push", 0.0
 
+    elif bet_type == "player_prop":
+        raise ValueError("player_prop bets must be evaluated via _evaluate_prop_bet")
+
     elif bet_type == "total":
         # Was the actual total over/under the line?
         line = bet.get("line", 0)
@@ -312,6 +317,69 @@ def _evaluate_bet(bet: ActiveBet, result: GameResult) -> tuple:
     return "loss", -units
 
 
+# --- Player prop evaluation ---
+
+PROP_TYPE_TO_STAT_KEY = {
+    "points": "points",
+    "rebounds": "totReb",
+    "assists": "assists",
+}
+
+
+def _find_player_stat(
+    box_score: list[dict], player_name: str, prop_type: str
+) -> Optional[float]:
+    """Find a player's stat from box score data.
+
+    Returns the stat value or None if player not found.
+    """
+    stat_key = PROP_TYPE_TO_STAT_KEY.get(prop_type)
+    if not stat_key:
+        return None
+
+    for entry in box_score:
+        player = entry.get("player", {})
+        full_name = f"{player.get('firstname', '')} {player.get('lastname', '')}".strip()
+        if not full_name:
+            continue
+        if names_match(player_name, full_name):
+            val = entry.get(stat_key)
+            if val is not None:
+                try:
+                    return float(val)
+                except (ValueError, TypeError):
+                    return None
+    return None
+
+
+def _evaluate_prop_bet(
+    bet: ActiveBet, actual_stat: float
+) -> tuple[str, float]:
+    """Evaluate a player prop bet.
+
+    Returns (outcome, profit_loss).
+    Caller must resolve actual_stat before calling (DNP = void, handled upstream).
+    """
+    units = bet["units"]
+    line = bet.get("line", 0)
+    pick = bet["pick"].lower()
+
+    if pick == "over":
+        if actual_stat > line:
+            return "win", units
+        elif actual_stat < line:
+            return "loss", -units
+        else:
+            return "push", 0.0
+    else:  # under
+        if actual_stat < line:
+            return "win", units
+        elif actual_stat > line:
+            return "loss", -units
+        else:
+            return "push", 0.0
+
+
 async def reflect_on_bet(
     bet: ActiveBet, result: GameResult, outcome: str
 ) -> Optional[Dict[str, Any]]:
@@ -326,6 +394,19 @@ async def reflect_on_bet(
     else:
         line_str = "N/A"
 
+    # Build prop-specific context for player prop bets
+    prop_context = ""
+    if bet.get("bet_type") == "player_prop":
+        player = bet.get("player_name", "Unknown")
+        prop_type = bet.get("prop_type", "unknown")
+        actual = bet.get("_actual_stat")
+        actual_str = str(actual) if actual is not None else "DNP"
+        prop_context = (
+            f"- Player: {player}\n"
+            f"- Stat Type: {prop_type}\n"
+            f"- Actual {prop_type}: {actual_str}"
+        )
+
     prompt = REFLECT_BET_PROMPT.format(
         matchup=bet["matchup"],
         bet_type=bet.get("bet_type", "moneyline"),
@@ -335,6 +416,7 @@ async def reflect_on_bet(
         units=bet["units"],
         reasoning=bet["reasoning"],
         primary_edge=bet["primary_edge"],
+        prop_context=prop_context,
         winner=result["winner"],
         final_score=_format_score(result),
         actual_total=actual_total,
@@ -382,7 +464,11 @@ def append_journal_post_game(date: str, completed: List[CompletedBet]) -> None:
         line = bet.get("line")
 
         # Format pick display
-        if bet_type == "spread" and line is not None:
+        if bet_type == "player_prop":
+            player = bet.get("player_name", "?")
+            prop = bet.get("prop_type", "?")
+            pick_display = f"{player} {prop} {pick} {line}" if line else f"{player} {prop} {pick}"
+        elif bet_type == "spread" and line is not None:
             pick_display = f"{pick} {line:+.1f}"
         elif bet_type == "total" and line is not None:
             pick_display = f"{pick} {line:.1f}"
@@ -400,7 +486,10 @@ def append_journal_post_game(date: str, completed: List[CompletedBet]) -> None:
         lines.append(f"- Pick: {pick_display}")
         lines.append(f"- Result: **{result_str}** ({profit_str})")
         lines.append(f"- Final: {bet['final_score']}")
-        if bet_type == "total":
+        if bet_type == "player_prop":
+            actual = bet.get("actual_stat")
+            lines.append(f"- Actual {bet.get('prop_type', 'stat')}: {actual if actual is not None else 'DNP'}")
+        elif bet_type == "total":
             lines.append(f"- Actual Total: {bet.get('actual_total', 'N/A')}")
         lines.append(f"- Winner: {bet['winner']}")
         if bet["reflection"]:
@@ -561,11 +650,55 @@ async def _process_results_for_date(date: str, season: int) -> None:
     unresolved: List[ActiveBet] = []
     matched: List[Tuple[ActiveBet, GameResult, str, float]] = []  # (bet, result, outcome, profit_loss)
 
+    # Cache box scores per game_id for player prop bets (avoid duplicate API calls)
+    box_score_cache: Dict[str, list[dict]] = {}
+
     for bet in date_bets:
         result = match_bet_to_result(bet, finished)
         if not result:
             print(f"  No result yet for {bet['matchup']}")
             unresolved.append(bet)
+            continue
+
+        # Player prop bets need box score data
+        if bet.get("bet_type") == "player_prop":
+            gid = bet["game_id"]
+
+            # Invalid game ID — can't fetch box score
+            if not gid.isdigit():
+                print(f"  Void: invalid game_id {gid!r} for {bet.get('player_name')}")
+                save_void(bet, f"Invalid game_id: {gid!r}")
+                continue
+
+            # Fetch box score (cache per game, preserve None vs [] distinction)
+            if gid not in box_score_cache:
+                box_score_cache[gid] = await get_game_player_stats(int(gid))
+            box_score = box_score_cache[gid]
+
+            if box_score is None:
+                print(f"  Void: box score unavailable for game {gid}")
+                save_void(bet, f"Box score unavailable for game {gid}")
+                continue
+
+            # Unsupported prop type — can't evaluate
+            prop_type = bet.get("prop_type", "")
+            if prop_type not in PROP_TYPE_TO_STAT_KEY:
+                print(f"  Void: unsupported prop type {prop_type!r}")
+                save_void(bet, f"Unsupported prop type: {prop_type!r}")
+                continue
+
+            # Check if player actually played — DNP voids the bet
+            actual_stat = _find_player_stat(
+                box_score, bet.get("player_name", ""), prop_type
+            )
+            if actual_stat is None:
+                print(f"  DNP void: {bet.get('player_name')} — moving to voids.json")
+                save_void(bet, f"DNP: {bet.get('player_name')} not in box score")
+                continue
+
+            outcome, profit_loss = _evaluate_prop_bet(bet, actual_stat)
+            bet["_actual_stat"] = actual_stat
+            matched.append((bet, result, outcome, profit_loss))
             continue
 
         # Determine outcome based on bet type
@@ -605,8 +738,10 @@ async def _process_results_for_date(date: str, season: int) -> None:
             actual_total = result["home_score"] + result["away_score"]
             actual_margin = result["home_score"] - result["away_score"]  # Positive = home win
 
+            # Strip internal keys before creating completed bet
+            clean_bet = {k: v for k, v in bet.items() if not k.startswith("_")}
             completed_bet: CompletedBet = {
-                **bet,
+                **clean_bet,
                 "result": outcome,
                 "winner": result["winner"],
                 "final_score": _format_score(result),
@@ -615,6 +750,9 @@ async def _process_results_for_date(date: str, season: int) -> None:
                 "profit_loss": profit_loss,
                 "reflection": reflection_text,
             }
+            # Add actual_stat for player prop bets
+            if bet.get("bet_type") == "player_prop" and bet.get("_actual_stat") is not None:
+                completed_bet["actual_stat"] = bet["_actual_stat"]
             if structured_ref:
                 completed_bet["structured_reflection"] = structured_ref
             # Compute dollar P&L from payout

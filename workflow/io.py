@@ -117,9 +117,30 @@ def get_dollar_pnl() -> float:
 
 
 def get_open_exposure() -> float:
-    """Get total dollar amount committed in active bets."""
+    """Get total dollar amount committed in active bets not yet placed on Polymarket.
+
+    Bets already placed on-chain have already debited the wallet balance,
+    so counting them here would double-subtract from available funds.
+    """
     active = get_active_bets()
-    return sum(b.get("amount", 0.0) for b in active)
+    return sum(b.get("amount", 0.0) for b in active if not b.get("placed_polymarket"))
+
+
+VOIDS_PATH = BETS_DIR / "voids.json"
+
+
+def get_voids() -> List[dict]:
+    """Load voided bets from bets/voids.json."""
+    data = read_json(VOIDS_PATH)
+    return data if isinstance(data, list) else []
+
+
+def save_void(bet: dict, reason: str) -> None:
+    """Append a voided bet to bets/voids.json."""
+    voids = get_voids()
+    entry = {**bet, "void_reason": reason}
+    voids.append(entry)
+    write_json(VOIDS_PATH, voids)
 
 
 SKIPS_PATH = BETS_DIR / "skips.json"

@@ -28,6 +28,7 @@ from .client import (
     get_team_players_statistics,
     get_games_by_date,
     get_game_by_id,
+    get_game_player_stats,
 )
 from .processors import (
     parse_minutes,
@@ -78,6 +79,7 @@ __all__ = [
     "get_team_players_statistics",
     "get_games_by_date",
     "get_game_by_id",
+    "get_game_player_stats",
     # Processors
     "parse_minutes",
     "process_player_statistics",

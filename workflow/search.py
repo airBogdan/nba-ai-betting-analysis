@@ -8,6 +8,7 @@ from .prompts import (
     SEARCH_FOLLOWUP_GENERATION_PROMPT,
     SEARCH_PERPLEXITY_WRAPPER,
     SEARCH_PLAYER_NEWS_PROMPT,
+    SEARCH_PLAYER_PROPS_PROMPT,
     SEARCH_QUERY_SYSTEM,
     SEARCH_TEMPLATE_PROMPT,
 )
@@ -198,4 +199,48 @@ async def search_player_news(
         return result or None
     except Exception as e:
         print(f"    player news failed: {e}")
+        return None
+
+
+MAX_PROP_SEARCH_PLAYERS = 10
+
+
+async def search_player_props(
+    matchup_str: str, players_with_props: list[dict]
+) -> Optional[str]:
+    """Search for player prop-specific context via Perplexity.
+
+    One call per game covering all players with available prop markets.
+    Returns markdown text or None on failure.
+    """
+    if not players_with_props:
+        return None
+
+    perplexity_model = _get_perplexity_model()
+
+    # Build player list (capped at MAX_PROP_SEARCH_PLAYERS)
+    lines = []
+    seen = set()
+    for prop in players_with_props[:MAX_PROP_SEARCH_PLAYERS]:
+        name = prop.get("player_name", "")
+        if name and name not in seen:
+            line_val = prop.get("line", "?")
+            lines.append(f"- {name} ({prop.get('prop_type', '?')} line: {line_val})")
+            seen.add(name)
+
+    if not lines:
+        return None
+
+    player_list_str = "\n".join(lines)
+    prompt = SEARCH_PLAYER_PROPS_PROMPT.format(
+        matchup=matchup_str, players_with_props=player_list_str
+    )
+
+    try:
+        result = await complete(prompt, model=perplexity_model)
+        if result:
+            print(f"    props search: {len(result)} chars")
+        return result or None
+    except Exception as e:
+        print(f"    props search failed: {e}")
         return None

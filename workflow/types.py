@@ -32,7 +32,7 @@ class TotalAnalysis(TypedDict):
 class RecommendedBet(TypedDict):
     """Single bet recommendation from analysis."""
 
-    bet_type: Literal["moneyline", "spread", "total"]
+    bet_type: Literal["moneyline", "spread", "total", "player_prop"]
     pick: str  # Team name or "over"/"under"
     line: Optional[float]  # null for moneyline
     confidence: Literal["low", "medium", "high"]
@@ -61,7 +61,7 @@ class SelectedBet(TypedDict):
 
     game_id: str
     matchup: str
-    bet_type: Literal["moneyline", "spread", "total"]
+    bet_type: Literal["moneyline", "spread", "total", "player_prop"]
     pick: str  # Team name for ML/spread, "over"/"under" for totals
     line: Optional[float]  # Spread number or total number (e.g., -4.5 or 224.5)
     confidence: Literal["low", "medium", "high"]
@@ -76,7 +76,7 @@ class _ActiveBetRequired(TypedDict):
     id: str
     game_id: str
     matchup: str
-    bet_type: Literal["moneyline", "spread", "total"]
+    bet_type: Literal["moneyline", "spread", "total", "player_prop"]
     pick: str  # Team name for ML/spread, "over"/"under" for totals
     line: Optional[float]  # Spread number or total number
     confidence: Literal["low", "medium", "high"]
@@ -94,6 +94,8 @@ class ActiveBet(_ActiveBetRequired, total=False):
     odds_price: int  # American odds price for payout calc (e.g., -150, +130)
     poly_price: float  # Polymarket price (0-1) at analysis time
     placed_polymarket: bool  # Whether bet was placed on Polymarket
+    prop_type: str  # "points", "rebounds", or "assists" (player_prop only)
+    player_name: str  # Player name (player_prop only)
 
 
 class _CompletedBetRequired(TypedDict):
@@ -102,7 +104,7 @@ class _CompletedBetRequired(TypedDict):
     id: str
     game_id: str
     matchup: str
-    bet_type: Literal["moneyline", "spread", "total"]
+    bet_type: Literal["moneyline", "spread", "total", "player_prop"]
     pick: str
     line: Optional[float]
     confidence: Literal["low", "medium", "high"]
@@ -138,6 +140,9 @@ class CompletedBet(_CompletedBetRequired, total=False):
     poly_price: float  # Polymarket price (0-1) at analysis time
     structured_reflection: StructuredReflection
     dollar_pnl: float  # Dollar profit/loss (positive=win, negative=loss)
+    prop_type: str  # "points", "rebounds", or "assists" (player_prop only)
+    player_name: str  # Player name (player_prop only)
+    actual_stat: float  # Actual stat value (player_prop only)
 
 
 class GameResult(TypedDict):
@@ -210,7 +215,7 @@ class _PaperTradeRequired(TypedDict):
 
     matchup: str
     date: str
-    bet_type: Literal["moneyline", "spread", "total"]
+    bet_type: Literal["moneyline", "spread", "total", "player_prop"]
     pick: str
     line: Optional[float]
     confidence: Literal["low", "medium", "high"]

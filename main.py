@@ -105,8 +105,15 @@ async def analyze_game(
     season: int,
     api_game_id: int,
     league_avg_efficiency: float = 113.5,
+    team1_players: list | None = None,
+    team2_players: list | None = None,
 ) -> dict:
-    """Analyze a single matchup and return the analysis dict."""
+    """Analyze a single matchup and return the analysis dict.
+
+    Args:
+        team1_players: Pre-fetched processed player stats for home team (avoids duplicate API call).
+        team2_players: Pre-fetched processed player stats for away team (avoids duplicate API call).
+    """
     team1_id, team1_name = home_id, home_name
     team2_id, team2_name = away_id, away_name
     home_team = home_name
@@ -123,11 +130,14 @@ async def analyze_game(
     team1_stats = await get_team_statistics_for_seasons(team1_id, season=season)
     team2_stats = await get_team_statistics_for_seasons(team2_id, season=season)
 
-    team1_raw_stats = await get_team_players_statistics(team1_id, season)
-    team1_players = process_player_statistics(team1_raw_stats or [])
+    # Use pre-fetched player stats if provided, otherwise fetch
+    if team1_players is None:
+        team1_raw_stats = await get_team_players_statistics(team1_id, season)
+        team1_players = process_player_statistics(team1_raw_stats or [])
 
-    team2_raw_stats = await get_team_players_statistics(team2_id, season)
-    team2_players = process_player_statistics(team2_raw_stats or [])
+    if team2_players is None:
+        team2_raw_stats = await get_team_players_statistics(team2_id, season)
+        team2_players = process_player_statistics(team2_raw_stats or [])
 
     all_standings = await get_all_standings(season)
 
@@ -198,6 +208,12 @@ async def main() -> None:
         print(f"\nProcessing: {away['name']} @ {home['name']}")
 
         try:
+            # Pre-fetch player stats (used for both matchup analysis and props output)
+            home_raw = await get_team_players_statistics(home["id"], season)
+            home_players = process_player_statistics(home_raw or [])
+            away_raw = await get_team_players_statistics(away["id"], season)
+            away_players = process_player_statistics(away_raw or [])
+
             analysis = await analyze_game(
                 home_id=home["id"],
                 home_name=home["name"],
@@ -207,6 +223,8 @@ async def main() -> None:
                 season=season,
                 api_game_id=game["id"],
                 league_avg_efficiency=league_avg_efficiency,
+                team1_players=home_players,
+                team2_players=away_players,
             )
 
             # Add odds if available
@@ -230,6 +248,19 @@ async def main() -> None:
 
             write_json(filename, analysis)
             generated_files.append((filename, home["name"], away["name"]))
+
+            # Write props file with full player stats for player prop analysis
+            props_filename = f"props_{away_slug}_vs_{home_slug}_{game_date}.json"
+            props_data = {
+                "api_game_id": game["id"],
+                "game_date": game_date,
+                "team1": home["name"],
+                "team2": away["name"],
+                "home_team": home["name"],
+                "team1_players": home_players,
+                "team2_players": away_players,
+            }
+            write_json(props_filename, props_data)
 
         except Exception as e:
             print(f"Error processing {away['name']} @ {home['name']}: {e}")

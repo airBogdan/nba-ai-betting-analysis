@@ -85,3 +85,8 @@ async def get_game_by_id(game_id: int) -> Optional[Dict[str, Any]]:
     """Get a single game by its API ID."""
     results = await fetch_nba_api(f"games?id={game_id}")
     return results[0] if results else None
+
+
+async def get_game_player_stats(game_id: int) -> Optional[List[Any]]:
+    """Get per-player box score stats for a specific game."""
+    return await fetch_nba_api(f"players/statistics?game={game_id}")

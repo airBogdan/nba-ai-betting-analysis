@@ -50,3 +50,12 @@ def pick_matches_outcome(pick: str, outcome: str) -> bool:
         return True
     pick_short = _extract_short_name(pick)
     return pick_short == outcome.lower()
+
+
+def prop_pick_to_outcome(pick: str) -> str:
+    """Map over/under pick to Polymarket Yes/No outcome.
+
+    Polymarket player props use Yes/No instead of Over/Under.
+    "over" -> "Yes", "under" -> "No".
+    """
+    return "Yes" if pick.lower() == "over" else "No"
