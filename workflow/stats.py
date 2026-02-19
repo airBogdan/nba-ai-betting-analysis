@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 from .io import BETS_DIR, get_history, get_paper_history, get_skips
-from .results import _categorize_edge, _categorize_skip_reason
+from .history import _categorize_edge, _categorize_skip_reason
 
 
 def _pick_side(bet: dict) -> Optional[str]:

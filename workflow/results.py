@@ -6,10 +6,6 @@ from typing import Any, Dict, List, Optional, Tuple
 from helpers.api import get_game_by_id, get_game_player_stats, get_games_by_date
 from helpers.utils import get_current_nba_season_year
 from .io import (
-    JOURNAL_DIR,
-    OUTPUT_DIR,
-    PAPER_JOURNAL_DIR,
-    append_text,
     clear_output_dir,
     get_active_bets,
     get_dollar_pnl,
@@ -25,359 +21,34 @@ from .io import (
     save_void,
 )
 from .llm import complete_json
-from .names import names_match
 from .prompts import REFLECT_BET_PROMPT, SYSTEM_ANALYST
+from .evaluation import (
+    PROP_TYPE_TO_STAT_KEY,
+    _evaluate_bet,
+    _evaluate_prop_bet,
+    _find_player_stat,
+    calculate_payout,
+)
+from .history import (
+    update_history_with_bet,
+    update_paper_history_with_trade,
+)
+from .game_results import (
+    _format_score,
+    _teams_match,
+    match_bet_to_result,
+    parse_game_results,
+    parse_single_game_result,
+)
+from .journal import append_journal_post_game, _append_paper_journal_results
 from .types import ActiveBet, CompletedBet, GameResult
 
 # Limit concurrent LLM calls to avoid rate limiting
 MAX_CONCURRENT_LLM_CALLS = 4
 
 
-def _categorize_edge(edge: str) -> str:
-    """Normalize edge description to a category for tracking."""
-    edge_lower = edge.lower()
-
-    if any(w in edge_lower for w in ["home", "home court", "home advantage"]):
-        return "home_court"
-    if any(w in edge_lower for w in ["rest", "fatigue", "back-to-back", "b2b", "tired"]):
-        return "rest_advantage"
-    if any(w in edge_lower for w in ["injury", "injured", "missing", "out", "questionable"]):
-        return "injury_edge"
-    if any(w in edge_lower for w in ["form", "streak", "momentum", "hot", "cold", "recent"]):
-        return "form_momentum"
-    if any(w in edge_lower for w in ["h2h", "head-to-head", "matchup history"]):
-        return "h2h_history"
-    if any(w in edge_lower for w in ["rating", "net rating", "offensive", "defensive", "efficiency"]):
-        return "ratings_edge"
-    if any(w in edge_lower for w in ["mismatch", "size", "pace", "style"]):
-        return "style_mismatch"
-    if any(w in edge_lower for w in ["total", "over", "under", "scoring"]):
-        return "totals_edge"
-
-    return edge[:25] if len(edge) > 25 else edge
 
 
-def update_history_with_bet(history: dict, bet: CompletedBet) -> None:
-    """Add a completed bet to history and recompute summary."""
-    history["bets"].append(bet)
-    summary = history["summary"]
-
-    result = bet["result"]
-    units = bet["units"]
-    profit_loss = bet["profit_loss"]
-
-    # early_exit: track dollar_pnl and net_units but don't count in W/L/P
-    if result == "early_exit":
-        summary["net_units"] = summary.get("net_units", 0.0) + profit_loss
-        summary["net_dollar_pnl"] = summary.get("net_dollar_pnl", 0.0) + bet.get("dollar_pnl", 0.0)
-        return
-
-    summary["total_bets"] = summary.get("total_bets", 0) + 1
-
-    if result == "win":
-        summary["wins"] = summary.get("wins", 0) + 1
-    elif result == "loss":
-        summary["losses"] = summary.get("losses", 0) + 1
-    elif result == "push":
-        summary["pushes"] = summary.get("pushes", 0) + 1
-
-    summary["net_units"] = summary.get("net_units", 0.0) + profit_loss
-    summary["net_dollar_pnl"] = summary.get("net_dollar_pnl", 0.0) + bet.get("dollar_pnl", 0.0)
-
-    if result in ("win", "loss"):
-        summary["total_units_wagered"] = summary.get("total_units_wagered", 0.0) + units
-
-    total = summary["total_bets"]
-    summary["win_rate"] = round(summary["wins"] / total, 3) if total > 0 else 0.0
-    wagered = summary["total_units_wagered"]
-    summary["roi"] = round(summary["net_units"] / wagered, 3) if wagered > 0 else 0.0
-
-    # Update by_confidence, by_primary_edge, by_bet_type
-    if result in ("win", "loss"):
-        result_key = "wins" if result == "win" else "losses"
-
-        confidence = bet["confidence"]
-        by_conf = summary.setdefault("by_confidence", {})
-        entry = by_conf.setdefault(confidence, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] = entry.get(result_key, 0) + 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-        edge_cat = _categorize_edge(bet["primary_edge"])
-        by_edge = summary.setdefault("by_primary_edge", {})
-        entry = by_edge.setdefault(edge_cat, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] = entry.get(result_key, 0) + 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-        bet_type = bet.get("bet_type", "moneyline")
-        by_type = summary.setdefault("by_bet_type", {})
-        entry = by_type.setdefault(bet_type, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] = entry.get(result_key, 0) + 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-    # Recompute current_streak from last 10 results
-    recent = [
-        b["result"]
-        for b in reversed(history["bets"])
-        if b["result"] in ("win", "loss")
-    ][:10]
-    if recent:
-        latest = recent[0]
-        count = 1
-        for r in recent[1:]:
-            if r == latest:
-                count += 1
-            else:
-                break
-        summary["current_streak"] = f"{'W' if latest == 'win' else 'L'}{count}"
-
-
-def parse_single_game_result(game: Dict[str, Any]) -> GameResult:
-    """Parse a single API game into GameResult."""
-    status_data = game.get("status", {})
-    status_long = status_data.get("long", "").lower()
-
-    # Map API status to our status
-    if status_long == "finished":
-        status = "finished"
-    elif status_long in ("scheduled", "not started"):
-        status = "scheduled"
-    else:
-        status = "in_progress"
-
-    teams = game.get("teams", {})
-    scores = game.get("scores", {})
-
-    home_team = teams.get("home", {}).get("name", "")
-    away_team = teams.get("visitors", {}).get("name", "")
-    home_score = scores.get("home", {}).get("points") or 0
-    away_score = scores.get("visitors", {}).get("points") or 0
-
-    if home_score > away_score:
-        winner = home_team
-    elif away_score > home_score:
-        winner = away_team
-    else:
-        winner = ""
-
-    return {
-        "game_id": str(game.get("id", "")),
-        "home_team": home_team,
-        "away_team": away_team,
-        "home_score": home_score,
-        "away_score": away_score,
-        "winner": winner,
-        "status": status,
-    }
-
-
-def parse_game_results(api_response: Optional[List[Any]]) -> List[GameResult]:
-    """Parse API response into GameResult list."""
-    if not api_response:
-        return []
-    return [parse_single_game_result(game) for game in api_response]
-
-
-def match_bet_to_result(
-    bet: ActiveBet, results: List[GameResult]
-) -> Optional[GameResult]:
-    """Match bet to game result by game ID or team names."""
-    game_id = bet["game_id"]
-
-    # Try exact game ID match first (for numeric API IDs)
-    for r in results:
-        if r["game_id"] == game_id:
-            return r
-
-    # Fallback to team name matching (for legacy bets)
-    matchup_parts = bet["matchup"].split(" @ ")
-    if len(matchup_parts) != 2:
-        return None
-
-    away_team, home_team = matchup_parts
-
-    for r in results:
-        # Check if teams match (allowing for slight name variations)
-        if _teams_match(r["home_team"], home_team) and _teams_match(
-            r["away_team"], away_team
-        ):
-            return r
-
-    return None
-
-
-def _teams_match(name1: str, name2: str) -> bool:
-    """Check if two team names match (case-insensitive, partial match)."""
-    n1 = name1.lower().strip()
-    n2 = name2.lower().strip()
-    if n1 == n2 or n1 in n2 or n2 in n1:
-        return True
-    # Handle LA/Los Angeles variations
-    n1_normalized = n1.replace("los angeles", "la").replace("l.a.", "la")
-    n2_normalized = n2.replace("los angeles", "la").replace("l.a.", "la")
-    return n1_normalized == n2_normalized or n1_normalized in n2_normalized or n2_normalized in n1_normalized
-
-
-def _format_score(result: GameResult) -> str:
-    """Format score as 'Away 110 @ Home 105' style."""
-    return f"{result['away_team']} {result['away_score']} @ {result['home_team']} {result['home_score']}"
-
-
-def calculate_payout(amount: float, odds_price: int, result: str) -> float:
-    """Calculate payout based on American odds.
-
-    American odds:
-    - Negative (e.g., -150): Bet $150 to win $100 → payout = stake * (1 + 100/150)
-    - Positive (e.g., +130): Bet $100 to win $130 → payout = stake * (1 + 130/100)
-    """
-    if result == "push":
-        return amount  # Stake returned
-    if result == "loss":
-        return 0.0  # Already deducted when placed
-
-    # Win: return stake + profit
-    if odds_price == 0:
-        # Fallback to -110 if odds_price is invalid
-        odds_price = -110
-    if odds_price < 0:
-        # Favorite: profit = stake * (100 / abs(odds))
-        profit = amount * (100 / abs(odds_price))
-    else:
-        # Underdog: profit = stake * (odds / 100)
-        profit = amount * (odds_price / 100)
-
-    return amount + profit  # Stake back + profit
-
-
-def _evaluate_bet(bet: ActiveBet, result: GameResult) -> tuple:
-    """
-    Evaluate bet outcome based on bet type.
-    Returns (outcome, profit_loss) tuple.
-    """
-    bet_type = bet.get("bet_type", "moneyline")
-    units = bet["units"]
-
-    if bet_type == "moneyline":
-        # Did the picked team win?
-        if _teams_match(bet["pick"], result["winner"]):
-            return "win", units
-        return "loss", -units
-
-    elif bet_type == "spread":
-        # Did the picked team cover the spread?
-        line = bet.get("line", 0)
-        # Calculate margin from perspective of picked team
-        if _teams_match(bet["pick"], result["home_team"]):
-            # We picked home team
-            margin = result["home_score"] - result["away_score"]
-        else:
-            # We picked away team
-            margin = result["away_score"] - result["home_score"]
-
-        # For spread, negative line means favorite (needs to win by more than line)
-        # Positive line means underdog (can lose by less than line)
-        adjusted_margin = margin + line  # line is already signed correctly
-
-        if adjusted_margin > 0:
-            return "win", units
-        elif adjusted_margin < 0:
-            return "loss", -units
-        else:
-            return "push", 0.0
-
-    elif bet_type == "player_prop":
-        raise ValueError("player_prop bets must be evaluated via _evaluate_prop_bet")
-
-    elif bet_type == "total":
-        # Was the actual total over/under the line?
-        line = bet.get("line", 0)
-        actual_total = result["home_score"] + result["away_score"]
-        pick = bet["pick"].lower()
-
-        if pick == "over":
-            if actual_total > line:
-                return "win", units
-            elif actual_total < line:
-                return "loss", -units
-            else:
-                return "push", 0.0
-        else:  # under
-            if actual_total < line:
-                return "win", units
-            elif actual_total > line:
-                return "loss", -units
-            else:
-                return "push", 0.0
-
-    # Default to moneyline logic
-    if _teams_match(bet["pick"], result["winner"]):
-        return "win", units
-    return "loss", -units
-
-
-# --- Player prop evaluation ---
-
-PROP_TYPE_TO_STAT_KEY = {
-    "points": "points",
-    "rebounds": "totReb",
-    "assists": "assists",
-}
-
-
-def _find_player_stat(
-    box_score: list[dict], player_name: str, prop_type: str
-) -> Optional[float]:
-    """Find a player's stat from box score data.
-
-    Returns the stat value or None if player not found.
-    """
-    stat_key = PROP_TYPE_TO_STAT_KEY.get(prop_type)
-    if not stat_key:
-        return None
-
-    for entry in box_score:
-        player = entry.get("player", {})
-        full_name = f"{player.get('firstname', '')} {player.get('lastname', '')}".strip()
-        if not full_name:
-            continue
-        if names_match(player_name, full_name):
-            val = entry.get(stat_key)
-            if val is not None:
-                try:
-                    return float(val)
-                except (ValueError, TypeError):
-                    return None
-    return None
-
-
-def _evaluate_prop_bet(
-    bet: ActiveBet, actual_stat: float
-) -> tuple[str, float]:
-    """Evaluate a player prop bet.
-
-    Returns (outcome, profit_loss).
-    Caller must resolve actual_stat before calling (DNP = void, handled upstream).
-    """
-    units = bet["units"]
-    line = bet.get("line", 0)
-    pick = bet["pick"].lower()
-
-    if pick == "over":
-        if actual_stat > line:
-            return "win", units
-        elif actual_stat < line:
-            return "loss", -units
-        else:
-            return "push", 0.0
-    else:  # under
-        if actual_stat < line:
-            return "win", units
-        elif actual_stat > line:
-            return "loss", -units
-        else:
-            return "push", 0.0
 
 
 async def reflect_on_bet(
@@ -425,78 +96,6 @@ async def reflect_on_bet(
     )
 
     return await complete_json(prompt, system=SYSTEM_ANALYST)
-
-
-def append_journal_post_game(date: str, completed: List[CompletedBet]) -> None:
-    """Append post-game results to journal."""
-    journal_path = JOURNAL_DIR / f"{date}.md"
-
-    # Check if results already appended (avoid duplicates on re-run)
-    existing = ""
-    if journal_path.exists():
-        existing = journal_path.read_text()
-        if "## Post-Game Results" in existing:
-            print(f"Post-game results already in journal for {date}, skipping append")
-            return
-
-    lines = []
-    # Add header if journal doesn't exist
-    if not existing:
-        lines.extend([f"# NBA Betting Journal - {date}", "", ""])
-
-    lines.extend(["## Post-Game Results", ""])
-
-    wins = sum(1 for b in completed if b["result"] == "win")
-    losses = sum(1 for b in completed if b["result"] == "loss")
-    pushes = sum(1 for b in completed if b["result"] == "push")
-    net = sum(b["profit_loss"] for b in completed)
-
-    if pushes > 0:
-        record_str = f"{wins}-{losses}-{pushes}"
-    else:
-        record_str = f"{wins}-{losses}"
-    lines.append(f"**Record: {record_str} | Net: {net:+.1f} units**")
-    lines.append("")
-
-    for bet in completed:
-        bet_type = bet.get("bet_type", "moneyline")
-        pick = bet["pick"]
-        line = bet.get("line")
-
-        # Format pick display
-        if bet_type == "player_prop":
-            player = bet.get("player_name", "?")
-            prop = bet.get("prop_type", "?")
-            pick_display = f"{player} {prop} {pick} {line}" if line else f"{player} {prop} {pick}"
-        elif bet_type == "spread" and line is not None:
-            pick_display = f"{pick} {line:+.1f}"
-        elif bet_type == "total" and line is not None:
-            pick_display = f"{pick} {line:.1f}"
-        else:
-            pick_display = pick
-
-        emoji = "+" if bet["result"] == "win" else ("-" if bet["result"] == "loss" else "=")
-        result_str = bet["result"].upper()
-        if bet["result"] == "push":
-            profit_str = "push"
-        else:
-            profit_str = f"{emoji}{abs(bet['profit_loss']):.1f}u"
-
-        lines.append(f"### {bet['matchup']} - {bet_type.upper()}")
-        lines.append(f"- Pick: {pick_display}")
-        lines.append(f"- Result: **{result_str}** ({profit_str})")
-        lines.append(f"- Final: {bet['final_score']}")
-        if bet_type == "player_prop":
-            actual = bet.get("actual_stat")
-            lines.append(f"- Actual {bet.get('prop_type', 'stat')}: {actual if actual is not None else 'DNP'}")
-        elif bet_type == "total":
-            lines.append(f"- Actual Total: {bet.get('actual_total', 'N/A')}")
-        lines.append(f"- Winner: {bet['winner']}")
-        if bet["reflection"]:
-            lines.append(f"- Reflection: {bet['reflection']}")
-        lines.append("")
-
-    append_text(journal_path, "\n".join(lines))
 
 
 async def _resolve_skips_for_date(date: str, season: int) -> None:
@@ -801,71 +400,6 @@ async def _process_results_for_date(date: str, season: int) -> None:
 # --- Paper trade resolution ---
 
 
-def _categorize_skip_reason(reason: str) -> str:
-    """Categorize skip reason for tracking patterns."""
-    reason_lower = reason.lower()
-    if any(w in reason_lower for w in ["injury", "injured", "missing", "out"]):
-        return "injury_uncertainty"
-    if any(w in reason_lower for w in ["coin flip", "coin-flip", "no edge", "no clear edge"]):
-        return "no_edge"
-    if any(w in reason_lower for w in ["uncertain", "unpredictable", "variance"]):
-        return "high_variance"
-    if any(w in reason_lower for w in ["kelly", "veto", "sizing"]):
-        return "sizing_veto"
-    return "other"
-
-
-def update_paper_history_with_trade(history: dict, trade: dict) -> None:
-    """Add a resolved paper trade to history and recompute summary."""
-    history["trades"].append(trade)
-    summary = history["summary"]
-
-    result = trade["result"]
-    profit_loss = trade.get("profit_loss", 0.0)
-
-    summary["total_trades"] = summary.get("total_trades", 0) + 1
-
-    if result == "win":
-        summary["wins"] = summary.get("wins", 0) + 1
-    elif result == "loss":
-        summary["losses"] = summary.get("losses", 0) + 1
-    elif result == "push":
-        summary["pushes"] = summary.get("pushes", 0) + 1
-
-    summary["net_units"] = summary.get("net_units", 0.0) + profit_loss
-
-    total = summary["total_trades"]
-    summary["win_rate"] = round(summary["wins"] / total, 3) if total > 0 else 0.0
-
-    # Update breakdowns
-    if result in ("win", "loss"):
-        result_key = "wins" if result == "win" else "losses"
-
-        # By confidence
-        conf = trade.get("confidence", "low")
-        by_conf = summary.setdefault("by_confidence", {})
-        entry = by_conf.setdefault(conf, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] += 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-        # By bet type
-        bt = trade.get("bet_type", "moneyline")
-        by_bt = summary.setdefault("by_bet_type", {})
-        entry = by_bt.setdefault(bt, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] += 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-        # By skip reason category
-        reason_cat = _categorize_skip_reason(trade.get("skip_reason", ""))
-        by_reason = summary.setdefault("by_skip_reason_category", {})
-        entry = by_reason.setdefault(reason_cat, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] += 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-
 async def _resolve_paper_trades_for_date(date: str, season: int) -> None:
     """Resolve paper trade outcomes for a date."""
     all_trades = get_paper_trades()
@@ -911,44 +445,3 @@ async def _resolve_paper_trades_for_date(date: str, season: int) -> None:
         save_paper_history(paper_history)
         _append_paper_journal_results(date, [t for t in date_trades if "result" in t])
         print(f"  Resolved {resolved} paper trade(s)")
-
-
-def _append_paper_journal_results(date: str, resolved_trades: List[dict]) -> None:
-    """Append results to paper journal entry."""
-    journal_path = PAPER_JOURNAL_DIR / f"{date}.md"
-    existing = ""
-    if journal_path.exists():
-        existing = journal_path.read_text()
-        if "## Results" in existing:
-            return  # Already appended
-
-    lines = []
-    if not existing:
-        lines.extend([f"# Paper Trading Journal - {date}", "", ""])
-
-    wins = sum(1 for t in resolved_trades if t["result"] == "win")
-    losses = sum(1 for t in resolved_trades if t["result"] == "loss")
-    net = sum(t.get("profit_loss", 0) for t in resolved_trades)
-
-    lines.extend(["## Results", "", f"**Record: {wins}-{losses} | Net: {net:+.1f} units**", ""])
-
-    for trade in resolved_trades:
-        bt = trade.get("bet_type", "moneyline")
-        pick = trade["pick"]
-        line = trade.get("line")
-        if bt == "spread" and line is not None:
-            pick_display = f"{pick} {line:+.1f}"
-        elif bt == "total" and line is not None:
-            pick_display = f"{pick} {line:.1f}"
-        else:
-            pick_display = pick
-
-        emoji = "+" if trade["result"] == "win" else "-"
-        lines.append(f"### {trade['matchup']} - {bt.upper()}")
-        lines.append(f"- Pick: {pick_display}")
-        lines.append(f"- Result: **{trade['result'].upper()}** ({emoji}{abs(trade.get('profit_loss', 0)):.1f}u)")
-        lines.append(f"- Final: {trade.get('final_score', 'N/A')}")
-        lines.append(f"- Skip reason: {trade.get('skip_reason', '')}")
-        lines.append("")
-
-    append_text(journal_path, "\n".join(lines))

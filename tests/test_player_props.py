@@ -10,7 +10,7 @@ from workflow.names import normalize_name, names_match
 from polymarket_helpers.gamma import extract_player_props, find_prop_market
 from polymarket_helpers.matching import prop_pick_to_outcome
 from workflow.polymarket_prices import extract_poly_price_for_prop
-from workflow.results import _find_player_stat, _evaluate_prop_bet
+from workflow.evaluation import _find_player_stat, _evaluate_prop_bet
 from workflow.analyze.bets import create_prop_bet
 from workflow.analyze.gamedata import load_props_for_date
 from workflow.io import get_voids, VOIDS_PATH
@@ -501,7 +501,7 @@ class TestDNPVoidFlow:
 
     def test_dnp_voids_bet_and_removes_from_active(self, tmp_path):
         """DNP player: bet saved to voids.json, removed from active.json."""
-        from workflow.results import _find_player_stat, _evaluate_prop_bet
+        from workflow.evaluation import _find_player_stat, _evaluate_prop_bet
         from workflow.io import save_void, get_voids, get_active_bets, save_active_bets
 
         bet = self._make_prop_bet(player_name="Bench Warmer")

@@ -18,12 +18,9 @@ from workflow.io import (
     save_history,
 )
 from workflow.prompts import compact_json
-from workflow.results import (
-    _evaluate_bet,
-    calculate_payout,
-    match_bet_to_result,
-    update_history_with_bet,
-)
+from workflow.evaluation import _evaluate_bet, calculate_payout
+from workflow.game_results import match_bet_to_result
+from workflow.history import update_history_with_bet
 
 
 # === Module-level helpers ===

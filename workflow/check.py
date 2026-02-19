@@ -22,7 +22,7 @@ from .io import (
     save_active_bets,
     save_history,
 )
-from .results import update_history_with_bet
+from .history import update_history_with_bet
 from .llm import complete, complete_json
 from .prompts import (
     CHECK_POSITION_PROMPT,

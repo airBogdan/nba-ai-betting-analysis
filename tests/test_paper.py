@@ -138,7 +138,7 @@ class TestRunPaperTrades:
 class TestResolvePaperTrades:
     def test_evaluate_moneyline_paper_trade(self):
         """Paper trades use same evaluation logic as real bets."""
-        from workflow.results import _evaluate_bet
+        from workflow.evaluation import _evaluate_bet
         trade = {"pick": "Boston Celtics", "bet_type": "moneyline", "units": 1.0}
         result = {"home_team": "Boston Celtics", "away_team": "New York Knicks",
                   "home_score": 110, "away_score": 105, "winner": "Boston Celtics", "status": "finished"}
@@ -147,7 +147,7 @@ class TestResolvePaperTrades:
         assert pnl == 1.0
 
     def test_evaluate_total_paper_trade(self):
-        from workflow.results import _evaluate_bet
+        from workflow.evaluation import _evaluate_bet
         trade = {"pick": "under", "bet_type": "total", "line": 220.0, "units": 0.5}
         result = {"home_team": "A", "away_team": "B",
                   "home_score": 100, "away_score": 105, "winner": "B", "status": "finished"}
@@ -158,26 +158,26 @@ class TestResolvePaperTrades:
 
 class TestCategorizeSkipReason:
     def test_injury_category(self):
-        from workflow.results import _categorize_skip_reason
+        from workflow.history import _categorize_skip_reason
         assert _categorize_skip_reason("Key player injured") == "injury_uncertainty"
         assert _categorize_skip_reason("Missing starters") == "injury_uncertainty"
 
     def test_no_edge_category(self):
-        from workflow.results import _categorize_skip_reason
+        from workflow.history import _categorize_skip_reason
         assert _categorize_skip_reason("No clear edge") == "no_edge"
         assert _categorize_skip_reason("Coin flip game") == "no_edge"
 
     def test_high_variance_category(self):
-        from workflow.results import _categorize_skip_reason
+        from workflow.history import _categorize_skip_reason
         assert _categorize_skip_reason("Too much variance") == "high_variance"
         assert _categorize_skip_reason("Unpredictable matchup") == "high_variance"
 
     def test_sizing_veto_category(self):
-        from workflow.results import _categorize_skip_reason
+        from workflow.history import _categorize_skip_reason
         assert _categorize_skip_reason("Vetoed: Kelly sizing too small") == "sizing_veto"
 
     def test_other_category(self):
-        from workflow.results import _categorize_skip_reason
+        from workflow.history import _categorize_skip_reason
         assert _categorize_skip_reason("Some random reason") == "other"
 
 
