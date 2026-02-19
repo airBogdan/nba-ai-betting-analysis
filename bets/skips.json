@@ -485,59 +485,59 @@
     "source": "synthesis"
   },
   {
-    "matchup": "Orlando Magic @ Sacramento Kings",
-    "reason": "Under 223.5 has value but Kings' atrocious defense (117.3 DRTG) creates risk Magic could score at will. H2H historically high-scoring (232.5 avg). Prefer cleaner injury-driven unders in IND/WAS and ATL/PHI.",
+    "matchup": "Phoenix Suns @ San Antonio Spurs",
+    "reason": "Spurs spread and under have edges but H2H history strongly favors Suns (4-1 recent) and Phoenix shoots exceptionally well vs Spurs historically. Brooks suspension is significant but not enough to overcome H2H concerns.",
     "date": "2026-02-19",
     "source": "synthesis",
-    "game_id": "16328"
+    "game_id": "16326"
+  },
+  {
+    "matchup": "Houston Rockets @ Charlotte Hornets",
+    "reason": "Charlotte's 9-1 L10 form and recent H2H win over Houston creates uncertainty. Injury edge exists but spread value is marginal (1.3 points). Prefer cleaner edges elsewhere.",
+    "date": "2026-02-19",
+    "source": "synthesis",
+    "game_id": "16320"
   },
   {
     "matchup": "Denver Nuggets @ LA Clippers",
-    "reason": "Under 224.5 has 12-point edge but Denver's injuries (Gordon/Watson) are less catastrophic than other games. Spread edge of 2.7 points is marginal. Passing for cleaner plays.",
+    "reason": "Under has 12+ point edge but both teams have significant injuries creating high variance. Denver ML at 63% is close to fair value. Prefer more definitive edges.",
     "date": "2026-02-19",
     "source": "synthesis",
     "game_id": "16329"
   },
   {
     "matchup": "Detroit Pistons @ New York Knicks",
-    "reason": "H2H dominance is compelling but Duren/Stewart suspensions remove 27.3 PPG from Pistons interior. Strategy warns against injury edges on spreads vs quality opponents. Knicks 21-7 at home.",
+    "reason": "Strategy notes caution on injury-based spread edges vs elite organizations. Pistons are 40-13 with elite depth and 'next man up' culture. Under has edge but Pistons' scoring ability creates uncertainty.",
     "date": "2026-02-19",
     "source": "synthesis",
     "game_id": "16324"
   },
   {
-    "matchup": "Brooklyn Nets @ Cleveland Cavaliers",
-    "reason": "Under 225.5 has value but Mobley OUT partially priced in. Cleveland's 126.8 recent PPG and H2H avg of 236.3 create risk. Prefer cleaner injury situations.",
+    "matchup": "Toronto Raptors @ Chicago Bulls",
+    "reason": "Bulls roster in disarray but home court and new player integration creates unpredictability. Raptors ML at 66.5% is fair value but not compelling enough given Bulls' potential bounce-back.",
     "date": "2026-02-19",
     "source": "synthesis",
-    "game_id": "16321"
+    "game_id": "16325"
+  },
+  {
+    "matchup": "Orlando Magic @ Sacramento Kings",
+    "reason": "Under has massive edge (19.5 points) but Kings are actively tanking with no competitive motivation - game flow becomes unpredictable. Magic ML at 75.5% too expensive.",
+    "date": "2026-02-19",
+    "source": "synthesis",
+    "game_id": "16328"
   },
   {
     "matchup": "Boston Celtics @ Golden State Warriors",
-    "reason": "Warriors missing Curry/Butler is massive but spread at -5.5 with my projection of -10 seems too good. Porzingis could debut, and strategy warns against large spreads with injury edges. Under 211.5 only has 3-point edge.",
+    "reason": "Vetoed: Kelly recommended is $0, indicating no mathematical edge at -199 odds. The reasoning mentions Butler missing for Warriors, but Butler plays for the Warriors now per the data trust notice - I accept that. However, even with significant injuries, -199 implies 66.5% win probability. The claimed 75%+ true probability would need to overcome heavy juice. With Kelly at 0, the edge doesn't exist at this price point. Veto.",
     "date": "2026-02-19",
-    "source": "synthesis",
+    "source": "sizing",
     "game_id": "16327"
   },
   {
-    "matchup": "Houston Rockets @ Charlotte Hornets",
-    "reason": "Moneyline edge exists but Charlotte beat Houston by 10 just 13 days ago. Charlotte's 9-1 L10 run and intact core (Ball, Miller) create uncertainty despite Bridges suspension.",
-    "date": "2026-02-19",
-    "source": "synthesis",
-    "game_id": "16320"
-  },
-  {
-    "matchup": "Phoenix Suns @ San Antonio Spurs",
-    "reason": "Spurs spread has value but H2H heavily favors Phoenix (4-1 recent). If Booker plays, Suns have star power to keep it close. Injury status too uncertain at game time.",
-    "date": "2026-02-19",
-    "source": "synthesis",
-    "game_id": "16326"
-  },
-  {
-    "matchup": "Toronto Raptors @ Chicago Bulls",
-    "reason": "Vetoed: Kelly recommended is $0 for good reason - the math doesn't support this bet. At -199 odds, you need ~66.6% to break even. Claiming 70-72% edge on a 5.0 net rating differential is optimistic. Bulls' losing streak is already priced in. The edge is too thin at this price point. Ratings_edge performs well but not at heavy juice like this.",
+    "matchup": "Brooklyn Nets @ Cleveland Cavaliers",
+    "reason": "Vetoed: Kelly recommended is $0, meaning no mathematical edge exists at -163 odds despite the ratings differential. Expected margin of 13.8 vs line of 12.5 is only 1.3 points of cushion - too thin given spread variance. The 87.5% ratings_edge win rate is impressive but sample size concerns apply. Heavy juice eliminates the edge. Veto.",
     "date": "2026-02-19",
     "source": "sizing",
-    "game_id": "16325"
+    "game_id": "16321"
   }
 ]
