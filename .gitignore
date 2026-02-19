@@ -10,3 +10,4 @@ logs/*.log
 /.idea/
 /synth-data-1.1.5/
 .worktrees/
+output/
