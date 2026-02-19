@@ -9,3 +9,4 @@ logs/*.log
 /.claude/
 /.idea/
 /synth-data-1.1.5/
+.worktrees/
