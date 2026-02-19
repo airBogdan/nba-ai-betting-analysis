@@ -52,7 +52,6 @@ from .types import ActiveBet, BetRecommendation, SelectedBet
 # Kelly Criterion parameters
 CONFIDENCE_WIN_PROB = {"high": 0.65, "medium": 0.57, "low": 0.54}
 KELLY_FRACTION = 0.5
-KELLY_MAX_BET_FRACTION = 0.03  # 3% of available balance per bet
 
 # Injury impact parameters
 INJURY_REPLACEMENT_FACTOR = 0.55  # Replacement players recover ~55% of missing PPG
@@ -161,7 +160,7 @@ def _half_kelly_amount(odds_price: int, confidence: str, available: float) -> fl
     kelly = (b * p - (1 - p)) / b
     if kelly <= 0:
         return 0.0
-    fraction = min(kelly * KELLY_FRACTION, KELLY_MAX_BET_FRACTION)
+    fraction = kelly * KELLY_FRACTION
     return round(fraction * available, 2)
 
 # Limit concurrent LLM calls to avoid rate limiting
