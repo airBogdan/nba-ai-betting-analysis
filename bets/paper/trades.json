@@ -1,1 +1,106 @@
-[]
+[
+  {
+    "matchup": "Orlando Magic @ Sacramento Kings",
+    "date": "2026-02-19",
+    "bet_type": "total",
+    "pick": "under",
+    "line": 223.5,
+    "confidence": "medium",
+    "reasoning": "Primary analyst dismissed under due to Kings' bad defense, but injury-adjusted total is 204.1 \u2014 a massive 19.4-point edge. Kings missing Sabonis (15.6 PPG) and LaVine (18.9 PPG) = 34.5 PPG out. Magic missing Wagner (20.8 PPG). Combined 24.9 point reduction. Kings' recent PPG is 105.5, not their season average. Both teams on 7 days rest suggests rust, not explosion.",
+    "primary_edge": "Injury-adjusted total 204.1 vs line 223.5 = 19.4 point edge",
+    "skip_reason": "Under 223.5 has value but Kings' atrocious defense (117.3 DRTG) creates risk Magic could score at will. H2H historically high-scoring (232.5 avg). Prefer cleaner injury-driven unders in IND/WAS and ATL/PHI.",
+    "game_id": "16328",
+    "units": 1.0
+  },
+  {
+    "matchup": "Denver Nuggets @ LA Clippers",
+    "date": "2026-02-19",
+    "bet_type": "total",
+    "pick": "under",
+    "line": 224.5,
+    "confidence": "medium",
+    "reasoning": "Injury-adjusted total is 212.3 \u2014 a 12.2-point edge on the 224.5 line. Gordon (17.5 PPG) and Watson (14.4 PPG) out for Denver = 31.9 PPG missing. H2H games are front-loaded (1H avg 114.6 vs 2H avg 105.4) and both teams scoring below season avg recently (-3.6 combined). Clippers play slow (98.5 pace) which drags down scoring.",
+    "primary_edge": "Injury-adjusted total 212.3 vs line 224.5 = 12.2 point edge",
+    "skip_reason": "Under 224.5 has 12-point edge but Denver's injuries (Gordon/Watson) are less catastrophic than other games. Spread edge of 2.7 points is marginal. Passing for cleaner plays.",
+    "game_id": "16329",
+    "units": 1.0
+  },
+  {
+    "matchup": "Detroit Pistons @ New York Knicks",
+    "date": "2026-02-19",
+    "bet_type": "spread",
+    "pick": "New York Knicks",
+    "line": -4.5,
+    "confidence": "medium",
+    "reasoning": "Duren (17.5 PPG) and Stewart (9.8 PPG) suspensions remove 27.3 PPG AND Detroit's interior presence. Knicks are 21-7 at home with +15.9 recent margin. H2H shows Pistons dominate boards (42.2 vs 36.1) but that advantage disappears without Duren/Stewart. Knicks' injury (McBride 12.5 PPG) is far less impactful. Polymarket has -4.5 at 49% implied \u2014 line is fair but Knicks should be bigger favorites.",
+    "primary_edge": "Pistons lose 27.3 PPG + interior defense vs Knicks lose 12.5 PPG",
+    "skip_reason": "H2H dominance is compelling but Duren/Stewart suspensions remove 27.3 PPG from Pistons interior. Strategy warns against injury edges on spreads vs quality opponents. Knicks 21-7 at home.",
+    "game_id": "16324",
+    "units": 1.0
+  },
+  {
+    "matchup": "Brooklyn Nets @ Cleveland Cavaliers",
+    "date": "2026-02-19",
+    "bet_type": "spread",
+    "pick": "Cleveland Cavaliers",
+    "line": -16.5,
+    "confidence": "low",
+    "reasoning": "Cleveland 5-0 in recent H2H, 9-1 L10, +14.6 recent margin. Mobley out but Cavs have depth (52.8 bench scoring). Nets missing Claxton (12.4 PPG) and are 7-19 on road. H2H shows Cleveland dominates Q1 (+9.0 avg) \u2014 they'll build early leads. Polymarket has -16.5 at 49.5% implied, suggesting line is accurate, but Cleveland's form and H2H dominance support covering.",
+    "primary_edge": "Cleveland 5-0 H2H, 9-1 L10, +10.5 net rating differential",
+    "skip_reason": "Under 225.5 has value but Mobley OUT partially priced in. Cleveland's 126.8 recent PPG and H2H avg of 236.3 create risk. Prefer cleaner injury situations.",
+    "game_id": "16321",
+    "units": 0.5
+  },
+  {
+    "matchup": "Boston Celtics @ Golden State Warriors",
+    "date": "2026-02-19",
+    "bet_type": "spread",
+    "pick": "Boston Celtics",
+    "line": -5.5,
+    "confidence": "high",
+    "reasoning": "Warriors missing Curry (26.4 PPG) AND Butler (19.5 PPG) = 45.9 PPG out. That's catastrophic. Injury-adjusted total is 208.6 and Boston's defense (108.6 DRTG) will clamp a Curry-less Warriors. Primary analyst's projection was -10 but worried about Porzingis debut \u2014 even if KP plays limited minutes, Boston's core (Brown 28.3, White 17.5, Pritchard 17.1) is intact. Polymarket has -5.5 at 51.5% implied \u2014 this should be 60%+.",
+    "primary_edge": "Warriors missing 45.9 PPG vs Celtics missing 0 PPG from injuries",
+    "skip_reason": "Warriors missing Curry/Butler is massive but spread at -5.5 with my projection of -10 seems too good. Porzingis could debut, and strategy warns against large spreads with injury edges. Under 211.5 only has 3-point edge.",
+    "game_id": "16327",
+    "units": 2.0
+  },
+  {
+    "matchup": "Houston Rockets @ Charlotte Hornets",
+    "date": "2026-02-19",
+    "bet_type": "spread",
+    "pick": "Houston Rockets",
+    "line": -4.5,
+    "confidence": "low",
+    "reasoning": "Bridges (18.1 PPG) and Diabate (8.5 PPG) suspensions remove 26.6 PPG from Charlotte. Yes, Charlotte beat Houston by 10 recently, but that was WITH Bridges. Houston has Durant (25.5 PPG), Sengun (20.2 PPG), Thompson (17.6 PPG) \u2014 star power intact. Charlotte's 9-1 run was against weak competition (0.483 avg opponent win%). Rockets' -11.7 PPG recent scoring suggests bounce-back.",
+    "primary_edge": "Charlotte loses 26.6 PPG from suspensions vs Houston fully healthy",
+    "skip_reason": "Moneyline edge exists but Charlotte beat Houston by 10 just 13 days ago. Charlotte's 9-1 L10 run and intact core (Ball, Miller) create uncertainty despite Bridges suspension.",
+    "game_id": "16320",
+    "units": 0.5
+  },
+  {
+    "matchup": "Phoenix Suns @ San Antonio Spurs",
+    "date": "2026-02-19",
+    "bet_type": "spread",
+    "pick": "San Antonio Spurs",
+    "line": -7.5,
+    "confidence": "medium",
+    "reasoning": "Brooks (20.8 PPG) suspension removes Phoenix's second-best scorer. Spurs are 6-0 streak, 8-2 L10, 19-6 at home, +13.3 recent margin. Yes, Phoenix is 4-1 H2H but those games had Brooks. Wembanyama (23.8 PPG, +6.9 plus/minus) is playing elite basketball. Spurs' home court (76% win rate) is massive. Injury-adjusted total favors lower scoring which benefits Spurs' half-court game.",
+    "primary_edge": "Spurs 6-0 streak, 19-6 home, Phoenix loses 20.8 PPG from Brooks",
+    "skip_reason": "Spurs spread has value but H2H heavily favors Phoenix (4-1 recent). If Booker plays, Suns have star power to keep it close. Injury status too uncertain at game time.",
+    "game_id": "16326",
+    "units": 1.0
+  },
+  {
+    "matchup": "Toronto Raptors @ Chicago Bulls",
+    "date": "2026-02-19",
+    "bet_type": "spread",
+    "pick": "Toronto Raptors",
+    "line": -5.5,
+    "confidence": "medium",
+    "reasoning": "Bulls are 1-9 L10 with -14.7 recent margin and on a 6-game losing streak. Toronto is 16-10 on road with +5.0 net rating advantage. H2H shows Toronto starts faster (+2.7 Q1) and finishes stronger (+2.6 Q4). Bulls' injury concerns are massive (Simons, Giddey, Sexton all limited). Polymarket has -5.5 at 50.5% \u2014 should be higher given Bulls' collapse.",
+    "primary_edge": "Bulls 1-9 L10, -14.7 margin vs Raptors 6-4 L10, +0.5 margin",
+    "skip_reason": "Vetoed: Kelly recommended is $0 for good reason - the math doesn't support this bet. At -199 odds, you need ~66.6% to break even. Claiming 70-72% edge on a 5.0 net rating differential is optimistic. Bulls' losing streak is already priced in. The edge is too thin at this price point. Ratings_edge performs well but not at heavy juice like this.",
+    "game_id": "16325",
+    "units": 1.0
+  }
+]

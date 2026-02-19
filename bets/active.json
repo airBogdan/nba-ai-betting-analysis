@@ -1,1 +1,36 @@
-[]
+[
+  {
+    "id": "384f1caf-d71c-49f2-b090-f137881095dd",
+    "game_id": "16323",
+    "matchup": "Indiana Pacers @ Washington Wizards",
+    "bet_type": "total",
+    "pick": "under",
+    "line": 232.5,
+    "confidence": "high",
+    "units": 2.0,
+    "reasoning": "Catastrophic injuries on both sides create massive under edge. Pacers missing Siakam (23.2 PPG) + Haliburton (season-ending). Wizards missing Sarr (16.9 PPG). Combined 40+ PPG missing from normal rotations. Injury-adjusted total of 205.7 vs line of 232.5 = 26.8 point edge. H2H historically lower-scoring with only 26% of games going over 220 at full strength.",
+    "primary_edge": "injury_edge",
+    "date": "2026-02-19",
+    "created_at": "2026-02-19T15:32:48.655462+00:00",
+    "odds_price": 104,
+    "poly_price": 0.49,
+    "amount": 9.86
+  },
+  {
+    "id": "4f5afc02-cd1f-4c47-9139-43b02c717447",
+    "game_id": "16322",
+    "matchup": "Atlanta Hawks @ Philadelphia 76ers",
+    "bet_type": "total",
+    "pick": "under",
+    "line": 236.5,
+    "confidence": "high",
+    "units": 2.0,
+    "reasoning": "76ers missing 42.2 PPG (Embiid + George both out). Injury-adjusted total of 218.8 vs line of 236.5 = 17.7 point edge. Even accounting for variance, this is a massive gap. Hawks won both meetings this season but those were high-scoring - tonight's depleted 76ers roster cannot replicate that offensive output.",
+    "primary_edge": "injury_edge",
+    "date": "2026-02-19",
+    "created_at": "2026-02-19T15:32:48.655534+00:00",
+    "odds_price": 120,
+    "poly_price": 0.455,
+    "amount": 11.27
+  }
+]

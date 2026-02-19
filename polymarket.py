@@ -105,7 +105,7 @@ def get_polymarket_balance() -> Optional[float]:
         result = client.get_balance_allowance(
             BalanceAllowanceParams(asset_type=AssetType.COLLATERAL)
         )
-        return float(result.get("balance", 0))
+        return float(result.get("balance", 0)) / 1e6
     except Exception:
         return None
 

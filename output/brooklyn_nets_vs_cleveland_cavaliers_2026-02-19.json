@@ -1,0 +1,669 @@
+{
+  "matchup": {
+    "team1": "Cleveland Cavaliers",
+    "team2": "Brooklyn Nets",
+    "home_team": "Cleveland Cavaliers"
+  },
+  "current_season": {
+    "team1": {
+      "name": "Cleveland Cavaliers",
+      "record": "34-21",
+      "conf_rank": 4,
+      "games": 59,
+      "ppg": 119.5,
+      "opp_ppg": 115.4,
+      "ortg": 113.9,
+      "drtg": 110.5,
+      "apg": 28.5,
+      "rpg": 44.4,
+      "topg": 14.7,
+      "net_rating": 3.44,
+      "fgp": 47.4,
+      "tpp": 35.9,
+      "last_ten": "9-1",
+      "last_ten_pct": 0.9,
+      "home_record": "18-11",
+      "away_record": "16-10",
+      "home_win_pct": 0.621,
+      "away_win_pct": 0.615,
+      "pace": 104.4,
+      "recent_ppg": 126.8,
+      "recent_margin": 14.6,
+      "sos": 0.454,
+      "sos_adjusted_net_rating": 2.98
+    },
+    "team2": {
+      "name": "Brooklyn Nets",
+      "record": "15-38",
+      "conf_rank": 13,
+      "games": 56,
+      "ppg": 108.2,
+      "opp_ppg": 116.3,
+      "ortg": 108.7,
+      "drtg": 115.7,
+      "apg": 25.5,
+      "rpg": 40.9,
+      "topg": 16.2,
+      "net_rating": -7.02,
+      "fgp": 44.8,
+      "tpp": 34.9,
+      "last_ten": "3-7",
+      "last_ten_pct": 0.3,
+      "home_record": "8-19",
+      "away_record": "7-19",
+      "home_win_pct": 0.296,
+      "away_win_pct": 0.269,
+      "pace": 100.5,
+      "recent_ppg": 109.7,
+      "recent_margin": -6.1,
+      "sos": 0.489,
+      "sos_adjusted_net_rating": -7.13
+    }
+  },
+  "schedule": {
+    "team1": {
+      "days_rest": 7,
+      "streak": "W5",
+      "games_last_7_days": 1,
+      "recent_opponent_avg_win_pct": 0.454,
+      "quality_wins": 4,
+      "quality_losses": 1
+    },
+    "team2": {
+      "days_rest": 7,
+      "streak": "L1",
+      "games_last_7_days": 1,
+      "recent_opponent_avg_win_pct": 0.489,
+      "quality_wins": 0,
+      "quality_losses": 5
+    }
+  },
+  "recent_games": {
+    "team1": [
+      {
+        "vs": "Washington Wizards",
+        "vs_record": "14-39",
+        "vs_win_pct": 0.264,
+        "result": "W",
+        "score": "138-113",
+        "home": true,
+        "margin": 25,
+        "date": "2026-02-12"
+      },
+      {
+        "vs": "Denver Nuggets",
+        "vs_record": "35-20",
+        "vs_win_pct": 0.636,
+        "result": "W",
+        "score": "119-117",
+        "home": false,
+        "margin": 2,
+        "date": "2026-02-10"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-44",
+        "vs_win_pct": 0.214,
+        "result": "W",
+        "score": "132-126",
+        "home": false,
+        "margin": 6,
+        "date": "2026-02-08"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "26-28",
+        "vs_win_pct": 0.481,
+        "result": "W",
+        "score": "124-91",
+        "home": false,
+        "margin": 33,
+        "date": "2026-02-05"
+      },
+      {
+        "vs": "Portland Trail Blazers",
+        "vs_record": "27-29",
+        "vs_win_pct": 0.482,
+        "result": "W",
+        "score": "130-111",
+        "home": false,
+        "margin": 19,
+        "date": "2026-02-02"
+      },
+      {
+        "vs": "Phoenix Suns",
+        "vs_record": "32-23",
+        "vs_win_pct": 0.582,
+        "result": "L",
+        "score": "113-126",
+        "home": false,
+        "margin": -13,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "33-21",
+        "vs_win_pct": 0.611,
+        "result": "W",
+        "score": "129-99",
+        "home": true,
+        "margin": 30,
+        "date": "2026-01-29"
+      },
+      {
+        "vs": "Orlando Magic",
+        "vs_record": "28-25",
+        "vs_win_pct": 0.528,
+        "result": "W",
+        "score": "114-98",
+        "home": true,
+        "margin": 16,
+        "date": "2026-01-27"
+      },
+      {
+        "vs": "Orlando Magic",
+        "vs_record": "28-25",
+        "vs_win_pct": 0.528,
+        "result": "W",
+        "score": "119-105",
+        "home": false,
+        "margin": 14,
+        "date": "2026-01-25"
+      },
+      {
+        "vs": "Sacramento Kings",
+        "vs_record": "12-44",
+        "vs_win_pct": 0.214,
+        "result": "W",
+        "score": "123-118",
+        "home": true,
+        "margin": 5,
+        "date": "2026-01-24"
+      }
+    ],
+    "team2": [
+      {
+        "vs": "Indiana Pacers",
+        "vs_record": "15-40",
+        "vs_win_pct": 0.273,
+        "result": "L",
+        "score": "110-115",
+        "home": true,
+        "margin": -5,
+        "date": "2026-02-12"
+      },
+      {
+        "vs": "Chicago Bulls",
+        "vs_record": "24-31",
+        "vs_win_pct": 0.436,
+        "result": "W",
+        "score": "123-115",
+        "home": true,
+        "margin": 8,
+        "date": "2026-02-10"
+      },
+      {
+        "vs": "Washington Wizards",
+        "vs_record": "14-39",
+        "vs_win_pct": 0.264,
+        "result": "W",
+        "score": "127-113",
+        "home": true,
+        "margin": 14,
+        "date": "2026-02-07"
+      },
+      {
+        "vs": "Orlando Magic",
+        "vs_record": "28-25",
+        "vs_win_pct": 0.528,
+        "result": "L",
+        "score": "98-118",
+        "home": false,
+        "margin": -20,
+        "date": "2026-02-06"
+      },
+      {
+        "vs": "Los Angeles Lakers",
+        "vs_record": "33-21",
+        "vs_win_pct": 0.611,
+        "result": "L",
+        "score": "109-125",
+        "home": true,
+        "margin": -16,
+        "date": "2026-02-04"
+      },
+      {
+        "vs": "Detroit Pistons",
+        "vs_record": "40-13",
+        "vs_win_pct": 0.755,
+        "result": "L",
+        "score": "77-130",
+        "home": false,
+        "margin": -53,
+        "date": "2026-02-01"
+      },
+      {
+        "vs": "Utah Jazz",
+        "vs_record": "18-38",
+        "vs_win_pct": 0.321,
+        "result": "W",
+        "score": "109-99",
+        "home": false,
+        "margin": 10,
+        "date": "2026-01-31"
+      },
+      {
+        "vs": "Denver Nuggets",
+        "vs_record": "35-20",
+        "vs_win_pct": 0.636,
+        "result": "L",
+        "score": "103-107",
+        "home": false,
+        "margin": -4,
+        "date": "2026-01-30"
+      },
+      {
+        "vs": "Phoenix Suns",
+        "vs_record": "32-23",
+        "vs_win_pct": 0.582,
+        "result": "L",
+        "score": "102-106",
+        "home": false,
+        "margin": -4,
+        "date": "2026-01-28"
+      },
+      {
+        "vs": "LA Clippers",
+        "vs_record": "26-28",
+        "vs_win_pct": 0.481,
+        "result": "L",
+        "score": "89-126",
+        "home": false,
+        "margin": -37,
+        "date": "2026-01-26"
+      }
+    ]
+  },
+  "players": {
+    "team1": {
+      "rotation": [
+        {
+          "name": "Donovan Mitchell",
+          "ppg": 28.2,
+          "plus_minus": 5.6,
+          "games": 54
+        },
+        {
+          "name": "Evan Mobley",
+          "ppg": 17.6,
+          "plus_minus": 3.7,
+          "games": 45
+        },
+        {
+          "name": "James Harden",
+          "ppg": 19.3,
+          "plus_minus": 4.3,
+          "games": 3
+        },
+        {
+          "name": "Darius Garland",
+          "ppg": 18.0,
+          "plus_minus": -1.5,
+          "games": 26
+        },
+        {
+          "name": "Jaylon Tyson",
+          "ppg": 13.4,
+          "plus_minus": 1.2,
+          "games": 54
+        },
+        {
+          "name": "Jarrett Allen",
+          "ppg": 14.2,
+          "plus_minus": 3.8,
+          "games": 46
+        }
+      ],
+      "availability_concerns": [
+        "James Harden (3/59 games)",
+        "Darius Garland (26/59 games)",
+        "Sam Merrill (32/59 games)",
+        "Keon Ellis (4/59 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Mitchell 28.2, Harden 19.3, Garland 18.0",
+      "playmaker": "James Harden 8.7 APG (limited: 3 games)",
+      "hot_hand": "Ellis +10.5 (limited: 4 games)",
+      "star_dependency": 23.6,
+      "depth_rating": "balanced (4.1 MPG std dev)",
+      "bench_scoring": 52.8,
+      "injuries": [
+        {
+          "player": "Tristan Enaruna",
+          "status": "Out",
+          "reason": "G League - Two- Way Injury Report: 02/19/26",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Emanuel Miller",
+          "status": "Out",
+          "reason": "G League - Two- Way",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Riley Minix",
+          "status": "Out",
+          "reason": "G League - Two- Way",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Max Strus",
+          "status": "Out",
+          "reason": "Injury/Illness - Left Foot; Surgery - Jones Fracture",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Nae'Qwan Tomlin",
+          "status": "Out",
+          "reason": "Injury/Illness - Left Calf; Soreness",
+          "report_time": "07PM"
+        }
+      ]
+    },
+    "team2": {
+      "rotation": [
+        {
+          "name": "Michael Porter Jr.",
+          "ppg": 24.7,
+          "plus_minus": -2.2,
+          "games": 44
+        },
+        {
+          "name": "Nic Claxton",
+          "ppg": 12.4,
+          "plus_minus": -5.9,
+          "games": 53
+        },
+        {
+          "name": "Noah Clowney",
+          "ppg": 12.7,
+          "plus_minus": -2.6,
+          "games": 50
+        },
+        {
+          "name": "Terance Mann",
+          "ppg": 7.4,
+          "plus_minus": -2.8,
+          "games": 49
+        },
+        {
+          "name": "Demin Egor",
+          "ppg": 10.9,
+          "plus_minus": -2.2,
+          "games": 47
+        },
+        {
+          "name": "Cam Thomas",
+          "ppg": 15.6,
+          "plus_minus": -5.6,
+          "games": 27
+        }
+      ],
+      "availability_concerns": [
+        "Cam Thomas (27/56 games)",
+        "N. Traore (34/56 games)"
+      ],
+      "full_strength": false,
+      "top_scorers": "Jr. 24.7, Thomas 15.6, Clowney 12.7",
+      "playmaker": "Nic Claxton 4.0 APG",
+      "hot_hand": "Sharpe -1.2",
+      "star_dependency": 22.8,
+      "depth_rating": "balanced (4.1 MPG std dev)",
+      "bench_scoring": 49.6,
+      "injuries": [
+        {
+          "player": "Nic Claxton",
+          "status": "Out",
+          "reason": "Injury/Illness - Right Ankle; Sprain",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Tyson Etienne",
+          "status": "Out",
+          "reason": "G League - Two- Way",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Chaney Johnson",
+          "status": "Out",
+          "reason": "G League - Two- Way",
+          "report_time": "07PM"
+        },
+        {
+          "player": "E.J. Liddell",
+          "status": "Out",
+          "reason": "G League - Two- Way",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Josh Minott",
+          "status": "Out",
+          "reason": "G League - On Assignment",
+          "report_time": "07PM"
+        },
+        {
+          "player": "Ben Saraf",
+          "status": "Out",
+          "reason": "G League - On Assignment",
+          "report_time": "07PM"
+        }
+      ]
+    }
+  },
+  "h2h": {
+    "summary": {
+      "total_games": 9,
+      "team1_wins_all_time": 8,
+      "team2_wins_all_time": 1,
+      "team1_win_pct": 0.889,
+      "team1_home_wins": 3,
+      "team1_home_losses": 1,
+      "team1_away_wins": 5,
+      "team1_away_losses": 0,
+      "avg_point_diff": 8.3,
+      "team1_avg_points": 122.3,
+      "team2_avg_points": 114.0,
+      "last_5_games": [
+        "Cleveland Cavaliers",
+        "Cleveland Cavaliers",
+        "Cleveland Cavaliers",
+        "Cleveland Cavaliers",
+        "Cleveland Cavaliers"
+      ],
+      "recent_trend": "team1_hot",
+      "close_games": 3,
+      "blowouts": 3
+    },
+    "patterns": {
+      "avg_total": 236.3,
+      "home_win_pct": 0.197,
+      "high_scoring_pct": 0.68,
+      "close_game_pct": 0.2
+    },
+    "recent": {
+      "team1_wins_last_2_seasons": 5,
+      "team2_wins_last_2_seasons": 0,
+      "last_winner": "Cleveland Cavaliers",
+      "home_team_home_record": "2-0",
+      "games_last_2_seasons": 5
+    },
+    "quarters": {
+      "avg_q1_total": 55.6,
+      "avg_q2_total": 55.6,
+      "avg_q3_total": 68.4,
+      "avg_q4_total": 56.7,
+      "avg_first_half": 111.2,
+      "avg_second_half": 125.1,
+      "team1_q1_avg": 32.3,
+      "team2_q1_avg": 23.3,
+      "team1_q4_avg": 25.7,
+      "team2_q4_avg": 31.0,
+      "halftime_leader_wins_pct": 0.67
+    },
+    "matchup_stats": {
+      "team1": {
+        "avg_fgp": 51.0,
+        "avg_tpp": 38.8,
+        "avg_rebounds": 39.2,
+        "avg_assists": 28.3,
+        "avg_turnovers": 16.1,
+        "avg_disruption": 17.4
+      },
+      "team2": {
+        "avg_fgp": 47.9,
+        "avg_tpp": 39.2,
+        "avg_rebounds": 38.7,
+        "avg_assists": 27.9,
+        "avg_turnovers": 18.7,
+        "avg_disruption": 10.2
+      }
+    }
+  },
+  "totals_analysis": {
+    "expected_total": 230.9,
+    "total_diff_from_h2h": -8.6,
+    "team1_h2h_scoring_diff": -2.8,
+    "team2_h2h_scoring_diff": -5.8,
+    "margin_volatility": 9.4,
+    "h2h_total_variance": 15.5,
+    "pace_adjusted_total": 228.1,
+    "defense_factor": 113.1,
+    "recent_scoring_trend": 1.1,
+    "injury_adjusted_total": 217.4
+  },
+  "comparison": {
+    "ppg": 11.3,
+    "net_rating": 10.46,
+    "form": 0.6,
+    "turnovers": 1.5,
+    "rebounds": 3.5,
+    "fgp": 2.6,
+    "three_pt_pct": 1.0,
+    "pace": 3.9,
+    "combined_pace": 102.5,
+    "weighted_form": 20.7,
+    "adjusted_net_rating": 10.11
+  },
+  "signals": [
+    "Cleveland Cavaliers missing 24% of offense with key players limited",
+    "Brooklyn Nets missing 23% of offense with key players limited",
+    "Cleveland Cavaliers won 5 straight",
+    "Cleveland Cavaliers starts faster (+9.0 Q1 avg in H2H)",
+    "Brooklyn Nets stronger closer (+5.3 Q4 avg in H2H)",
+    "Halftime leader wins 67% in this matchup",
+    "H2H games back-loaded (2H avg 125.1 vs 1H avg 111.2)",
+    "Cleveland Cavaliers injury concerns: James Harden (3/59 games), Darius Garland (26/59 games)",
+    "Brooklyn Nets injury concerns: Cam Thomas (27/56 games), N. Traore (34/56 games)",
+    "Cleveland Cavaliers hot form (9-1 L10)",
+    "Brooklyn Nets struggling (3-7 L10)",
+    "Cleveland Cavaliers strong at home (18-11)",
+    "Brooklyn Nets poor on road (7-19)",
+    "Cleveland Cavaliers +11.3 PPG edge",
+    "Cleveland Cavaliers significantly better net rating (+10.5)",
+    "Cleveland Cavaliers 5-0 in recent H2H",
+    "Cleveland Cavaliers won 4+ of last 5 H2H meetings",
+    "High-scoring matchup (68% H2H games over 220)",
+    "High-variance H2H (\u00b115.5 pts std dev in totals)",
+    "Cleveland Cavaliers FG% elevated vs Brooklyn Nets: 51.0% H2H vs 47.4% season",
+    "Brooklyn Nets FG% elevated vs Cleveland Cavaliers: 47.9% H2H vs 44.8% season",
+    "Brooklyn Nets hot from 3 vs Cleveland Cavaliers: 39.2% H2H vs 34.9% season",
+    "Brooklyn Nets more careless vs Cleveland Cavaliers: 18.7 H2H vs 16.2 season TOV",
+    "Cleveland Cavaliers struggles on boards vs Brooklyn Nets: 39.2 H2H vs 44.4 season",
+    "Cleveland Cavaliers scoring +7.3 PPG above season avg recently \u2014 regression likely"
+  ],
+  "api_game_id": 16321,
+  "odds": {
+    "spread": {
+      "home": {
+        "line": -16.5,
+        "price": -112
+      },
+      "away": {
+        "line": 16.5,
+        "price": -108
+      }
+    },
+    "total": {
+      "line": 230.5,
+      "over": -110,
+      "under": -110
+    },
+    "moneyline": {
+      "home": -1350,
+      "away": 810
+    },
+    "alternate_spreads": [
+      {
+        "line": -17.5,
+        "price": -104
+      },
+      {
+        "line": -18.5,
+        "price": 108
+      },
+      {
+        "line": -15.5,
+        "price": -130
+      },
+      {
+        "line": -14.5,
+        "price": -148
+      }
+    ],
+    "alternate_totals": [
+      {
+        "line": 229.5,
+        "price": -120
+      },
+      {
+        "line": 228.5,
+        "price": -132
+      },
+      {
+        "line": 231.5,
+        "price": 100
+      },
+      {
+        "line": 232.5,
+        "price": 110
+      }
+    ]
+  },
+  "search_context": "### Injury Report\n**Brooklyn Nets:**\n- Nic Claxton (C): Out (Right Ankle Sprain)[1][4][7]\n- Michael Porter Jr. (PF): Questionable (Knee)[2]\n- Noah Clowney (PF): Questionable (Left Ankle Sprain)[2]\n- Tyson Etienne: Out (G League - Two-Way)[3][4]\n- Chaney Johnson: Out (G League - Two-Way)[3][4]\n- E.J. Liddell: Out (G League - Two-Way)[4]\n- Josh Minott: Out (G League - On Assignment)[3][4]\n- Ben Saraf: Out (G League - On Assignment)[3][4]\n\n**Cleveland Cavaliers:**\n- Nae'Qwan Tomlin (PF): Out (Left Calf Soreness)[2][3]\n- Max Strus (PG/SF): Out (Left Foot Fracture/Jones Fracture, surgery)[1][2][3]\n- Evan Mobley (C): Out (Calf, no timetable)[2]\n- Dean Wade (SF): Probable (Ankle)[2]\n- Tristan Enaruna: Out (G League - Two-Way)[1][3][4]\n- Emanuel Miller: Out (G League)[1][3]\n- Riley Minix: Out (G League)[1][3]\n\n### Betting Lines\nNo current consensus spread, moneyline odds, or over/under total available in search results.\n\n### Line Movement\nNo information on opening lines or notable moves available in search results.\n\n### Recent News\n- Nets (15-38, 13th in East) lost 115-110 to Pacers on Feb 11, won 123-115 vs. Bulls prior[1].\n- Cavaliers (34-21, 4th in East) on five-game win streak, beat Wizards 138-113 on Feb 11, Nuggets 119-? on Feb 9; previously beat Nets 131-? on Oct 24[1].\n- Cavaliers expected to be healthier post-All-Star, starting run vs. Nets[3].\n- Nets not focused on wins, rank among weakest teams[3].\n\n### Additional Context\nI can provide information about Cleveland's defensive efficiency based on the available search results, but the search results do not contain the specific information needed for a complete betting analysis as requested.\n\n## Cleveland Cavaliers Defensive Efficiency\n\nThe **Cleveland Cavaliers have a defensive rating of 114.3**[1][3], which ranks them **12th in the NBA**[2]. According to defensive efficiency metrics, Cleveland's efficiency rating is 1.104[2], placing them in the middle tier of league defenses. Their defensive performance has been relatively consistent, with a home defensive efficiency of 1.108 and away efficiency of 1.100[2].\n\nCleveland's overall record stands at **34-21**, positioning them **2nd in the Central Division**[4]. Their offensive rating is 118.0 (6th in the league) and net rating is 3.6 (9th)[1], indicating they are a strong offensive team that relies more on scoring than elite defense.\n\n## Missing Information for Complete Analysis\n\nThe search results do not contain:\n\n- **Brooklyn Nets roster status**: No information about Claxton's availability, Cam Thomas's injury status, or how the Nets perform without key players\n- **Cleveland's perimeter defense specifics**: No breakdown of how their perimeter defense performs against teams lacking rim protection\n- **Brooklyn's offensive efficiency**: No data on the Nets' scoring distribution or offensive efficiency in games with limited Cam Thomas minutes\n- **Cleveland's recent form**: No information about a five-game winning streak or recent performance trends\n- **Pace of play analysis**: No data comparing Cleveland's pace against different opponent types\n\nTo complete this betting analysis, you would need additional sources covering current injury reports, recent game-by-game performance data, and specific defensive matchup analytics between these teams.\n\n### Player & Team News\n# Brooklyn Nets @ Cleveland Cavaliers \u2013 Player-Focused News Report\n\n## Player Form & Streaks\n\n**Cleveland Cavaliers** are riding strong momentum, with the team on a **5-game win streak**[4] and holding a **9-1 record in their last 10 games**[3]. **Donovan Mitchell** leads the offensive charge, averaging **29.0 PPG**[3] with efficient shooting at **50.0 FG%**[8] and **84.8 FT%**[8]. **Evan Mobley** complements the scoring with **8.8 RPG**[3] and solid two-way production.\n\n**Brooklyn Nets** are struggling significantly, sitting at **3-7 in their last 10 games**[3] with a **15-38 record**[5]. The team ranks **lowest in the NBA for offensive output** at **107.7 PPG**[1] and **lowest for fast break points at 12.0 per game**[1]. **Michael Porter Jr.** remains the primary scorer at **25.0 PPG**[3], shooting **47.4 FG%**[7], but the overall offensive system is underperforming league-wide standards.\n\n## Returning Players & Ramp-Ups\n\n**Michael Porter Jr.** (Nets) has been cleared to play Thursday after dealing with a knee issue[4]. **Noah Clowney** (Nets) is off the injury report after an ankle concern[4].\n\n**Evan Mobley** (Cavaliers) is on track to play Thursday despite a calf issue, according to coach Kenny Atkinson[4].\n\n## Matchup Storylines\n\nThe **Cavaliers aim to prolong their 5-game win streak**[4] against a Nets team that has lost four of its last five games. Cleveland's defensive rating of **117.1**[3] will be tested against Brooklyn's struggling offensive unit, creating a potential mismatch where the Cavaliers' elite defense could further expose the Nets' offensive limitations. Mitchell's playmaking (**5.9 APG**[3]) will be crucial in orchestrating the offense against a Nets defense allowing **114.9 PPG**[5].",
+  "injury_impact": {
+    "team1": {
+      "out_players": [
+        {
+          "name": "Evan Mobley",
+          "ppg": 17.6,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 17.6,
+      "adjusted_ppg_loss": 7.9
+    },
+    "team2": {
+      "out_players": [
+        {
+          "name": "Nic Claxton",
+          "ppg": 12.4,
+          "status": "Out"
+        }
+      ],
+      "missing_ppg": 12.4,
+      "adjusted_ppg_loss": 5.6
+    },
+    "total_reduction": 13.5,
+    "missing_ppg_diff": -2.3
+  }
+}
