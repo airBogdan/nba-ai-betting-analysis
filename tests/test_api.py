@@ -10,12 +10,14 @@ from helpers.api import (
     process_player_statistics,
     process_team_stats,
 )
-from helpers.api.processors import (
+from helpers.api.league import (
     compute_league_avg_efficiency,
-    get_scheduled_games,
-    _utc_to_et_date,
     _FALLBACK_EFFICIENCY,
     LEAGUE_EFFICIENCY_CACHE,
+)
+from helpers.api.games import (
+    get_scheduled_games,
+    _utc_to_et_date,
 )
 
 
@@ -329,7 +331,7 @@ class TestComputeLeagueAvgEfficiency:
     async def test_computes_from_api(self, tmp_path, monkeypatch):
         """Computes average efficiency from all teams' stats."""
         monkeypatch.setattr(
-            "helpers.api.processors.LEAGUE_EFFICIENCY_CACHE",
+            "helpers.api.league.LEAGUE_EFFICIENCY_CACHE",
             tmp_path / "cache" / "league_avg_efficiency.json",
         )
         teams = [
@@ -343,8 +345,8 @@ class TestComputeLeagueAvgEfficiency:
         stats_a = self._make_raw_team_stats(2200, 20, 1800, 450, 280, 200)
         stats_b = self._make_raw_team_stats(2300, 20, 1800, 450, 280, 200)
 
-        with patch("helpers.api.processors.fetch_nba_api", new_callable=AsyncMock, return_value=teams) as mock_teams, \
-             patch("helpers.api.processors.get_team_statistics", new_callable=AsyncMock) as mock_stats:
+        with patch("helpers.api.league.fetch_nba_api", new_callable=AsyncMock, return_value=teams) as mock_teams, \
+             patch("helpers.api.league.get_team_statistics", new_callable=AsyncMock) as mock_stats:
             mock_stats.side_effect = [stats_a, stats_b]
             result = await compute_league_avg_efficiency(2025)
 
@@ -366,10 +368,10 @@ class TestComputeLeagueAvgEfficiency:
             "date": str(date.today()), "season": 2025, "efficiency": 114.2, "teams": 30
         }))
         monkeypatch.setattr(
-            "helpers.api.processors.LEAGUE_EFFICIENCY_CACHE", cache_file,
+            "helpers.api.league.LEAGUE_EFFICIENCY_CACHE", cache_file,
         )
 
-        with patch("helpers.api.processors.fetch_nba_api", new_callable=AsyncMock) as mock_api:
+        with patch("helpers.api.league.fetch_nba_api", new_callable=AsyncMock) as mock_api:
             result = await compute_league_avg_efficiency(2025)
 
         assert result == 114.2
@@ -379,11 +381,11 @@ class TestComputeLeagueAvgEfficiency:
     async def test_fallback_when_api_fails(self, tmp_path, monkeypatch):
         """Falls back to _FALLBACK_EFFICIENCY when API returns None."""
         monkeypatch.setattr(
-            "helpers.api.processors.LEAGUE_EFFICIENCY_CACHE",
+            "helpers.api.league.LEAGUE_EFFICIENCY_CACHE",
             tmp_path / "no_cache.json",
         )
 
-        with patch("helpers.api.processors.fetch_nba_api", new_callable=AsyncMock, return_value=None):
+        with patch("helpers.api.league.fetch_nba_api", new_callable=AsyncMock, return_value=None):
             result = await compute_league_avg_efficiency(2025)
 
         assert result == _FALLBACK_EFFICIENCY
@@ -394,13 +396,13 @@ class TestComputeLeagueAvgEfficiency:
         cache_file = tmp_path / "league_avg_efficiency.json"
         cache_file.write_text("not valid json{{{")
         monkeypatch.setattr(
-            "helpers.api.processors.LEAGUE_EFFICIENCY_CACHE", cache_file,
+            "helpers.api.league.LEAGUE_EFFICIENCY_CACHE", cache_file,
         )
         teams = [{"id": 1, "name": "Team A", "nbaFranchise": True, "allStar": False}]
         stats = self._make_raw_team_stats(2200, 20, 1800, 450, 280, 200)
 
-        with patch("helpers.api.processors.fetch_nba_api", new_callable=AsyncMock, return_value=teams), \
-             patch("helpers.api.processors.get_team_statistics", new_callable=AsyncMock, return_value=stats):
+        with patch("helpers.api.league.fetch_nba_api", new_callable=AsyncMock, return_value=teams), \
+             patch("helpers.api.league.get_team_statistics", new_callable=AsyncMock, return_value=stats):
             result = await compute_league_avg_efficiency(2025)
 
         assert 100 < result < 120
@@ -475,7 +477,7 @@ class TestGetScheduledGamesETFilter:
                 return [next_evening]
             return None
 
-        with patch("helpers.api.processors.get_games_by_date", side_effect=mock_get_games):
+        with patch("helpers.api.games.get_games_by_date", side_effect=mock_get_games):
             result = await get_scheduled_games(2025, "2026-02-11")
 
         # Should include afternoon_game (ET=Feb 11) and next_evening (ET=Feb 11)
@@ -491,7 +493,7 @@ class TestGetScheduledGamesETFilter:
         async def mock_get_games(season, date_str):
             return None
 
-        with patch("helpers.api.processors.get_games_by_date", side_effect=mock_get_games):
+        with patch("helpers.api.games.get_games_by_date", side_effect=mock_get_games):
             result = await get_scheduled_games(2025, "2026-02-11")
 
         assert result == []
@@ -505,7 +507,7 @@ class TestGetScheduledGamesETFilter:
             # Same game returned by both date queries
             return [game]
 
-        with patch("helpers.api.processors.get_games_by_date", side_effect=mock_get_games):
+        with patch("helpers.api.games.get_games_by_date", side_effect=mock_get_games):
             result = await get_scheduled_games(2025, "2026-02-11")
 
         assert len(result) == 1
@@ -519,7 +521,7 @@ class TestGetScheduledGamesETFilter:
             calls.append(date_str)
             return None
 
-        with patch("helpers.api.processors.get_games_by_date", side_effect=mock_get_games):
+        with patch("helpers.api.games.get_games_by_date", side_effect=mock_get_games):
             await get_scheduled_games(2025, "2026-02-11")
 
         assert "2026-02-11" in calls

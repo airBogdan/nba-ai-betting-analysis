@@ -30,13 +30,17 @@ from .client import (
     get_game_by_id,
     get_game_player_stats,
 )
-from .processors import (
+from .transforms import (
     parse_minutes,
     process_player_statistics,
     process_team_stats,
+)
+from .league import (
     get_all_standings,
-    get_team_statistics_for_seasons,
     compute_league_avg_efficiency,
+)
+from .games import (
+    get_team_statistics_for_seasons,
     get_team_recent_games,
     get_scheduled_games,
 )
