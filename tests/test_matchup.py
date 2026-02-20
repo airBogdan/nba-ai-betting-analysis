@@ -419,14 +419,14 @@ class TestComputeH2hMatchupStats:
 class TestComputeRecentH2h:
     """Tests for compute_recent_h2h function."""
 
-    @patch("helpers.matchup.get_current_nba_season_year")
+    @patch("helpers.matchup_h2h.get_current_nba_season_year")
     def test_returns_none_in_offseason(self, mock_season):
         """Returns None when in off-season."""
         mock_season.return_value = None
         result = compute_recent_h2h({2024: []}, "A", "A")
         assert result is None
 
-    @patch("helpers.matchup.get_current_nba_season_year")
+    @patch("helpers.matchup_h2h.get_current_nba_season_year")
     def test_filters_to_last_2_seasons(self, mock_season):
         """Only includes games from last 2 seasons."""
         mock_season.return_value = 2024
@@ -438,7 +438,7 @@ class TestComputeRecentH2h:
         result = compute_recent_h2h(h2h, "A", "A")
         assert result["games_last_2_seasons"] == 2
 
-    @patch("helpers.matchup.get_current_nba_season_year")
+    @patch("helpers.matchup_h2h.get_current_nba_season_year")
     def test_computes_recent_wins(self, mock_season):
         """Computes wins for each team in recent games."""
         mock_season.return_value = 2024

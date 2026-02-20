@@ -3,259 +3,66 @@
 import math
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
-from typing_extensions import TypedDict
 
-from .api import ProcessedPlayerStats, ProcessedTeamStats, RecentGame, Injury
-from .games import compute_quarter_analysis, _weighted_h2h_games
+from .api import ProcessedPlayerStats, ProcessedTeamStats, RecentGame
+from .games import compute_quarter_analysis
 from .teams import SeasonStanding
-from .types import H2HResults, H2HSummary, QuarterAnalysis
+from .types import H2HResults, H2HSummary
 from .utils import get_current_nba_season_year
 
+# Re-export types and constants for backward compatibility
+from .matchup_types import (  # noqa: F401
+    AVAILABILITY_THRESHOLD,
+    AWAY_STRONG_THRESHOLD,
+    AWAY_WEAK_THRESHOLD,
+    BACK_TO_BACK_THRESHOLD,
+    DEFAULT_LEAGUE_AVG_EFFICIENCY,
+    DEFAULT_LEAGUE_AVG_TOTAL,
+    FAST_PACE_THRESHOLD,
+    FGP_DIFF_THRESHOLD,
+    FORM_COLD_THRESHOLD,
+    FORM_HOT_THRESHOLD,
+    H2H_VARIANCE_THRESHOLD,
+    HALF_SCORING_DIFF_THRESHOLD,
+    HALFTIME_LEADER_THRESHOLD,
+    HOME_STRONG_THRESHOLD,
+    HOME_WEAK_THRESHOLD,
+    LEAGUE_AVG_TOTAL_MAX,
+    LEAGUE_AVG_TOTAL_MIN,
+    NET_RATING_EDGE_THRESHOLD,
+    PPG_EDGE_THRESHOLD,
+    QUARTER_DIFF_THRESHOLD,
+    REB_DIFF_THRESHOLD,
+    REGRESSION_FACTOR,
+    REST_ADVANTAGE_THRESHOLD,
+    SCORING_REGRESSION_THRESHOLD,
+    SCORING_TREND_THRESHOLD,
+    SLOW_PACE_THRESHOLD,
+    STAR_DEPENDENCY_THRESHOLD,
+    TOV_DIFF_THRESHOLD,
+    TPP_DIFF_THRESHOLD,
+    BuildMatchupInput,
+    H2H,
+    H2HMatchupStats,
+    H2HPatterns,
+    H2HRecent,
+    H2HSummaryData,
+    H2HTeamStats,
+    MatchupAnalysis,
+    MatchupEdges,
+    RotationPlayer,
+    TeamPlayers,
+    TeamSchedule,
+    TeamSnapshot,
+    TotalsAnalysis,
+)
 
-# === Constants ===
-# TODO: for user, test and tweak these variables based on betting results
-
-# Rest/schedule thresholds
-BACK_TO_BACK_THRESHOLD = 1
-REST_ADVANTAGE_THRESHOLD = 2
-
-# Player impact thresholds
-STAR_DEPENDENCY_THRESHOLD = 22
-AVAILABILITY_THRESHOLD = 0.7
-
-# Form thresholds (last 10 win%)
-FORM_HOT_THRESHOLD = 0.7
-FORM_COLD_THRESHOLD = 0.3
-
-# Home/away performance thresholds
-HOME_STRONG_THRESHOLD = 0.6
-HOME_WEAK_THRESHOLD = 0.4
-AWAY_STRONG_THRESHOLD = 0.55
-AWAY_WEAK_THRESHOLD = 0.35
-
-# Scoring/rating edge thresholds
-PPG_EDGE_THRESHOLD = 3.0
-NET_RATING_EDGE_THRESHOLD = 3.0
-
-# Pace thresholds
-FAST_PACE_THRESHOLD = 105
-SLOW_PACE_THRESHOLD = 98
-
-# Totals signal thresholds
-SCORING_TREND_THRESHOLD = 5
-H2H_VARIANCE_THRESHOLD = 15
-
-# H2H quarter/half tendency thresholds
-QUARTER_DIFF_THRESHOLD = 2
-HALFTIME_LEADER_THRESHOLD = 0.65
-HALF_SCORING_DIFF_THRESHOLD = 3
-
-# H2H vs season comparison thresholds
-FGP_DIFF_THRESHOLD = 3
-TPP_DIFF_THRESHOLD = 4
-TOV_DIFF_THRESHOLD = 2
-REB_DIFF_THRESHOLD = 3
-
-# League average defaults
-DEFAULT_LEAGUE_AVG_EFFICIENCY = 113.5
-DEFAULT_LEAGUE_AVG_TOTAL = 225.0
-LEAGUE_AVG_TOTAL_MIN = 180
-LEAGUE_AVG_TOTAL_MAX = 240
-
-# Regression factor for expected total
-REGRESSION_FACTOR = 0.15
-
-# Scoring regression threshold (recent PPG vs season PPG)
-SCORING_REGRESSION_THRESHOLD = 5
-
-
-# === TypedDict definitions ===
-
-
-class TeamSnapshot(TypedDict):
-    """Current season team state with computed metrics."""
-    name: str
-    record: str
-    conf_rank: int
-    games: int
-    ppg: float
-    opp_ppg: float  # Points allowed (estimated)
-    ortg: float  # Offensive rating estimate
-    drtg: float  # Defensive rating estimate
-    apg: float
-    rpg: float
-    topg: float
-    net_rating: float
-    fgp: float
-    tpp: float
-    last_ten: str
-    last_ten_pct: float
-    home_record: str
-    away_record: str
-    home_win_pct: float
-    away_win_pct: float
-    pace: float
-    recent_ppg: float
-    recent_margin: float
-    sos: float
-    sos_adjusted_net_rating: float
-
-
-class MatchupEdges(TypedDict):
-    """Comparison edges between two teams."""
-    ppg: float
-    net_rating: float
-    form: float
-    turnovers: float
-    rebounds: float
-    fgp: float
-    three_pt_pct: float
-    pace: float
-    combined_pace: float
-    weighted_form: float
-    adjusted_net_rating: float
-
-
-class H2HSummaryData(TypedDict):
-    """H2H summary data."""
-    total_games: int
-    team1_wins_all_time: int
-    team2_wins_all_time: int
-    team1_win_pct: float
-    team1_home_wins: int
-    team1_home_losses: int
-    team1_away_wins: int
-    team1_away_losses: int
-    avg_point_diff: float
-    team1_avg_points: float
-    team2_avg_points: float
-    last_5_games: List[str]
-    recent_trend: str
-    close_games: int
-    blowouts: int
-
-
-class H2HPatterns(TypedDict):
-    """H2H patterns analysis."""
-    avg_total: float  # Single source of truth for avg combined score
-    home_win_pct: float
-    high_scoring_pct: float
-    close_game_pct: float
-
-
-class H2HTeamStats(TypedDict):
-    """Aggregated team stats from H2H box scores."""
-    avg_fgp: float
-    avg_tpp: float
-    avg_rebounds: float
-    avg_assists: float
-    avg_turnovers: float
-    avg_disruption: float  # steals + blocks
-
-
-class H2HMatchupStats(TypedDict):
-    """Matchup-specific stats from H2H games."""
-    team1: H2HTeamStats
-    team2: H2HTeamStats
-
-
-class H2HRecent(TypedDict):
-    """Recent H2H data (last 2 seasons only)."""
-    team1_wins_last_2_seasons: int
-    team2_wins_last_2_seasons: int
-    last_winner: str
-    home_team_home_record: str
-    games_last_2_seasons: int
-
-
-class H2H(TypedDict):
-    """Combined H2H analysis."""
-    summary: H2HSummaryData
-    patterns: H2HPatterns
-    recent: H2HRecent
-    quarters: Optional[QuarterAnalysis]
-    matchup_stats: Optional[H2HMatchupStats]
-
-
-class TeamSchedule(TypedDict):
-    """Schedule/situational context for a team."""
-    days_rest: Optional[int]
-    streak: str  # e.g., "W3", "L2"
-    games_last_7_days: int
-    # Opponent strength context
-    recent_opponent_avg_win_pct: float  # Avg win% of recent opponents
-    quality_wins: int  # Wins vs .500+ teams in recent games
-    quality_losses: int  # Losses vs .500+ teams in recent games
-
-
-class TotalsAnalysis(TypedDict):
-    """Totals/Over-Under analysis.
-
-    Note: `injury_adjusted_total` may be added post-generation by the betting
-    workflow (workflow/analyze.py) when injury data is available.
-    """
-    expected_total: float
-    total_diff_from_h2h: float
-    team1_h2h_scoring_diff: float
-    team2_h2h_scoring_diff: float
-    margin_volatility: float
-    h2h_total_variance: float
-    pace_adjusted_total: float
-    defense_factor: float
-    recent_scoring_trend: float
-
-
-class RotationPlayer(TypedDict):
-    """Rotation player data."""
-    name: str
-    ppg: float
-    plus_minus: float
-    games: int
-
-
-class TeamPlayers(TypedDict, total=False):
-    """Team player analysis."""
-    rotation: List[RotationPlayer]
-    availability_concerns: List[str]
-    full_strength: bool
-    top_scorers: str
-    playmaker: str
-    hot_hand: str
-    star_dependency: float
-    depth_rating: str
-    bench_scoring: float
-    injuries: List[Injury]  # Added post-generation from injuries API
-
-
-class MatchupAnalysis(TypedDict):
-    """Complete matchup analysis output."""
-    matchup: Dict[str, str]
-    current_season: Dict[str, TeamSnapshot]
-    schedule: Dict[str, TeamSchedule]
-    recent_games: Dict[str, List[RecentGame]]
-    players: Dict[str, Optional[TeamPlayers]]
-    h2h: Optional[H2H]
-    totals_analysis: TotalsAnalysis
-    comparison: MatchupEdges
-    signals: List[str]
-
-
-class BuildMatchupInput(TypedDict):
-    """Input for build_matchup_analysis."""
-    team1_name: str
-    team2_name: str
-    home_team: str
-    team1_standings: List[SeasonStanding]
-    team2_standings: List[SeasonStanding]
-    team1_stats: Optional[Dict[int, ProcessedTeamStats]]
-    team2_stats: Optional[Dict[int, ProcessedTeamStats]]
-    team1_players: List[ProcessedPlayerStats]
-    team2_players: List[ProcessedPlayerStats]
-    team1_recent_games: List[RecentGame]
-    team2_recent_games: List[RecentGame]
-    h2h_summary: Optional[H2HSummary]
-    h2h_results: Optional[H2HResults]
-    game_date: Optional[str]  # YYYY-MM-DD or ISO datetime for rest calculations
+# Re-export H2H functions for backward compatibility
+from .matchup_h2h import (  # noqa: F401
+    compute_h2h_matchup_stats,
+    compute_h2h_patterns,
+    compute_recent_h2h,
+)
 
 
 # === Helper functions ===
@@ -367,152 +174,6 @@ def compute_edges(team1: TeamSnapshot, team2: TeamSnapshot) -> MatchupEdges:
         "combined_pace": round((team1["pace"] + team2["pace"]) / 2, 1),
         "weighted_form": round(team1.get("recent_margin", 0) - team2.get("recent_margin", 0), 1),
         "adjusted_net_rating": round(team1.get("sos_adjusted_net_rating", 0) - team2.get("sos_adjusted_net_rating", 0), 2),
-    }
-
-
-def compute_recent_h2h(
-    h2h_results: Optional[H2HResults],
-    team1_name: str,
-    home_team: str
-) -> Optional[H2HRecent]:
-    """Compute recent H2H data (last 2 seasons)."""
-    if not h2h_results:
-        return None
-
-    current_year = get_current_nba_season_year()
-    if not current_year:
-        return None
-
-    # Get games from last 2 seasons only
-    recent_seasons = [current_year, current_year - 1]
-    recent_games: List[Dict[str, str]] = []
-
-    for season in recent_seasons:
-        season_games = h2h_results.get(season)
-        if season_games:
-            recent_games.extend([
-                {"winner": g["winner"], "home_team": g["home_team"]}
-                for g in season_games
-            ])
-
-    if len(recent_games) == 0:
-        return None
-
-    team1_wins = sum(1 for g in recent_games if g["winner"] == team1_name)
-    team2_wins = len(recent_games) - team1_wins
-
-    # Home team's record when hosting this matchup
-    home_games = [g for g in recent_games if g["home_team"] == home_team]
-    home_wins = sum(1 for g in home_games if g["winner"] == home_team)
-
-    return {
-        "team1_wins_last_2_seasons": team1_wins,
-        "team2_wins_last_2_seasons": team2_wins,
-        "last_winner": recent_games[-1]["winner"] if recent_games else "N/A",
-        "home_team_home_record": f"{home_wins}-{len(home_games) - home_wins}",
-        "games_last_2_seasons": len(recent_games),
-    }
-
-
-def compute_h2h_matchup_stats(
-    h2h_results: Optional[H2HResults],
-    team1_name: str,
-    team2_name: str
-) -> Optional[H2HMatchupStats]:
-    """Compute recency-weighted aggregated stats for each team from H2H box scores."""
-    if not h2h_results:
-        return None
-
-    weighted_games = _weighted_h2h_games(h2h_results)
-
-    # Filter to games with box scores and collect weighted stats
-    t1_accum = {"fgp": 0.0, "tpp": 0.0, "rebounds": 0.0, "assists": 0.0, "turnovers": 0.0, "disruption": 0.0}
-    t2_accum = {"fgp": 0.0, "tpp": 0.0, "rebounds": 0.0, "assists": 0.0, "turnovers": 0.0, "disruption": 0.0}
-    total_weight = 0.0
-
-    for game, w in weighted_games:
-        home_stats = game.get("home_statistics")
-        visitor_stats = game.get("visitor_statistics")
-
-        if not home_stats or not visitor_stats:
-            continue
-
-        is_team1_home = game["home_team"] == team1_name
-        t1_stats = home_stats if is_team1_home else visitor_stats
-        t2_stats = visitor_stats if is_team1_home else home_stats
-
-        t1_accum["fgp"] += float(t1_stats.get("fgp", 0) or 0) * w
-        t1_accum["tpp"] += float(t1_stats.get("tpp", 0) or 0) * w
-        t1_accum["rebounds"] += (t1_stats.get("totReb", 0) or 0) * w
-        t1_accum["assists"] += (t1_stats.get("assists", 0) or 0) * w
-        t1_accum["turnovers"] += (t1_stats.get("turnovers", 0) or 0) * w
-        t1_accum["disruption"] += ((t1_stats.get("steals", 0) or 0) + (t1_stats.get("blocks", 0) or 0)) * w
-
-        t2_accum["fgp"] += float(t2_stats.get("fgp", 0) or 0) * w
-        t2_accum["tpp"] += float(t2_stats.get("tpp", 0) or 0) * w
-        t2_accum["rebounds"] += (t2_stats.get("totReb", 0) or 0) * w
-        t2_accum["assists"] += (t2_stats.get("assists", 0) or 0) * w
-        t2_accum["turnovers"] += (t2_stats.get("turnovers", 0) or 0) * w
-        t2_accum["disruption"] += ((t2_stats.get("steals", 0) or 0) + (t2_stats.get("blocks", 0) or 0)) * w
-
-        total_weight += w
-
-    if total_weight == 0:
-        return None
-
-    def wavg(val: float) -> float:
-        return round(val / total_weight, 1)
-
-    return {
-        "team1": {
-            "avg_fgp": wavg(t1_accum["fgp"]),
-            "avg_tpp": wavg(t1_accum["tpp"]),
-            "avg_rebounds": wavg(t1_accum["rebounds"]),
-            "avg_assists": wavg(t1_accum["assists"]),
-            "avg_turnovers": wavg(t1_accum["turnovers"]),
-            "avg_disruption": wavg(t1_accum["disruption"]),
-        },
-        "team2": {
-            "avg_fgp": wavg(t2_accum["fgp"]),
-            "avg_tpp": wavg(t2_accum["tpp"]),
-            "avg_rebounds": wavg(t2_accum["rebounds"]),
-            "avg_assists": wavg(t2_accum["assists"]),
-            "avg_turnovers": wavg(t2_accum["turnovers"]),
-            "avg_disruption": wavg(t2_accum["disruption"]),
-        },
-    }
-
-
-def compute_h2h_patterns(h2h_results: Optional[H2HResults]) -> Optional[H2HPatterns]:
-    """Compute recency-weighted H2H patterns from results."""
-    if not h2h_results:
-        return None
-
-    weighted_games = _weighted_h2h_games(h2h_results)
-    if not weighted_games:
-        return None
-
-    weighted_total_score = 0.0
-    weighted_home_wins = 0.0
-    weighted_high_scoring = 0.0
-    weighted_close_games = 0.0
-
-    for game, w in weighted_games:
-        combined = game["home_points"] + game["visitor_points"]
-        weighted_total_score += combined * w
-
-        if game["winner"] == game["home_team"]:
-            weighted_home_wins += w
-        if combined > 220:
-            weighted_high_scoring += w
-        if abs(game["point_diff"]) <= 5:
-            weighted_close_games += w
-
-    return {
-        "avg_total": round(weighted_total_score, 1),
-        "home_win_pct": round(weighted_home_wins, 3),
-        "high_scoring_pct": round(weighted_high_scoring, 2),
-        "close_game_pct": round(weighted_close_games, 2),
     }
 
 
