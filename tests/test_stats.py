@@ -6,7 +6,8 @@ from unittest.mock import patch
 
 import pytest
 
-from workflow.stats import (
+from workflow.stats import generate_dashboard
+from workflow.stats_compute import (
     _pick_side,
     compute_all_breakdowns,
     compute_breakdown_table,
@@ -16,7 +17,6 @@ from workflow.stats import (
     compute_paper_overview,
     compute_rolling_win_rate,
     compute_skip_stats,
-    generate_dashboard,
 )
 
 
