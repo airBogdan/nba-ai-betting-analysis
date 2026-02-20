@@ -47,10 +47,6 @@ from .types import ActiveBet, CompletedBet, GameResult
 MAX_CONCURRENT_LLM_CALLS = 4
 
 
-
-
-
-
 async def reflect_on_bet(
     bet: ActiveBet, result: GameResult, outcome: str
 ) -> Optional[Dict[str, Any]]:
@@ -186,30 +182,20 @@ async def run_results_workflow(date: Optional[str] = None) -> None:
     clear_output_dir()
 
 
-async def _process_results_for_date(date: str, season: int) -> None:
-    """Process results for a single date."""
-    # Re-read active bets (may have been updated by previous date)
-    active = get_active_bets()
-    date_bets = [b for b in active if b["date"] == date]
+async def _fetch_game_results(
+    date_bets: List[ActiveBet], date: str, season: int
+) -> Optional[List[GameResult]]:
+    """Fetch game results for bets, using ID lookup or date fallback.
 
-    if not date_bets:
-        print(f"\nNo active bets for {date}")
-        return
-
-    # Separate bets by ID type (numeric API IDs vs legacy filename-based IDs)
-    numeric_id_bets = []
-    legacy_bets = []
-    for bet in date_bets:
-        if bet["game_id"].isdigit():
-            numeric_id_bets.append(bet)
-        else:
-            legacy_bets.append(bet)
+    Returns finished games, or None if no finished games found.
+    """
+    numeric_id_bets = [b for b in date_bets if b["game_id"].isdigit()]
+    legacy_bets = [b for b in date_bets if not b["game_id"].isdigit()]
 
     print(f"\nFetching results for {date}...")
     results: List[GameResult] = []
     seen_game_ids: set[str] = set()
 
-    # Fetch games by ID for new bets (more efficient - only fetch what we need)
     if numeric_id_bets:
         unique_game_ids = set(bet["game_id"] for bet in numeric_id_bets)
         print(f"  Fetching {len(unique_game_ids)} games by ID...")
@@ -220,7 +206,6 @@ async def _process_results_for_date(date: str, season: int) -> None:
                 results.append(result)
                 seen_game_ids.add(result["game_id"])
 
-    # Fallback: fetch all games by date for legacy bets (avoid duplicates)
     if legacy_bets:
         print(f"  Fetching all games for date (legacy bets)...")
         api_results = await get_games_by_date(season, date)
@@ -229,7 +214,6 @@ async def _process_results_for_date(date: str, season: int) -> None:
                 results.append(result)
                 seen_game_ids.add(result["game_id"])
 
-    # Filter to finished games
     finished = [r for r in results if r["status"] == "finished"]
 
     if not finished:
@@ -240,16 +224,21 @@ async def _process_results_for_date(date: str, season: int) -> None:
             print(f"  {len(in_progress)} games in progress")
         if scheduled:
             print(f"  {len(scheduled)} games scheduled")
-        return
+        return None
 
-    print(f"Found {len(finished)} finished games")
-    print(f"Processing {len(date_bets)} bets...")
+    return finished
 
-    # First pass: match bets to results and determine outcomes
+
+async def _resolve_bet_outcomes(
+    date_bets: List[ActiveBet], finished: List[GameResult]
+) -> Tuple[List[Tuple[ActiveBet, GameResult, str, float]], List[ActiveBet]]:
+    """Match bets to results and determine outcomes.
+
+    Returns (matched, unresolved) where matched is a list of
+    (bet, result, outcome, profit_loss) tuples.
+    """
     unresolved: List[ActiveBet] = []
-    matched: List[Tuple[ActiveBet, GameResult, str, float]] = []  # (bet, result, outcome, profit_loss)
-
-    # Cache box scores per game_id for player prop bets (avoid duplicate API calls)
+    matched: List[Tuple[ActiveBet, GameResult, str, float]] = []
     box_score_cache: Dict[str, Optional[list[dict]]] = {}
 
     for bet in date_bets:
@@ -259,17 +248,14 @@ async def _process_results_for_date(date: str, season: int) -> None:
             unresolved.append(bet)
             continue
 
-        # Player prop bets need box score data
         if bet.get("bet_type") == "player_prop":
             gid = bet["game_id"]
 
-            # Invalid game ID — can't fetch box score
             if not gid.isdigit():
                 print(f"  Void: invalid game_id {gid!r} for {bet.get('player_name')}")
                 save_void(bet, f"Invalid game_id: {gid!r}")
                 continue
 
-            # Fetch box score (cache per game, preserve None vs [] distinction)
             if gid not in box_score_cache:
                 box_score_cache[gid] = await get_game_player_stats(int(gid))
             box_score = box_score_cache[gid]
@@ -279,14 +265,12 @@ async def _process_results_for_date(date: str, season: int) -> None:
                 save_void(bet, f"Box score unavailable for game {gid}")
                 continue
 
-            # Unsupported prop type — can't evaluate
             prop_type = bet.get("prop_type", "")
             if prop_type not in PROP_TYPE_TO_STAT_KEY:
                 print(f"  Void: unsupported prop type {prop_type!r}")
                 save_void(bet, f"Unsupported prop type: {prop_type!r}")
                 continue
 
-            # Check if player actually played — DNP voids the bet
             actual_stat = _find_player_stat(
                 box_score, bet.get("player_name", ""), prop_type
             )
@@ -300,67 +284,92 @@ async def _process_results_for_date(date: str, season: int) -> None:
             matched.append((bet, result, outcome, profit_loss))
             continue
 
-        # Determine outcome based on bet type
         outcome, profit_loss = _evaluate_bet(bet, result)
         matched.append((bet, result, outcome, profit_loss))
 
-    # Second pass: get reflections with concurrency limiting
+    return matched, unresolved
+
+
+async def _build_completed_bets(
+    matched: List[Tuple[ActiveBet, GameResult, str, float]]
+) -> List[CompletedBet]:
+    """Run reflections and build CompletedBet records from matched outcomes."""
+    if not matched:
+        return []
+
+    print(f"  Reflecting on {len(matched)} bets...")
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_LLM_CALLS)
+
+    async def reflect_with_limit(bet: ActiveBet, result: GameResult, outcome: str):
+        async with semaphore:
+            return await reflect_on_bet(bet, result, outcome)
+
+    reflection_tasks = [
+        reflect_with_limit(bet, result, outcome)
+        for bet, result, outcome, _ in matched
+    ]
+    reflections = await asyncio.gather(*reflection_tasks, return_exceptions=True)
+
     completed: List[CompletedBet] = []
-    if matched:
-        print(f"  Reflecting on {len(matched)} bets...")
-        semaphore = asyncio.Semaphore(MAX_CONCURRENT_LLM_CALLS)
-
-        async def reflect_with_limit(bet: ActiveBet, result: GameResult, outcome: str):
-            async with semaphore:
-                return await reflect_on_bet(bet, result, outcome)
-
-        reflection_tasks = [
-            reflect_with_limit(bet, result, outcome)
-            for bet, result, outcome, _ in matched
-        ]
-        reflections = await asyncio.gather(*reflection_tasks, return_exceptions=True)
-
-        # Create completed bets
-        for (bet, result, outcome, profit_loss), reflection in zip(matched, reflections):
-            reflection_text = ""
-            structured_ref = None
-            if reflection and not isinstance(reflection, Exception):
-                reflection_text = reflection.get("summary", "")
-                structured_ref = {
-                    "edge_valid": reflection.get("edge_valid", True),
-                    "missed_factors": reflection.get("missed_factors", []),
-                    "process_assessment": reflection.get("process_assessment", "sound"),
-                    "key_lesson": reflection.get("key_lesson", ""),
-                    "summary": reflection_text,
-                }
-
-            actual_total = result["home_score"] + result["away_score"]
-            actual_margin = result["home_score"] - result["away_score"]  # Positive = home win
-
-            # Strip internal keys before creating completed bet
-            clean_bet = {k: v for k, v in bet.items() if not k.startswith("_")}
-            completed_bet: CompletedBet = {
-                **clean_bet,
-                "result": outcome,
-                "winner": result["winner"],
-                "final_score": _format_score(result),
-                "actual_total": actual_total,
-                "actual_margin": actual_margin,
-                "profit_loss": profit_loss,
-                "reflection": reflection_text,
+    for (bet, result, outcome, profit_loss), reflection in zip(matched, reflections):
+        reflection_text = ""
+        structured_ref = None
+        if reflection and not isinstance(reflection, Exception):
+            reflection_text = reflection.get("summary", "")
+            structured_ref = {
+                "edge_valid": reflection.get("edge_valid", True),
+                "missed_factors": reflection.get("missed_factors", []),
+                "process_assessment": reflection.get("process_assessment", "sound"),
+                "key_lesson": reflection.get("key_lesson", ""),
+                "summary": reflection_text,
             }
-            # Add actual_stat for player prop bets
-            if bet.get("bet_type") == "player_prop" and bet.get("_actual_stat") is not None:
-                completed_bet["actual_stat"] = bet["_actual_stat"]
-            if structured_ref:
-                completed_bet["structured_reflection"] = structured_ref
-            # Compute dollar P&L from payout
-            amount = bet.get("amount")
-            odds_price = bet.get("odds_price")
-            if amount and odds_price:
-                payout = calculate_payout(amount, odds_price, outcome)
-                completed_bet["dollar_pnl"] = round(payout - amount, 2)
-            completed.append(completed_bet)
+
+        actual_total = result["home_score"] + result["away_score"]
+        actual_margin = result["home_score"] - result["away_score"]
+
+        clean_bet = {k: v for k, v in bet.items() if not k.startswith("_")}
+        completed_bet: CompletedBet = {
+            **clean_bet,
+            "result": outcome,
+            "winner": result["winner"],
+            "final_score": _format_score(result),
+            "actual_total": actual_total,
+            "actual_margin": actual_margin,
+            "profit_loss": profit_loss,
+            "reflection": reflection_text,
+        }
+        if bet.get("bet_type") == "player_prop" and bet.get("_actual_stat") is not None:
+            completed_bet["actual_stat"] = bet["_actual_stat"]
+        if structured_ref:
+            completed_bet["structured_reflection"] = structured_ref
+        amount = bet.get("amount")
+        odds_price = bet.get("odds_price")
+        if amount and odds_price:
+            payout = calculate_payout(amount, odds_price, outcome)
+            completed_bet["dollar_pnl"] = round(payout - amount, 2)
+        completed.append(completed_bet)
+
+    return completed
+
+
+async def _process_results_for_date(date: str, season: int) -> None:
+    """Process results for a single date."""
+    active = get_active_bets()
+    date_bets = [b for b in active if b["date"] == date]
+
+    if not date_bets:
+        print(f"\nNo active bets for {date}")
+        return
+
+    finished = await _fetch_game_results(date_bets, date, season)
+    if not finished:
+        return
+
+    print(f"Found {len(finished)} finished games")
+    print(f"Processing {len(date_bets)} bets...")
+
+    matched, unresolved = await _resolve_bet_outcomes(date_bets, finished)
+    completed = await _build_completed_bets(matched)
 
     # Update history with completed bets
     if completed:
@@ -373,7 +382,6 @@ async def _process_results_for_date(date: str, season: int) -> None:
     other_bets = [b for b in active if b["date"] != date]
     save_active_bets(other_bets + unresolved)
 
-    # Append to journal
     if completed:
         append_journal_post_game(date, completed)
 
@@ -387,7 +395,6 @@ async def _process_results_for_date(date: str, season: int) -> None:
     else:
         print(f"\nResults: {wins}-{losses}, {net:+.1f} units")
 
-    # Print dollar P&L
     total_pnl = get_dollar_pnl()
     print(f"Dollar P&L: ${total_pnl:+.2f}")
 
