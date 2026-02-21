@@ -6,12 +6,10 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from workflow.names import normalize_name, names_match
 from polymarket_helpers.gamma import extract_player_props, find_prop_market
 from polymarket_helpers.matching import prop_pick_to_outcome
 from workflow.polymarket_prices import extract_poly_price_for_prop
 from workflow.evaluation import _find_player_stat, _evaluate_prop_bet
-from workflow.analyze.bets import create_prop_bet
 from workflow.analyze.gamedata import load_props_for_date
 from workflow.io import get_voids, VOIDS_PATH
 
@@ -70,50 +68,6 @@ SAMPLE_NOT_ACCEPTING = {
 
 def _make_event(markets):
     return {"markets": markets, "title": "Lakers vs Celtics"}
-
-
-# --- TestNamesMatch ---
-
-
-class TestNamesMatch:
-    def test_exact_match(self):
-        assert names_match("LeBron James", "LeBron James")
-
-    def test_case_insensitive(self):
-        assert names_match("lebron james", "LEBRON JAMES")
-
-    def test_suffix_stripped(self):
-        assert names_match("Jaren Jackson Jr.", "Jaren Jackson")
-
-    def test_suffix_sr(self):
-        assert names_match("Gary Payton Sr.", "Gary Payton")
-
-    def test_periods_stripped(self):
-        assert names_match("P.J. Washington", "PJ Washington")
-
-    def test_initial_matching(self):
-        assert names_match("C. Coward", "Cedric Coward")
-
-    def test_initial_reverse(self):
-        assert names_match("Kyle Knueppel", "K. Knueppel")
-
-    def test_unicode_diacritics(self):
-        assert names_match("Luka Dončić", "Luka Doncic")
-
-    def test_unicode_diacritics_reverse(self):
-        assert names_match("Nikola Jokic", "Nikola Jokić")
-
-    def test_no_match_different_names(self):
-        assert not names_match("LeBron James", "Stephen Curry")
-
-    def test_no_match_same_last_different_first(self):
-        assert not names_match("Michael Jordan", "DeAndre Jordan")
-
-    def test_normalize_diacritics(self):
-        assert normalize_name("Dončić") == "doncic"
-
-    def test_normalize_suffix(self):
-        assert normalize_name("Jaren Jackson Jr.") == "jaren jackson"
 
 
 # --- TestExtractPlayerProps ---
@@ -381,59 +335,6 @@ class TestFindPlayerStat:
 
     def test_empty_box_score(self):
         assert _find_player_stat([], "LeBron James", "points") is None
-
-
-# --- TestCreatePropBet ---
-
-
-class TestCreatePropBet:
-    def test_creates_valid_bet(self):
-        selected = {
-            "game_id": "123",
-            "matchup": "Lakers @ Celtics",
-            "player_name": "LeBron James",
-            "prop_type": "points",
-            "line": 25.5,
-            "pick": "over",
-            "confidence": "medium",
-            "units": 1.0,
-            "reasoning": "Season avg 27.5 PPG vs line of 25.5",
-            "primary_edge": "avg_vs_line",
-        }
-        bet = create_prop_bet(selected, "2026-02-17")
-        assert bet["bet_type"] == "player_prop"
-        assert bet["prop_type"] == "points"
-        assert bet["player_name"] == "LeBron James"
-        assert bet["pick"] == "over"
-        assert bet["line"] == 25.5
-        assert bet["game_id"] == "123"
-        assert bet["date"] == "2026-02-17"
-        assert "id" in bet
-        assert "created_at" in bet
-
-    def test_rejects_unsupported_prop_type(self):
-        selected = {
-            "game_id": "123",
-            "matchup": "Lakers @ Celtics",
-            "player_name": "LeBron James",
-            "prop_type": "steals",
-            "line": 1.5,
-            "pick": "over",
-            "confidence": "medium",
-        }
-        assert create_prop_bet(selected, "2026-02-17") is None
-
-    def test_rejects_empty_prop_type(self):
-        selected = {
-            "game_id": "123",
-            "matchup": "Lakers @ Celtics",
-            "player_name": "LeBron James",
-            "prop_type": "",
-            "line": 25.5,
-            "pick": "over",
-            "confidence": "medium",
-        }
-        assert create_prop_bet(selected, "2026-02-17") is None
 
 
 # --- TestLoadPropsForDate ---

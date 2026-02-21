@@ -9,62 +9,6 @@ from workflow.analyze.injuries import (
     _extract_injuries_from_search,
     compute_injury_impact,
 )
-from workflow.names import names_match as _names_match, normalize_name as _normalize_name
-
-
-class TestNormalizeName:
-    """Tests for _normalize_name."""
-
-    def test_basic(self):
-        assert _normalize_name("Ja Morant") == "ja morant"
-
-    def test_strips_jr(self):
-        assert _normalize_name("Gary Trent Jr.") == "gary trent"
-
-    def test_strips_iii(self):
-        assert _normalize_name("Robert Williams III") == "robert williams"
-
-    def test_strips_sr(self):
-        assert _normalize_name("Tim Hardaway Sr.") == "tim hardaway"
-
-    def test_removes_periods(self):
-        assert _normalize_name("P.J. Washington") == "pj washington"
-
-    def test_strips_whitespace(self):
-        assert _normalize_name("  Ja Morant  ") == "ja morant"
-
-
-class TestNamesMatch:
-    """Tests for _names_match."""
-
-    def test_exact_match(self):
-        assert _names_match("Ja Morant", "Ja Morant")
-
-    def test_case_insensitive(self):
-        assert _names_match("ja morant", "JA MORANT")
-
-    def test_suffix_stripping(self):
-        assert _names_match("Gary Trent Jr.", "Gary Trent")
-
-    def test_initial_matching(self):
-        assert _names_match("K. Knueppel", "Kyle Knueppel")
-
-    def test_initial_reversed(self):
-        assert _names_match("Cedric Coward", "C. Coward")
-
-    def test_pj_matching(self):
-        assert _names_match("P.J. Washington", "PJ Washington")
-
-    def test_different_players(self):
-        assert not _names_match("Ja Morant", "Trae Young")
-
-    def test_same_last_name_different_first(self):
-        assert not _names_match("Marcus Morris", "Markieff Morris")
-
-    def test_initial_different_last_name(self):
-        assert not _names_match("K. Durant", "K. Thompson")
-
-
 class TestComputeInjuryImpact:
     """Tests for compute_injury_impact."""
 

@@ -1,4 +1,4 @@
-"""Temp integration tests: injuries linked to rotation stats end-to-end."""
+"""Integration tests: injuries linked to rotation stats end-to-end."""
 
 import copy
 from unittest.mock import AsyncMock, patch
