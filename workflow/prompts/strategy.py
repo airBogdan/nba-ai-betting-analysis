@@ -113,6 +113,63 @@ Respond with JSON:
 If no changes are warranted, return an empty adjustments array with explanations in no_change_reasons."""
 
 
+UPDATE_PROPS_STRATEGY_PROMPT = """Review the player props betting strategy and propose small, targeted adjustments based on actual results.
+
+## Context
+{date_context}
+
+## Current Props Strategy
+{current_strategy}
+
+## Props Performance Summary (Record: {wins}-{losses}, ROI: {roi}%)
+{history_summary}
+
+## Recent Prop Bets (last 20)
+{recent_bets}
+
+## Instructions
+Propose 0-3 SMALL, SPECIFIC adjustments to the player props strategy.
+
+**Rules:**
+1. Each adjustment targets ONE specific rule, threshold, or guideline
+2. Each MUST be supported by data from 10+ prop bets in the relevant category
+3. Ignore any category marked "(small sample — not actionable)"
+4. Do NOT rewrite entire sections — change one thing per adjustment
+5. If data doesn't clearly support a change, propose 0 adjustments
+6. Check the Change Log at the bottom of the strategy to avoid reverting recent changes
+
+**What qualifies as an adjustment:**
+- Adjusting a threshold (e.g., "raise projection edge minimum from 10% to 15%")
+- Adding ONE specific rule backed by data (e.g., "avoid rebounds unders on centers vs small-ball teams")
+- Removing a rule that data shows doesn't work
+- Reweighting a factor based on prop results
+- Stat-specific guidance changes (e.g., "assists overs are hitting at 75% — increase confidence")
+
+**What does NOT qualify:**
+- Rewriting a section's structure or tone
+- Generic advice not tied to specific numbers
+- Changes based on fewer than 10 prop bets
+- Multiple changes bundled into one adjustment
+
+The `updated_content` field must contain the COMPLETE new content for that section — all lines, including unchanged ones. Do NOT include the ## header line itself.
+
+Respond with JSON:
+{{
+  "adjustments": [
+    {{
+      "section": "Exact name of the ## section to modify",
+      "updated_content": "Full replacement content for this section",
+      "change_description": "One-line summary of what changed",
+      "reasoning": "Data-backed justification citing actual W-L records or patterns"
+    }}
+  ],
+  "no_change_reasons": ["Why a specific area was left unchanged despite data"],
+  "summary": "1-sentence summary of this update"
+}}
+
+If no changes are warranted, return an empty adjustments array with explanations in no_change_reasons."""
+
+
 UPDATE_PAPER_STRATEGY_PROMPT = """Review the paper trading strategy and propose adjustments.
 
 ## Context

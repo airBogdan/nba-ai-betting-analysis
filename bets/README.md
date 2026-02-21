@@ -21,7 +21,8 @@ Creates analysis files in `output/` for today's games.
 python3.13 betting.py analyze
 ```
 - Analyzes all matchups for the date
-- Selects up to 3 bets (use `--max-bets N` to change)
+- Selects up to 3 game-level bets (use `--max-bets N` to change)
+- Runs a player props pipeline (points, rebounds, assists) on games without a game-level bet, using `props_strategy.md`
 - Saves to `active.json` and `journal/YYYY-MM-DD.md`
 - Paper trades all skipped games via a contrarian LLM analyst (saved to `paper/`)
 
@@ -63,7 +64,7 @@ Generates `dashboard.html` with performance charts (cumulative P&L, rolling win 
 ```bash
 python3.13 betting.py update-strategy
 ```
-Produces 1-3 targeted adjustments to `strategy.md` based on performance patterns. Includes paper trade aggregate stats (when 15+ paper trades exist) and actionable insights saved by `update-paper-strategy`.
+Produces 1-3 targeted adjustments to `strategy.md` based on game-level bet performance. Game-level and player prop histories are evaluated independently. After the game-level pass, updates `props_strategy.md` if 15+ prop bets exist. Includes paper trade aggregate stats (when 15+ paper trades exist) and actionable insights saved by `update-paper-strategy`.
 
 ### 8. Update paper strategy (after 15+ paper trades)
 ```bash
@@ -78,7 +79,8 @@ Evolves the paper trading strategy and saves actionable insights to `paper/insig
 - `active.json` - Open bets awaiting results
 - `history.json` - Completed bets with outcomes
 - `skips.json` - Skipped games with reasons and resolved outcomes
-- `strategy.md` - Evolving betting strategy
+- `strategy.md` - Evolving game-level betting strategy
+- `props_strategy.md` - Evolving player props betting strategy
 - `dashboard.html` - Generated stats dashboard
 - `journal/` - Daily entries with analysis and results
 - `paper/trades.json` - Active paper trades (contrarian bets on skipped games)

@@ -5,11 +5,14 @@ import pytest
 from workflow.prompts import MIN_ACTIONABLE_SAMPLE, format_history_summary
 from workflow.strategy import (
     MAX_CHANGE_LOG_ENTRIES,
+    _compute_summary,
     _parse_sections,
     _rebuild_strategy,
     aggregate_reflections,
     append_change_log,
     apply_adjustments,
+    format_recent_bets,
+    format_recent_prop_bets,
 )
 
 SAMPLE_STRATEGY = """# NBA Betting Strategy
@@ -241,3 +244,326 @@ class TestAggregateReflections:
         bets = self._make_bets(MIN_ACTIONABLE_SAMPLE)
         result = aggregate_reflections(bets)
         assert "not yet actionable" not in result
+
+
+# --- Helpers for bet fixtures ---
+
+
+def _make_bet(result="win", bet_type="moneyline", confidence="high",
+              primary_edge="ratings_edge", units=1.0, profit_loss=1.0,
+              date="2026-02-10", **extra):
+    bet = {
+        "result": result,
+        "bet_type": bet_type,
+        "confidence": confidence,
+        "primary_edge": primary_edge,
+        "units": units,
+        "profit_loss": profit_loss,
+        "date": date,
+        "matchup": "NYK @ BOS",
+        "pick": "NYK",
+    }
+    bet.update(extra)
+    return bet
+
+
+def _make_prop_bet(result="win", prop_type="points", confidence="medium",
+                   primary_edge="matchup_defense", units=1.0, profit_loss=0.8,
+                   date="2026-02-10", **extra):
+    return _make_bet(
+        result=result,
+        bet_type="player_prop",
+        confidence=confidence,
+        primary_edge=primary_edge,
+        units=units,
+        profit_loss=profit_loss,
+        date=date,
+        player_name="Jalen Brunson",
+        prop_type=prop_type,
+        line=25.5,
+        **extra,
+    )
+
+
+class TestComputeSummary:
+    def test_empty_bets(self):
+        s = _compute_summary([])
+        assert s["total_bets"] == 0
+        assert s["wins"] == 0
+        assert s["losses"] == 0
+        assert s["win_rate"] == 0.0
+        assert s["roi"] == 0.0
+        assert s["current_streak"] == "—"
+
+    def test_basic_record(self):
+        bets = [
+            _make_bet(result="win", units=1.0, profit_loss=0.9),
+            _make_bet(result="win", units=1.0, profit_loss=0.9),
+            _make_bet(result="loss", units=1.0, profit_loss=-1.0),
+        ]
+        s = _compute_summary(bets)
+        assert s["total_bets"] == 3
+        assert s["wins"] == 2
+        assert s["losses"] == 1
+        assert s["pushes"] == 0
+        assert s["win_rate"] == pytest.approx(2 / 3)
+
+    def test_win_rate_excludes_pushes_from_denominator(self):
+        """Win rate = wins / (wins + losses), pushes don't dilute it."""
+        bets = [
+            _make_bet(result="win"),
+            _make_bet(result="loss"),
+            _make_bet(result="push"),
+            _make_bet(result="push"),
+        ]
+        s = _compute_summary(bets)
+        assert s["total_bets"] == 4
+        assert s["pushes"] == 2
+        # win_rate should be 1/2, not 1/4
+        assert s["win_rate"] == pytest.approx(0.5)
+
+    def test_net_units_and_roi(self):
+        bets = [
+            _make_bet(result="win", units=2.0, profit_loss=1.8),
+            _make_bet(result="loss", units=1.0, profit_loss=-1.0),
+        ]
+        s = _compute_summary(bets)
+        assert s["net_units"] == pytest.approx(0.8)
+        # ROI = net_units / total_wagered (wins + losses only)
+        assert s["roi"] == pytest.approx(0.8 / 3.0)
+
+    def test_roi_excludes_push_wager_from_denominator(self):
+        """ROI denominator only includes bets that resolved (win/loss)."""
+        bets = [
+            _make_bet(result="win", units=1.0, profit_loss=1.0),
+            _make_bet(result="push", units=5.0, profit_loss=0.0),
+        ]
+        s = _compute_summary(bets)
+        # ROI = 1.0 / 1.0 = 100%, not 1.0 / 6.0
+        assert s["roi"] == pytest.approx(1.0)
+
+    def test_missing_profit_loss_defaults_to_zero(self):
+        """Bets missing profit_loss field don't break ROI calculation."""
+        bet = _make_bet(result="win", units=1.0)
+        del bet["profit_loss"]
+        s = _compute_summary([bet])
+        assert s["net_units"] == 0.0
+        assert s["roi"] == 0.0
+
+    def test_missing_units_defaults_to_zero(self):
+        """Bets missing units field don't break ROI calculation."""
+        bet = _make_bet(result="win", profit_loss=1.0)
+        del bet["units"]
+        s = _compute_summary([bet])
+        assert s["net_units"] == pytest.approx(1.0)
+        assert s["roi"] == 0.0  # no wagered units → 0 ROI, not division error
+
+    def test_streak_win(self):
+        bets = [
+            _make_bet(result="loss"),
+            _make_bet(result="win"),
+            _make_bet(result="win"),
+            _make_bet(result="win"),
+        ]
+        s = _compute_summary(bets)
+        assert s["current_streak"] == "WWW"
+
+    def test_streak_loss(self):
+        bets = [
+            _make_bet(result="win"),
+            _make_bet(result="loss"),
+            _make_bet(result="loss"),
+        ]
+        s = _compute_summary(bets)
+        assert s["current_streak"] == "LL"
+
+    def test_streak_ignores_trailing_pushes(self):
+        """Pushes at the end don't reset or appear in the streak."""
+        bets = [
+            _make_bet(result="loss"),
+            _make_bet(result="win"),
+            _make_bet(result="win"),
+            _make_bet(result="push"),
+        ]
+        s = _compute_summary(bets)
+        assert s["current_streak"] == "WW"
+
+    def test_by_confidence_groups_wins_and_losses_separately(self):
+        bets = [
+            _make_bet(result="win", confidence="high"),
+            _make_bet(result="win", confidence="high"),
+            _make_bet(result="loss", confidence="high"),
+            _make_bet(result="loss", confidence="low"),
+        ]
+        s = _compute_summary(bets)
+        assert s["by_confidence"]["high"] == {
+            "wins": 2, "losses": 1, "pushes": 0, "win_rate": pytest.approx(2 / 3),
+        }
+        assert s["by_confidence"]["low"] == {
+            "wins": 0, "losses": 1, "pushes": 0, "win_rate": pytest.approx(0.0),
+        }
+
+    def test_by_bet_type_groups_correctly(self):
+        bets = [
+            _make_bet(result="win", bet_type="moneyline"),
+            _make_bet(result="loss", bet_type="moneyline"),
+            _make_bet(result="win", bet_type="spread"),
+        ]
+        s = _compute_summary(bets)
+        assert s["by_bet_type"]["moneyline"]["wins"] == 1
+        assert s["by_bet_type"]["moneyline"]["losses"] == 1
+        assert s["by_bet_type"]["spread"]["wins"] == 1
+        assert s["by_bet_type"]["spread"]["losses"] == 0
+
+    def test_compatible_with_format_history_summary(self):
+        """_compute_summary output can be rendered by format_history_summary without errors."""
+        bets = [
+            _make_bet(result="win", confidence="high", units=2.0, profit_loss=1.8),
+            _make_bet(result="loss", confidence="medium", units=1.0, profit_loss=-1.0),
+            _make_bet(result="win", confidence="high", units=2.0, profit_loss=1.8),
+        ]
+        s = _compute_summary(bets)
+        text = format_history_summary(s)
+        assert "Record: 2-1" in text
+        assert "By Confidence:" in text
+        assert "high: 2-0" in text
+        assert "medium: 0-1" in text
+
+
+class TestBetTypeIsolation:
+    """Core intention: game-level and props strategies see only their own bets."""
+
+    def _mixed_history(self):
+        """5 game bets (3W 2L) + 4 prop bets (1W 3L) — different records."""
+        return [
+            _make_bet(result="win", bet_type="moneyline", confidence="high",
+                      units=2.0, profit_loss=1.8, date="2026-02-01"),
+            _make_bet(result="win", bet_type="moneyline", confidence="high",
+                      units=2.0, profit_loss=1.8, date="2026-02-02"),
+            _make_bet(result="win", bet_type="spread", confidence="medium",
+                      units=1.0, profit_loss=0.9, date="2026-02-03"),
+            _make_bet(result="loss", bet_type="moneyline", confidence="medium",
+                      units=1.0, profit_loss=-1.0, date="2026-02-04"),
+            _make_bet(result="loss", bet_type="spread", confidence="low",
+                      units=0.5, profit_loss=-0.5, date="2026-02-05"),
+            _make_prop_bet(result="win", date="2026-02-01"),
+            _make_prop_bet(result="loss", date="2026-02-02"),
+            _make_prop_bet(result="loss", date="2026-02-03"),
+            _make_prop_bet(result="loss", date="2026-02-04"),
+        ]
+
+    def test_game_filter_excludes_all_prop_bets(self):
+        bets = self._mixed_history()
+        game_bets = [b for b in bets if b.get("bet_type") != "player_prop"]
+        assert len(game_bets) == 5
+        assert all(b["bet_type"] != "player_prop" for b in game_bets)
+
+    def test_prop_filter_excludes_all_game_bets(self):
+        bets = self._mixed_history()
+        prop_bets = [b for b in bets if b.get("bet_type") == "player_prop"]
+        assert len(prop_bets) == 4
+        assert all(b["bet_type"] == "player_prop" for b in prop_bets)
+
+    def test_game_summary_reflects_only_game_bets(self):
+        bets = self._mixed_history()
+        game_bets = [b for b in bets if b.get("bet_type") != "player_prop"]
+        s = _compute_summary(game_bets)
+        # Game bets: 3W 2L
+        assert s["wins"] == 3
+        assert s["losses"] == 2
+        assert s["win_rate"] == pytest.approx(0.6)
+        assert "player_prop" not in s["by_bet_type"]
+
+    def test_prop_summary_reflects_only_prop_bets(self):
+        bets = self._mixed_history()
+        prop_bets = [b for b in bets if b.get("bet_type") == "player_prop"]
+        s = _compute_summary(prop_bets)
+        # Prop bets: 1W 3L
+        assert s["wins"] == 1
+        assert s["losses"] == 3
+        assert s["win_rate"] == pytest.approx(0.25)
+        assert "moneyline" not in s["by_bet_type"]
+        assert "spread" not in s["by_bet_type"]
+
+    def test_game_summary_formatted_text_has_no_prop_references(self):
+        """The rendered summary string for game strategy should never mention player_prop."""
+        bets = self._mixed_history()
+        game_bets = [b for b in bets if b.get("bet_type") != "player_prop"]
+        s = _compute_summary(game_bets)
+        text = format_history_summary(s)
+        assert "player_prop" not in text
+        assert "Record: 3-2" in text
+
+    def test_prop_summary_formatted_text_has_no_game_bet_types(self):
+        """The rendered summary for props strategy should not mention moneyline/spread."""
+        bets = self._mixed_history()
+        prop_bets = [b for b in bets if b.get("bet_type") == "player_prop"]
+        s = _compute_summary(prop_bets)
+        text = format_history_summary(s)
+        assert "moneyline" not in text
+        assert "spread" not in text
+        assert "Record: 1-3" in text
+
+    def test_recent_bets_formatting_excludes_other_type(self):
+        """format_recent_bets on game bets should not show prop bet details."""
+        bets = self._mixed_history()
+        game_bets = [b for b in bets if b.get("bet_type") != "player_prop"]
+        text = format_recent_bets(game_bets)
+        assert "Jalen Brunson" not in text
+        assert "player_prop" not in text
+
+    def test_recent_prop_bets_formatting_excludes_game_bets(self):
+        """format_recent_prop_bets on prop bets should not show game bet details."""
+        bets = self._mixed_history()
+        prop_bets = [b for b in bets if b.get("bet_type") == "player_prop"]
+        text = format_recent_prop_bets(prop_bets)
+        assert "moneyline" not in text
+        assert "spread" not in text
+
+    def test_filtered_summaries_add_up_to_total(self):
+        bets = self._mixed_history()
+        game_s = _compute_summary([b for b in bets if b.get("bet_type") != "player_prop"])
+        prop_s = _compute_summary([b for b in bets if b.get("bet_type") == "player_prop"])
+        total_s = _compute_summary(bets)
+        assert game_s["wins"] + prop_s["wins"] == total_s["wins"]
+        assert game_s["losses"] + prop_s["losses"] == total_s["losses"]
+        assert game_s["total_bets"] + prop_s["total_bets"] == total_s["total_bets"]
+
+    def test_legacy_bets_without_bet_type_included_in_game_filter(self):
+        """Old bets that predate prop support have no bet_type field.
+        They should be treated as game-level bets, not filtered out."""
+        legacy_bet = {"result": "win", "date": "2026-01-01", "matchup": "NYK @ BOS",
+                      "pick": "NYK", "confidence": "high", "units": 1.0,
+                      "profit_loss": 0.9, "primary_edge": "ratings_edge"}
+        # No "bet_type" key at all
+        assert "bet_type" not in legacy_bet
+        bets = [legacy_bet, _make_prop_bet(result="loss")]
+        game_bets = [b for b in bets if b.get("bet_type") != "player_prop"]
+        # Legacy bet should be included in game bets
+        assert len(game_bets) == 1
+        assert game_bets[0] is legacy_bet
+
+
+class TestFormatRecentPropBets:
+    def test_empty(self):
+        assert format_recent_prop_bets([]) == "No completed prop bets yet."
+
+    def test_formats_prop_fields(self):
+        bets = [_make_prop_bet(result="win", prop_type="points")]
+        text = format_recent_prop_bets(bets)
+        assert "[W]" in text
+        assert "Jalen Brunson" in text
+        assert "points" in text
+        assert "25.5" in text
+
+    def test_includes_reflection(self):
+        bet = _make_prop_bet(result="loss")
+        bet["reflection"] = "Line was sharp"
+        text = format_recent_prop_bets([bet])
+        assert "[L]" in text
+        assert "Reflection: Line was sharp" in text
+
+    def test_missing_fields_show_placeholder(self):
+        bet = {"result": "win"}
+        text = format_recent_prop_bets([bet])
+        assert "?" in text

@@ -49,7 +49,7 @@ LLM-powered bet selection and tracking system built on top of the matchup analys
 python betting.py init
 ```
 
-Creates the `bets/` directory with `active.json`, `history.json`, `strategy.md`, and the `paper/` subdirectory for paper trading.
+Creates the `bets/` directory with `active.json`, `history.json`, `strategy.md`, `props_strategy.md`, and the `paper/` subdirectory for paper trading.
 
 ### Analyze games and select bets
 
@@ -57,7 +57,7 @@ Creates the `bets/` directory with `active.json`, `history.json`, `strategy.md`,
 python betting.py analyze
 ```
 
-Loads all matchup files from `output/`, condenses them, and sends them to an LLM along with the current strategy. The LLM evaluates each game and selects up to 3 bets with reasoning. Results are saved to `bets/active.json` and a daily journal entry in `bets/journal/`. Skipped games are automatically paper traded by a contrarian LLM analyst (see Paper Trading below).
+Loads all matchup files from `output/`, condenses them, and sends them to an LLM along with the current strategy. The LLM evaluates each game and selects up to 3 bets with reasoning. After game-level bets are placed, a player props pipeline analyzes individual stat lines (points, rebounds, assists) on games without a game-level bet, using a dedicated props strategy. Results are saved to `bets/active.json` and a daily journal entry in `bets/journal/`. Skipped games are automatically paper traded by a contrarian LLM analyst (see Paper Trading below).
 
 | Flag | Description |
 |------|-------------|
@@ -122,7 +122,7 @@ The dashboard pulls from `bets/history.json` for bet performance and `bets/skips
 python betting.py update-strategy
 ```
 
-Requires 15+ completed bets. Aggregates performance patterns and reflections from history, then asks the LLM to produce 1-3 targeted adjustments to `bets/strategy.md`. Includes paper trade aggregate stats (when 15+ paper trades exist) and any actionable insights persisted by `update-paper-strategy`. Changes are appended to a change log for auditability. Previous strategy versions are archived (last 10 kept).
+Requires 15+ completed bets. Aggregates performance patterns and reflections from history, then asks the LLM to produce 1-3 targeted adjustments to `bets/strategy.md`. Game-level and player prop bets are evaluated independently — each strategy file only sees its own bet type's history. After the game-level pass, a props strategy pass runs if 15+ prop bets exist, updating `bets/props_strategy.md` separately. Includes paper trade aggregate stats (when 15+ paper trades exist) and any actionable insights persisted by `update-paper-strategy`. Changes are appended to a change log for auditability. Previous strategy versions are archived (last 10 kept).
 
 ### Paper trading
 
@@ -176,7 +176,8 @@ bets/
     history.json        # Completed bets with outcomes
     skips.json          # Skipped games with reasons and outcomes
     bankroll.json       # Bankroll tracking (auto-created at $1000)
-    strategy.md         # Evolving betting strategy
+    strategy.md         # Evolving game-level betting strategy
+    props_strategy.md   # Evolving player props betting strategy
     dashboard.html      # Generated stats dashboard
     journal/            # Daily analysis and results entries
     paper/              # Paper trading (contrarian bets on skipped games)

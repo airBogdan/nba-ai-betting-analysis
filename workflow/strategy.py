@@ -5,15 +5,84 @@ import re
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
+from .history import _categorize_edge
 from .io import BETS_DIR, JOURNAL_DIR, get_history, get_paper_history, get_paper_insights, read_text, write_text
 from .llm import complete_json
 from .prompts import (
     MIN_ACTIONABLE_SAMPLE,
     SYSTEM_ANALYST,
+    SYSTEM_PROPS_ANALYST,
+    UPDATE_PROPS_STRATEGY_PROMPT,
     UPDATE_STRATEGY_PROMPT,
     format_history_summary,
     format_paper_trade_insights,
 )
+
+def _compute_summary(bets: List[dict]) -> Dict[str, Any]:
+    """Compute a summary dict from a list of resolved bets.
+
+    Produces the same shape that format_history_summary() expects,
+    allowing filtered bet lists (e.g. game-only or props-only) to
+    generate accurate, isolated summaries.
+    """
+    wins = sum(1 for b in bets if b.get("result") == "win")
+    losses = sum(1 for b in bets if b.get("result") == "loss")
+    pushes = sum(1 for b in bets if b.get("result") == "push")
+    total = wins + losses + pushes
+    decided = wins + losses
+    win_rate = wins / decided if decided else 0.0
+    net_units = sum(b.get("profit_loss", 0) for b in bets)
+    total_wagered = sum(b.get("units", 0) for b in bets if b.get("result") in ("win", "loss"))
+    roi = net_units / total_wagered if total_wagered else 0.0
+
+    # Current streak
+    streak = ""
+    for b in reversed(bets):
+        r = b.get("result")
+        if r in ("win", "loss"):
+            ch = "W" if r == "win" else "L"
+            if not streak:
+                streak = ch
+            elif streak[0] == ch:
+                streak += ch
+            else:
+                break
+    streak = streak or "—"
+
+    def _breakdown(key: str, categorize: bool = False) -> Dict[str, Dict[str, Any]]:
+        groups: Dict[str, Dict[str, Any]] = {}
+        for b in bets:
+            val = b.get(key, "unknown")
+            if categorize:
+                val = _categorize_edge(val)
+            if val not in groups:
+                groups[val] = {"wins": 0, "losses": 0, "pushes": 0, "win_rate": 0.0}
+            r = b.get("result")
+            if r == "win":
+                groups[val]["wins"] += 1
+            elif r == "loss":
+                groups[val]["losses"] += 1
+            elif r == "push":
+                groups[val]["pushes"] += 1
+        for stats in groups.values():
+            denom = stats["wins"] + stats["losses"]
+            stats["win_rate"] = stats["wins"] / denom if denom else 0.0
+        return groups
+
+    return {
+        "total_bets": total,
+        "wins": wins,
+        "losses": losses,
+        "pushes": pushes,
+        "win_rate": win_rate,
+        "net_units": net_units,
+        "roi": roi,
+        "current_streak": streak,
+        "by_confidence": _breakdown("confidence"),
+        "by_bet_type": _breakdown("bet_type"),
+        "by_primary_edge": _breakdown("primary_edge", categorize=True),
+    }
+
 
 MIN_BETS_FOR_STRATEGY = 15
 MAX_ADJUSTMENTS_PER_RUN = 3
@@ -264,12 +333,12 @@ def _build_date_context(all_bets: List[dict]) -> str:
 
 async def generate_adjustments(
     current: str,
-    summary: dict,
     all_bets: List[dict],
     recent_bets: List[dict],
     recent_journals: str,
 ) -> Optional[Dict[str, Any]]:
     """Generate targeted adjustments via LLM. Returns parsed JSON or None."""
+    summary = _compute_summary(all_bets)
     reflection_patterns = aggregate_reflections(recent_bets)
 
     paper_history = get_paper_history()
@@ -291,12 +360,117 @@ async def generate_adjustments(
         recent_journals=recent_journals,
         reflection_patterns=reflection_patterns,
         paper_trade_insights=paper_insights,
-        wins=summary.get("wins", 0),
-        losses=summary.get("losses", 0),
-        roi=round(summary.get("roi", 0) * 100, 1),
+        wins=summary["wins"],
+        losses=summary["losses"],
+        roi=round(summary["roi"] * 100, 1),
     )
 
     return await complete_json(prompt, system=SYSTEM_ANALYST)
+
+
+def format_recent_prop_bets(bets: List[dict]) -> str:
+    """Format recent prop bets for the props strategy prompt."""
+    if not bets:
+        return "No completed prop bets yet."
+
+    lines = []
+    for bet in bets:
+        result_emoji = "W" if bet["result"] == "win" else "L"
+        player = bet.get("player_name", "?")
+        prop_type = bet.get("prop_type", "?")
+        line = bet.get("line", "?")
+        pick = bet.get("pick", "?")
+        date = bet.get("date", "?")
+        lines.append(
+            f"- [{result_emoji}] {date} {bet.get('matchup', '?')}: {player} {prop_type} "
+            f"{pick} {line} ({bet.get('confidence', '?')}, {bet.get('units', '?')}u) "
+            f"- {bet.get('primary_edge', '?')}"
+        )
+        if bet.get("reflection"):
+            lines.append(f"  Reflection: {bet['reflection']}")
+
+    return "\n".join(lines)
+
+
+async def generate_props_adjustments(
+    current: str,
+    prop_bets: List[dict],
+) -> Optional[Dict[str, Any]]:
+    """Generate targeted adjustments for props strategy via LLM."""
+    summary = _compute_summary(prop_bets)
+
+    prompt = UPDATE_PROPS_STRATEGY_PROMPT.format(
+        date_context=_build_date_context(prop_bets),
+        current_strategy=current,
+        history_summary=format_history_summary(summary),
+        recent_bets=format_recent_prop_bets(prop_bets[-20:]),
+        wins=summary["wins"],
+        losses=summary["losses"],
+        roi=round(summary["roi"] * 100, 1),
+    )
+
+    return await complete_json(prompt, system=SYSTEM_PROPS_ANALYST)
+
+
+async def _update_props_strategy(all_bets: List[dict]) -> None:
+    """Run the props strategy update pass."""
+    prop_bets = [b for b in all_bets if b.get("bet_type") == "player_prop"]
+
+    if len(prop_bets) < MIN_BETS_FOR_STRATEGY:
+        print(
+            f"\nProps strategy: need {MIN_BETS_FOR_STRATEGY} completed prop bets "
+            f"(have {len(prop_bets)}). Skipping."
+        )
+        return
+
+    current = read_text(BETS_DIR / "props_strategy.md")
+    if not current:
+        print("\nNo props_strategy.md found. Run 'betting.py init' first.")
+        return
+
+    print("\nAnalyzing prop bet performance for adjustments...")
+    result = await generate_props_adjustments(current, prop_bets)
+
+    if result is None:
+        print("Props strategy analysis failed.")
+        return
+
+    required_keys = {"section", "updated_content", "change_description", "reasoning"}
+    adjustments = [
+        adj
+        for adj in result.get("adjustments", [])
+        if isinstance(adj, dict) and required_keys <= adj.keys()
+    ]
+
+    if not adjustments:
+        print("No props strategy adjustments needed.")
+        for reason in result.get("no_change_reasons", []):
+            print(f"  - {reason}")
+        return
+
+    if len(adjustments) > MAX_ADJUSTMENTS_PER_RUN:
+        adjustments = adjustments[:MAX_ADJUSTMENTS_PER_RUN]
+
+    # Archive previous props strategy
+    versions_dir = BETS_DIR / "versions"
+    versions_dir.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    (versions_dir / f"props_strategy_{ts}.md").write_text(current)
+    for old in sorted(versions_dir.glob("props_strategy_*.md"), reverse=True)[10:]:
+        old.unlink()
+    print(f"  Archived → versions/props_strategy_{ts}.md")
+
+    updated = apply_adjustments(current, adjustments)
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    updated = append_change_log(updated, adjustments, date_str)
+    write_text(BETS_DIR / "props_strategy.md", updated)
+
+    print(f"\nApplied {len(adjustments)} props adjustment(s):")
+    for adj in adjustments:
+        print(f"  - [{adj['section']}] {adj['change_description']}")
+
+    if result.get("summary"):
+        print(f"\n{result['summary']}")
 
 
 async def run_strategy_workflow() -> None:
@@ -310,65 +484,67 @@ async def run_strategy_workflow() -> None:
         )
         return
 
+    # --- Game-level strategy pass ---
     current = read_text(BETS_DIR / "strategy.md")
     if not current:
         print("No strategy.md found. Run 'betting.py init' first.")
-        return
+    else:
+        print("Loading context...")
+        game_bets = [b for b in history["bets"] if b.get("bet_type") != "player_prop"]
+        recent_bets = game_bets[-20:]
+        recent_journals = load_recent_journals()
 
-    print("Loading context...")
-    recent_bets = history["bets"][-20:]
-    recent_journals = load_recent_journals()
-
-    print("Analyzing performance for adjustments...")
-    result = await generate_adjustments(
-        current, history["summary"], history["bets"], recent_bets, recent_journals
-    )
-
-    if result is None:
-        print("Strategy analysis failed. Check LLM errors above.")
-        return
-
-    required_keys = {"section", "updated_content", "change_description", "reasoning"}
-    adjustments = [
-        adj
-        for adj in result.get("adjustments", [])
-        if isinstance(adj, dict) and required_keys <= adj.keys()
-    ]
-
-    if not adjustments:
-        print("No adjustments needed based on current data.")
-        for reason in result.get("no_change_reasons", []):
-            print(f"  - {reason}")
-        return
-
-    if len(adjustments) > MAX_ADJUSTMENTS_PER_RUN:
-        print(
-            f"LLM proposed {len(adjustments)} adjustments "
-            f"(max {MAX_ADJUSTMENTS_PER_RUN}). Taking first {MAX_ADJUSTMENTS_PER_RUN}."
+        print("Analyzing performance for adjustments...")
+        result = await generate_adjustments(
+            current, game_bets, recent_bets, recent_journals
         )
-        adjustments = adjustments[:MAX_ADJUSTMENTS_PER_RUN]
 
-    # Archive previous strategy
-    versions_dir = BETS_DIR / "versions"
-    versions_dir.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-    (versions_dir / f"strategy_{ts}.md").write_text(current)
-    for old in sorted(versions_dir.glob("strategy_*.md"), reverse=True)[10:]:
-        old.unlink()
-    print(f"  Archived → versions/strategy_{ts}.md")
+        if result is None:
+            print("Strategy analysis failed. Check LLM errors above.")
+        else:
+            required_keys = {"section", "updated_content", "change_description", "reasoning"}
+            adjustments = [
+                adj
+                for adj in result.get("adjustments", [])
+                if isinstance(adj, dict) and required_keys <= adj.keys()
+            ]
 
-    # Apply adjustments to existing strategy
-    updated = apply_adjustments(current, adjustments)
+            if not adjustments:
+                print("No adjustments needed based on current data.")
+                for reason in result.get("no_change_reasons", []):
+                    print(f"  - {reason}")
+            else:
+                if len(adjustments) > MAX_ADJUSTMENTS_PER_RUN:
+                    print(
+                        f"LLM proposed {len(adjustments)} adjustments "
+                        f"(max {MAX_ADJUSTMENTS_PER_RUN}). Taking first {MAX_ADJUSTMENTS_PER_RUN}."
+                    )
+                    adjustments = adjustments[:MAX_ADJUSTMENTS_PER_RUN]
 
-    # Append change log entry
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    updated = append_change_log(updated, adjustments, date_str)
+                # Archive previous strategy
+                versions_dir = BETS_DIR / "versions"
+                versions_dir.mkdir(parents=True, exist_ok=True)
+                ts = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+                (versions_dir / f"strategy_{ts}.md").write_text(current)
+                for old in sorted(versions_dir.glob("strategy_*.md"), reverse=True)[10:]:
+                    old.unlink()
+                print(f"  Archived → versions/strategy_{ts}.md")
 
-    write_text(BETS_DIR / "strategy.md", updated)
+                # Apply adjustments to existing strategy
+                updated = apply_adjustments(current, adjustments)
 
-    print(f"\nApplied {len(adjustments)} adjustment(s):")
-    for adj in adjustments:
-        print(f"  - [{adj['section']}] {adj['change_description']}")
+                # Append change log entry
+                date_str = datetime.now().strftime("%Y-%m-%d")
+                updated = append_change_log(updated, adjustments, date_str)
 
-    if result.get("summary"):
-        print(f"\n{result['summary']}")
+                write_text(BETS_DIR / "strategy.md", updated)
+
+                print(f"\nApplied {len(adjustments)} adjustment(s):")
+                for adj in adjustments:
+                    print(f"  - [{adj['section']}] {adj['change_description']}")
+
+                if result.get("summary"):
+                    print(f"\n{result['summary']}")
+
+    # --- Props strategy pass ---
+    await _update_props_strategy(history["bets"])

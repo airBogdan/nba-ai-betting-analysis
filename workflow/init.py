@@ -82,6 +82,15 @@ def run_init() -> None:
     else:
         print(f"Already exists: {strategy_path}")
 
+    # Initialize props_strategy.md
+    props_strategy_path = BETS_DIR / "props_strategy.md"
+    if not props_strategy_path.exists():
+        from .analyze.props import INITIAL_PROPS_STRATEGY
+        write_text(props_strategy_path, INITIAL_PROPS_STRATEGY)
+        print(f"Created {props_strategy_path}")
+    else:
+        print(f"Already exists: {props_strategy_path}")
+
     # Initialize paper trading directory
     ensure_dir(PAPER_DIR)
     ensure_dir(PAPER_JOURNAL_DIR)

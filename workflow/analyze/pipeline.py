@@ -336,7 +336,8 @@ async def run_analyze_workflow(date: str, max_bets: int = 4, force: bool = False
         try:
             await _run_props_pipeline(
                 date, games, game_lookup, polymarket_events,
-                strategy, history, balance, max_props, game_ids_with_bets,
+                read_text(BETS_DIR / "props_strategy.md") or strategy,
+                history, balance, max_props, game_ids_with_bets,
             )
         except Exception as e:
             print(f"Player props pipeline failed (non-fatal): {e}")
