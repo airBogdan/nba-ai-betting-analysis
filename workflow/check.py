@@ -113,37 +113,19 @@ async def reevaluate_position(
     return await complete_json(prompt, system=SYSTEM_POSITION_MANAGER)
 
 
-def _get_live_price(bet: Dict[str, Any], events: List[dict]) -> Optional[float]:
-    """Get live price for a bet from Polymarket events.
-
-    Returns None if market is closed or not found.
-    """
-    result = resolve_token_id(bet, events)
-    if result is None:
-        return None
-    _, live_price = result
-    return live_price
-
-
 def execute_close(
     bet: Dict[str, Any],
     pnl_info: Dict[str, Any],
     recommendation: Dict[str, Any],
     client: Any,
-    events: List[dict],
+    token_id: str,
+    live_price: float,
     active_bets: List[Dict[str, Any]],
 ) -> bool:
     """Execute a SELL order and record to history.
 
     Returns True if sell succeeded, False otherwise.
     """
-    # Resolve token ID for sell
-    result = resolve_token_id(bet, events)
-    if result is None:
-        print(f"  Cannot resolve market for sell: {bet['matchup']}")
-        return False
-
-    token_id, live_price = result
     shares = pnl_info["shares"]
 
     try:
@@ -285,15 +267,16 @@ async def run_check_workflow() -> None:
     positions: List[Dict[str, Any]] = []
     for bet in placed_bets:
         events = events_by_date.get(bet["date"], [])
-        live_price = _get_live_price(bet, events)
+        result = resolve_token_id(bet, events)
 
-        if live_price is None:
+        if result is None:
             print(f"  {bet['matchup']}: market closed or not found, skipping")
             continue
 
+        token_id, live_price = result
         pnl = compute_position_pnl(bet["poly_price"], live_price, bet["amount"])
         adverse = is_adverse(pnl)
-        positions.append({"bet": bet, "pnl": pnl, "adverse": adverse})
+        positions.append({"bet": bet, "pnl": pnl, "adverse": adverse, "token_id": token_id, "live_price": live_price})
 
     if not positions:
         print("No open markets found for positions.")
@@ -343,13 +326,15 @@ async def run_check_workflow() -> None:
         if result:
             action = result.get("action", "HOLD")
             print(f"    Recommendation: {action} — {result.get('reasoning', '')[:80]}")
-            recommendations.append({"bet": bet, "pnl": pnl, "recommendation": result})
+            recommendations.append({"bet": bet, "pnl": pnl, "recommendation": result, "token_id": pos["token_id"], "live_price": pos["live_price"]})
         else:
             print(f"    LLM failed — defaulting to HOLD")
             recommendations.append({
                 "bet": bet,
                 "pnl": pnl,
                 "recommendation": {"action": "HOLD", "reasoning": "LLM evaluation failed"},
+                "token_id": pos["token_id"],
+                "live_price": pos["live_price"],
             })
 
     # Execute CLOSE recommendations
@@ -369,11 +354,10 @@ async def run_check_workflow() -> None:
             for rec in close_recs:
                 bet = rec["bet"]
                 pnl = rec["pnl"]
-                events = events_by_date.get(bet["date"], [])
 
                 success = execute_close(
                     bet, pnl, rec["recommendation"],
-                    client, events, active_bets,
+                    client, rec["token_id"], rec["live_price"], active_bets,
                 )
                 if success:
                     executions.append({"bet": bet, "pnl": pnl})

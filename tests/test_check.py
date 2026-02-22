@@ -113,23 +113,19 @@ class TestExecuteClose:
         bet = _make_bet()
         pnl = compute_position_pnl(0.47, 0.35, 20.0)
         recommendation = {"action": "CLOSE", "reasoning": "Edge gone"}
-        events = [{"title": "Celtics vs Lakers", "markets": []}]
 
         mock_client = MagicMock()
-        mock_client.create_market_order.return_value = "signed"
-        mock_client.post_order.return_value = {"status": "ok"}
 
         active_bets = [bet, _make_bet(id="other-bet")]
 
-        with patch("workflow.check.resolve_token_id", return_value=("token123", 0.35)), \
-             patch("workflow.check.sell_position", return_value={"status": "ok"}), \
+        with patch("workflow.check.sell_position", return_value={"status": "ok"}), \
              patch("workflow.check.get_history", return_value={"bets": [], "summary": {}}), \
              patch("workflow.check.save_history") as mock_save, \
              patch("workflow.check.update_history_with_bet") as mock_update:
 
             result = execute_close(
                 bet, pnl, recommendation,
-                mock_client, events, active_bets,
+                mock_client, "token123", 0.35, active_bets,
             )
 
         assert result is True
@@ -143,36 +139,17 @@ class TestExecuteClose:
         assert completed["dollar_pnl"] == round(pnl["current_value"] - bet["amount"], 2)
         mock_save.assert_called_once()
 
-    def test_sell_fails(self):
-        """Sell failure — position stays open."""
-        bet = _make_bet()
-        pnl = compute_position_pnl(0.47, 0.35, 20.0)
-        recommendation = {"action": "CLOSE", "reasoning": "Edge gone"}
-        events = []
-        active_bets = [bet]
-
-        with patch("workflow.check.resolve_token_id", return_value=None):
-            result = execute_close(
-                bet, pnl, recommendation,
-                MagicMock(), events, active_bets,
-            )
-
-        assert result is False
-        assert len(active_bets) == 1
-
     def test_sell_exception(self):
         """Sell throws — position stays open."""
         bet = _make_bet()
         pnl = compute_position_pnl(0.47, 0.35, 20.0)
         recommendation = {"action": "CLOSE", "reasoning": "Edge gone"}
-        events = []
         active_bets = [bet]
 
-        with patch("workflow.check.resolve_token_id", return_value=("token123", 0.35)), \
-             patch("workflow.check.sell_position", side_effect=Exception("Network error")):
+        with patch("workflow.check.sell_position", side_effect=Exception("Network error")):
             result = execute_close(
                 bet, pnl, recommendation,
-                MagicMock(), events, active_bets,
+                MagicMock(), "token123", 0.35, active_bets,
             )
 
         assert result is False
@@ -209,7 +186,7 @@ class TestRunCheckWorkflow:
         assert "no Polymarket events" in captured.out
 
     @patch("workflow.check.append_journal_check")
-    @patch("workflow.check._get_live_price", return_value=0.50)
+    @patch("workflow.check.resolve_token_id", return_value=("token123", 0.50))
     @patch("workflow.check.fetch_nba_events", return_value=[{"title": "test"}])
     @patch("workflow.check.get_active_bets")
     async def test_no_adverse_positions(self, mock_active, mock_events, mock_price, mock_journal, capsys):
@@ -227,7 +204,7 @@ class TestRunCheckWorkflow:
     @patch("workflow.check.execute_close", return_value=True)
     @patch("workflow.check.reevaluate_position")
     @patch("workflow.check.search_position_context")
-    @patch("workflow.check._get_live_price", return_value=0.30)
+    @patch("workflow.check.resolve_token_id", return_value=("token123", 0.30))
     @patch("workflow.check.fetch_nba_events", return_value=[{"title": "test"}])
     @patch("workflow.check.get_active_bets")
     async def test_adverse_triggers_reeval_and_close(
@@ -264,7 +241,7 @@ class TestRunCheckWorkflow:
     @patch("workflow.check.append_journal_check")
     @patch("workflow.check.reevaluate_position")
     @patch("workflow.check.search_position_context")
-    @patch("workflow.check._get_live_price", return_value=0.30)
+    @patch("workflow.check.resolve_token_id", return_value=("token123", 0.30))
     @patch("workflow.check.fetch_nba_events", return_value=[{"title": "test"}])
     @patch("workflow.check.get_active_bets")
     async def test_adverse_hold_no_sell(
@@ -291,7 +268,7 @@ class TestRunCheckWorkflow:
     @patch("workflow.check.append_journal_check")
     @patch("workflow.check.reevaluate_position", return_value=None)
     @patch("workflow.check.search_position_context", return_value=None)
-    @patch("workflow.check._get_live_price", return_value=0.30)
+    @patch("workflow.check.resolve_token_id", return_value=("token123", 0.30))
     @patch("workflow.check.fetch_nba_events", return_value=[{"title": "test"}])
     @patch("workflow.check.get_active_bets")
     async def test_llm_failure_defaults_hold(
