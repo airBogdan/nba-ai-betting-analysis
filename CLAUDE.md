@@ -56,3 +56,59 @@ Optional: `INJURIES_API_KEY`, `THE_ODDS_API`, `POLYMARKET_PRIVATE_KEY` / `POLYMA
 - TypedDicts throughout — not enforced at runtime, safe to add optional fields
 - Season logic (`helpers/utils.py::get_current_nba_season_year()`): Sep-Dec → current year, Jan-May → previous year, Jun-Aug → None
 - `run.sh` wraps commands for cron with venv, `.env`, logging, and Telegram notifications (see `CRONS.md`)
+
+## Before Editing Any File
+
+- **Read the file first.** Do not edit a file you haven't read in this session.
+- **Check its length.** If a module is already large, extract before adding.
+
+## Code Style
+
+### Function Readability
+
+- If a function exceeds ~50–60 lines, extract blocks into named helper functions.
+- Function names should make intent obvious — the caller should read like a sequence of steps, not a wall of implementation detail.
+- Prefer many small functions over few large ones. A 5-line function with a clear name is better than an inline block with a comment.
+- Naming: booleans use `is_x`/`has_x`/`can_x`. Use the same name for the same concept everywhere.
+
+### File Size Guidelines
+
+| File type | Target range | Action when exceeding |
+|---|---|---|
+| Utility / helper (`helpers/`) | 100–300 lines | Split into focused modules or subdirectory package |
+| Workflow module (`workflow/`) | 150–400 lines | Extract helper functions into separate files |
+| Test file (`tests/`) | 200–600 lines | Split by feature area |
+
+Some existing files exceed these ranges (e.g., `helpers/games.py`, `workflow/strategy.py`, intent test files). When modifying them, look for opportunities to extract — don't just pile on.
+
+### Data & Error Handling
+
+- **Single source of truth.** Don't duplicate data across JSON files. If a value can be derived, derive it.
+- **Validate at boundaries, trust internally.** Check data from JSON files, API responses, and user input. Don't litter internal functions with defensive checks.
+- Always handle async errors. Don't leave coroutines unhandled.
+- User-facing operations that fail → raise or log so the error is visible in output/Telegram.
+- Background operations that fail → `logging.error` and fall back to safe defaults.
+- Never swallow errors silently — at minimum log so failures are visible.
+
+## Testing
+
+- **Test intent, not implementation.** Ask "what would break if this function had a bug?" — not "what does this function currently return?"
+- **Tests should survive refactoring.** If the implementation changes but behavior stays the same, tests should still pass. Test inputs/outputs, not internal details.
+- **Cover edge cases and failure modes.** The happy path usually works. Test boundaries: empty lists, None inputs, missing keys, off-by-one.
+- **Test names describe expected behavior**, not implementation: `test_completes_bet_and_updates_history` not `test_calls_save_with_updated_dict`.
+
+## When Making Changes
+
+- **If existing code looks wrong but works, ask before changing it.** It may be intentional.
+- Don't add features, refactoring, or "improvements" beyond what was asked.
+- Don't add new pip dependencies without asking first.
+- Don't add comments explaining *what* code does — use clear function names instead. Only comment *why* when the reason isn't obvious.
+- When extracting from a large file, create a new file in the same directory.
+
+### Before Claiming Done
+
+- Run `pytest` to verify no regressions.
+- Verify there are no obvious import errors in the changed files.
+- If you added a new import, confirm the target exists in the source module.
+- If you changed a function signature, grep for all call sites and verify they match.
+- If the change affects user-visible behavior, describe what the user should test.
