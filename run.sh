@@ -59,44 +59,42 @@ send_telegram() {
         -d chat_id="$TELEGRAM_CHAT_ID" > /dev/null 2>&1
 }
 
-send_telegram_file() {
-    [ -z "${TELEGRAM_BOT_TOKEN:-}" ] && return
-    [ -z "${TELEGRAM_CHAT_ID:-}" ] && return
-    local filepath="$1"
-    local caption="${2:-}"
-    [ ! -f "$filepath" ] && return
-    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
-        -F chat_id="$TELEGRAM_CHAT_ID" \
-        -F document=@"$filepath" \
-        -F caption="$caption" > /dev/null 2>&1
-}
 
 # Notify on specific commands
 case "$*" in
     *"betting.py analyze"*)
         if [ $EXIT_CODE -eq 0 ]; then
-            ACTIVE="$PROJECT_DIR/bets/active.json"
-            if [ -f "$ACTIVE" ] && [ "$(cat "$ACTIVE")" != "[]" ]; then
-                SUMMARY=$(grep -v '^===== \|^Command: \|^$' "$LOGFILE" | tail -20)
-                send_telegram "$(printf 'Betting Analyze Complete (%s)\n\n%s' "$DATE" "$SUMMARY")"
-                send_telegram_file "$ACTIVE" "Active bets — $DATE"
+            SUMMARY=$(grep -E '^Placed .+ bets |^  .+- \$|^Balance:' "$LOGFILE")
+            if [ -n "$SUMMARY" ]; then
+                send_telegram "$(printf 'Bets — %s\n\n%s' "$DATE" "$SUMMARY")"
             fi
         else
-            send_telegram "$(printf 'Betting Analyze FAILED (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
+            send_telegram "$(printf 'Analyze FAILED (%s)\nExit code: %d' "$DATE" "$EXIT_CODE")"
+        fi
+        ;;
+    *"polymarket.py"*)
+        if [ $EXIT_CODE -eq 0 ]; then
+            SUMMARY=$(grep -E '^  OK:|^Done:' "$LOGFILE")
+            if echo "$SUMMARY" | grep -q 'OK:'; then
+                send_telegram "$(printf 'Polymarket — %s\n\n%s' "$DATE" "$SUMMARY")"
+            fi
+        else
+            send_telegram "$(printf 'Polymarket FAILED (%s)\nExit code: %d' "$DATE" "$EXIT_CODE")"
         fi
         ;;
     *"betting.py results"*)
         if [ $EXIT_CODE -eq 0 ]; then
-            if ! grep -q "No active bets" "$LOGFILE"; then
-                SUMMARY=$(grep -v '^===== \|^Command: \|^$' "$LOGFILE" | tail -20)
-                send_telegram "$(printf 'Betting Results Complete (%s)\n\n%s' "$DATE" "$SUMMARY")"
-                JOURNAL=$(ls -t "$PROJECT_DIR/bets/journal/"*.md 2>/dev/null | head -1)
-                if [ -n "$JOURNAL" ]; then
-                    send_telegram_file "$JOURNAL" "Journal — $(basename "$JOURNAL" .md)"
-                fi
+            SUMMARY=$(grep -E '^Results:|^Dollar P&L:|bet\(s\) voided|bets still pending' "$LOGFILE")
+            if [ -n "$SUMMARY" ]; then
+                send_telegram "$(printf 'Results — %s\n\n%s' "$DATE" "$SUMMARY")"
             fi
         else
-            send_telegram "$(printf 'Betting Results FAILED (%s)\nExit code: %d\nCheck: %s' "$DATE" "$EXIT_CODE" "$LOGFILE")"
+            send_telegram "$(printf 'Results FAILED (%s)\nExit code: %d' "$DATE" "$EXIT_CODE")"
+        fi
+        ;;
+    *)
+        if [ $EXIT_CODE -ne 0 ]; then
+            send_telegram "$(printf 'FAILED: %s (%s)\nExit code: %d' "$*" "$DATE" "$EXIT_CODE")"
         fi
         ;;
 esac

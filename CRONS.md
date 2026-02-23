@@ -39,7 +39,12 @@ Install with: `crontab -e` and paste the above, or pipe a file with `crontab cro
 
 ## Telegram Notifications
 
-`run.sh` sends a Telegram message after `betting.py analyze` and `betting.py results` complete (success or failure). On success it also sends `bets/active.json` (after analyze) and the daily journal entry (after results) as file attachments.
+`run.sh` sends targeted Telegram messages:
+
+- **analyze** — placed bets with amounts and balance (only if bets were selected)
+- **polymarket** — confirmed placements (only if bets were placed)
+- **results** — W-L record, units, and dollar P&L
+- **any command** — failure alert with exit code
 
 Add to `.env`:
 
