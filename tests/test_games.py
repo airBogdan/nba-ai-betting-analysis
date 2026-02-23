@@ -7,6 +7,8 @@ import pytest
 from helpers.games import (
     process_game_stats,
     process_h2h_results,
+)
+from helpers.h2h_stats import (
     compute_h2h_summary,
     compute_quarter_analysis,
     _weighted_h2h_games,
@@ -265,13 +267,13 @@ class TestComputeH2hSummary:
             ],
         }
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_total_games(self, mock_season, sample_h2h_results):
         """Total games counted correctly."""
         result = compute_h2h_summary(sample_h2h_results, "Hawks", "76ers")
         assert result["total_games"] == 5
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_win_counts(self, mock_season, sample_h2h_results):
         """Win counts computed correctly."""
         result = compute_h2h_summary(sample_h2h_results, "Hawks", "76ers")
@@ -279,14 +281,14 @@ class TestComputeH2hSummary:
         assert result["team1_wins_all_time"] == 3
         assert result["team2_wins_all_time"] == 2
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_win_pct(self, mock_season, sample_h2h_results):
         """Win percentage computed correctly."""
         result = compute_h2h_summary(sample_h2h_results, "Hawks", "76ers")
         # 3/5 = 0.6
         assert result["team1_win_pct"] == 0.6
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_home_away_splits(self, mock_season, sample_h2h_results):
         """Home/away splits computed correctly."""
         result = compute_h2h_summary(sample_h2h_results, "Hawks", "76ers")
@@ -297,7 +299,7 @@ class TestComputeH2hSummary:
         assert result["team1_away_wins"] == 1
         assert result["team1_away_losses"] == 1
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_avg_point_diff(self, mock_season, sample_h2h_results):
         """Average point differential weighted toward recent season."""
         result = compute_h2h_summary(sample_h2h_results, "Hawks", "76ers")
@@ -306,7 +308,7 @@ class TestComputeH2hSummary:
         # = 7*0.3125 + (-8)*0.3125 + 5*0.125 + 18*0.125 + (-7)*0.125 = 1.6875
         assert result["avg_point_diff"] == 1.7
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_avg_points(self, mock_season, sample_h2h_results):
         """Average points per team weighted toward recent season."""
         result = compute_h2h_summary(sample_h2h_results, "Hawks", "76ers")
@@ -316,27 +318,27 @@ class TestComputeH2hSummary:
         # 76ers: 108*0.3125 + 120*0.3125 + 105*0.125 + 100*0.125 + 102*0.125 = 109.625
         assert result["team2_avg_points"] == 109.6
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_last_5_games(self, mock_season, sample_h2h_results):
         """Last 5 game winners tracked correctly."""
         result = compute_h2h_summary(sample_h2h_results, "Hawks", "76ers")
         assert len(result["last_5_games"]) == 5
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_close_games(self, mock_season, sample_h2h_results):
         """Close games (margin <= 5) counted correctly."""
         result = compute_h2h_summary(sample_h2h_results, "Hawks", "76ers")
         # Games with margin <= 5: game 3 (5)
         assert result["close_games"] == 1
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_blowouts(self, mock_season, sample_h2h_results):
         """Blowouts (margin >= 15) counted correctly."""
         result = compute_h2h_summary(sample_h2h_results, "Hawks", "76ers")
         # Games with margin >= 15: game 4 (18)
         assert result["blowouts"] == 1
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_recent_trend_team1_hot(self, mock_season):
         """Recent trend is team1_hot when team1 won 4+ of last 5."""
         h2h = {
@@ -356,7 +358,7 @@ class TestComputeH2hSummary:
         result = compute_h2h_summary(h2h, "A", "B")
         assert result["recent_trend"] == "team1_hot"
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_recent_trend_team2_hot(self, mock_season):
         """Recent trend is team2_hot when team1 won 1 or fewer of last 5."""
         h2h = {
@@ -376,7 +378,7 @@ class TestComputeH2hSummary:
         result = compute_h2h_summary(h2h, "A", "B")
         assert result["recent_trend"] == "team2_hot"
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_recent_trend_balanced(self, mock_season):
         """Recent trend is balanced when split."""
         h2h = {
@@ -410,14 +412,14 @@ class TestComputeQuarterAnalysis:
             ],
         }
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_returns_none_for_no_quarter_data(self, mock_season):
         """Returns None when no games have quarter data."""
         h2h = {2024: [{"home_team": "A", "winner": "A"}]}
         result = compute_quarter_analysis(h2h, "A", "B")
         assert result is None
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_avg_quarter_totals(self, mock_season, sample_h2h_with_quarters):
         """Average quarter totals computed correctly."""
         result = compute_quarter_analysis(sample_h2h_with_quarters, "Hawks", "76ers")
@@ -426,7 +428,7 @@ class TestComputeQuarterAnalysis:
         # Q2: (30+28) + (28+30) = 116/2 = 58.0
         assert result["avg_q2_total"] == 58.0
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_team_quarter_averages(self, mock_season, sample_h2h_with_quarters):
         """Per-team quarter averages computed correctly."""
         result = compute_quarter_analysis(sample_h2h_with_quarters, "Hawks", "76ers")
@@ -435,7 +437,7 @@ class TestComputeQuarterAnalysis:
         # 76ers Q1: 25 (away game 1) + 30 (home game 2) = 55/2 = 27.5
         assert result["team2_q1_avg"] == 27.5
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_half_averages(self, mock_season, sample_h2h_with_quarters):
         """First and second half averages computed correctly."""
         result = compute_quarter_analysis(sample_h2h_with_quarters, "Hawks", "76ers")
@@ -445,7 +447,7 @@ class TestComputeQuarterAnalysis:
         # Avg: 225/2 = 112.5
         assert result["avg_first_half"] == 112.5
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_halftime_leader_wins(self, mock_season, sample_h2h_with_quarters):
         """Halftime leader win percentage computed correctly."""
         result = compute_quarter_analysis(sample_h2h_with_quarters, "Hawks", "76ers")
@@ -454,7 +456,7 @@ class TestComputeQuarterAnalysis:
         # Both halftime leaders won: 2/2 = 1.0
         assert result["halftime_leader_wins_pct"] == 1.0
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_handles_incomplete_quarter_data(self, mock_season):
         """Filters out games with incomplete quarter data."""
         h2h = {
@@ -475,7 +477,7 @@ class TestComputeQuarterAnalysis:
 class TestWeightedH2hGames:
     """Tests for _weighted_h2h_games helper."""
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_weights_sum_to_one(self, mock_season):
         """Weights from 3 seasons sum to 1.0."""
         h2h = {
@@ -487,7 +489,7 @@ class TestWeightedH2hGames:
         total = sum(w for _, w in result)
         assert abs(total - 1.0) < 1e-9
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_recent_season_heavier(self, mock_season):
         """Current season games have higher per-game weight than older ones."""
         h2h = {
@@ -501,7 +503,7 @@ class TestWeightedH2hGames:
         # 1 game per season, weights proportional to (1.0, 0.6, 0.3)
         assert weights[0] > weights[1] > weights[2]
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_single_season_uniform(self, mock_season):
         """Single season gives all games equal weight."""
         h2h = {2024: [{"id": 1}, {"id": 2}, {"id": 3}]}
@@ -514,7 +516,7 @@ class TestWeightedH2hGames:
         """Empty input returns empty list."""
         assert _weighted_h2h_games({}) == []
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=None)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=None)
     def test_offseason_uniform(self, mock_season):
         """Off-season returns uniform weights."""
         h2h = {

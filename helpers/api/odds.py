@@ -1,5 +1,7 @@
 """Odds API client for betting lines from the-odds-api."""
 
+import asyncio
+import logging
 import os
 from typing import Any, Dict, List, Optional
 
@@ -55,8 +57,8 @@ async def fetch_nba_odds(
                     print(f"Odds API error {response.status}: {error_text[:100]}")
                     return None
                 return await response.json()
-    except Exception as e:
-        print(f"Odds API error: {e}")
+    except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+        logging.error("Odds API error: %s", e)
         return None
 
 
@@ -81,7 +83,7 @@ async def fetch_event_alternates(event_id: str) -> Optional[Dict[str, Any]]:
                 if response.status != 200:
                     return None
                 return await response.json()
-    except Exception:
+    except (aiohttp.ClientError, asyncio.TimeoutError):
         return None
 
 

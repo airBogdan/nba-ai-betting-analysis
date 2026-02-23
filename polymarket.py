@@ -1,5 +1,6 @@
 """Place bets on Polymarket."""
 
+import logging
 import os
 
 from dotenv import load_dotenv
@@ -106,7 +107,8 @@ def get_polymarket_balance() -> Optional[float]:
             BalanceAllowanceParams(asset_type=AssetType.COLLATERAL)
         )
         return float(result.get("balance", 0)) / 1e6
-    except Exception:
+    except Exception as e:
+        logging.error("Polymarket balance check failed: %s", e)
         return None
 
 

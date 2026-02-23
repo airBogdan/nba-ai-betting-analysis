@@ -307,7 +307,7 @@ class TestComputeH2hPatterns:
         assert compute_h2h_patterns(None) is None
         assert compute_h2h_patterns({}) is None
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_avg_total(self, mock_season):
         """Computes average combined score."""
         h2h = {
@@ -322,7 +322,7 @@ class TestComputeH2hPatterns:
         # (215 + 235) / 2 = 225
         assert result["avg_total"] == 225.0
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_home_win_pct(self, mock_season):
         """Computes home team win percentage."""
         h2h = {
@@ -336,7 +336,7 @@ class TestComputeH2hPatterns:
         result = compute_h2h_patterns(h2h)
         assert result["home_win_pct"] == 0.5
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_high_scoring_pct(self, mock_season):
         """Computes percentage of games over 220."""
         h2h = {
@@ -350,7 +350,7 @@ class TestComputeH2hPatterns:
         result = compute_h2h_patterns(h2h)
         assert result["high_scoring_pct"] == 0.5
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_computes_close_game_pct(self, mock_season):
         """Computes percentage of close games (margin <= 5)."""
         h2h = {
@@ -372,14 +372,14 @@ class TestComputeH2hMatchupStats:
         """Returns None for empty results."""
         assert compute_h2h_matchup_stats(None, "A", "B") is None
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_returns_none_for_no_box_scores(self, mock_season):
         """Returns None when no games have box scores."""
         h2h = {2024: [{"home_team": "A", "visitor_team": "B"}]}
         result = compute_h2h_matchup_stats(h2h, "A", "B")
         assert result is None
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_aggregates_team_stats(self, mock_season):
         """Aggregates stats for each team from box scores."""
         h2h = {
@@ -766,7 +766,7 @@ class TestRecentScoringTrend:
 class TestComputeH2hPatternsMultiSeason:
     """Tests for compute_h2h_patterns with multi-season recency weighting."""
 
-    @patch("helpers.games.get_current_nba_season_year", return_value=2024)
+    @patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2024)
     def test_avg_total_skews_toward_recent(self, mock_season):
         """avg_total should weight recent season more heavily."""
         h2h = {

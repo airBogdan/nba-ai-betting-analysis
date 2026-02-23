@@ -23,7 +23,8 @@ from helpers.api import (
     extract_odds,
 )
 from helpers.teams import get_teams_standings
-from helpers.games import h2h, compute_h2h_summary, add_game_statistics_to_h2h_results
+from helpers.games import h2h, add_game_statistics_to_h2h_results
+from helpers.h2h_stats import compute_h2h_summary
 from helpers.matchup import build_matchup_analysis
 
 

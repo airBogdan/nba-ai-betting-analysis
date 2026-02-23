@@ -10,7 +10,6 @@ from ..types import H2HResults, H2HSummary, QuarterAnalysis
 
 
 # === Constants ===
-# TODO: for user, test and tweak these variables based on betting results
 
 # Rest/schedule thresholds
 BACK_TO_BACK_THRESHOLD = 1

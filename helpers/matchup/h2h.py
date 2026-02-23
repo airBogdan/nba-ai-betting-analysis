@@ -2,7 +2,7 @@
 
 from typing import Dict, List, Optional
 
-from ..games import _weighted_h2h_games
+from ..h2h_stats import _weighted_h2h_games
 from .types import H2HMatchupStats, H2HPatterns, H2HRecent
 from ..types import H2HResults
 from ..utils import get_current_nba_season_year

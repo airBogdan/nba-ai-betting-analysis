@@ -22,7 +22,7 @@ from .prompts import (
     compact_json,
     format_paper_history_summary,
 )
-from .strategy import apply_adjustments, append_change_log
+from .strategy_sections import apply_adjustments, append_change_log
 
 CONFIDENCE_TO_UNITS = {"low": 0.5, "medium": 1.0, "high": 2.0}
 MIN_PAPER_TRADES_FOR_STRATEGY = 15

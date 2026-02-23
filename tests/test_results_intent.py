@@ -1038,15 +1038,15 @@ class TestSkipResolution:
     """Skipped games should have their outcomes recorded for learning."""
 
     def test_skips_resolved_by_game_id(self):
-        from workflow.results import _resolve_skips_for_date
+        from workflow.results_resolution import _resolve_skips_for_date
 
         skips = [_make_skip(game_id="12345")]
         finished = [_make_game_result(game_id="12345")]
 
-        with patch("workflow.results.get_skips", return_value=skips), \
-             patch("workflow.results.get_games_by_date", new_callable=AsyncMock, return_value=["game"]), \
-             patch("workflow.results.parse_game_results", return_value=finished), \
-             patch("workflow.results.save_skips_all") as mock_save:
+        with patch("workflow.results_resolution.get_skips", return_value=skips), \
+             patch("workflow.results_resolution.get_games_by_date", new_callable=AsyncMock, return_value=["game"]), \
+             patch("workflow.results_resolution.parse_game_results", return_value=finished), \
+             patch("workflow.results_resolution.save_skips_all") as mock_save:
             asyncio.get_event_loop().run_until_complete(
                 _resolve_skips_for_date("2026-02-20", 2025)
             )
@@ -1057,7 +1057,7 @@ class TestSkipResolution:
         assert saved_skips[0]["winner"] == "Los Angeles Lakers"
 
     def test_skips_resolved_by_team_name_fallback(self):
-        from workflow.results import _resolve_skips_for_date
+        from workflow.results_resolution import _resolve_skips_for_date
 
         skips = [_make_skip(matchup="Celtics @ Lakers")]  # No game_id
         finished = [_make_game_result(
@@ -1067,10 +1067,10 @@ class TestSkipResolution:
             home_score=115, away_score=108,
         )]
 
-        with patch("workflow.results.get_skips", return_value=skips), \
-             patch("workflow.results.get_games_by_date", new_callable=AsyncMock, return_value=["game"]), \
-             patch("workflow.results.parse_game_results", return_value=finished), \
-             patch("workflow.results.save_skips_all") as mock_save:
+        with patch("workflow.results_resolution.get_skips", return_value=skips), \
+             patch("workflow.results_resolution.get_games_by_date", new_callable=AsyncMock, return_value=["game"]), \
+             patch("workflow.results_resolution.parse_game_results", return_value=finished), \
+             patch("workflow.results_resolution.save_skips_all") as mock_save:
             asyncio.get_event_loop().run_until_complete(
                 _resolve_skips_for_date("2026-02-20", 2025)
             )
@@ -1082,12 +1082,12 @@ class TestSkipResolution:
 
     def test_already_resolved_skips_ignored(self):
         """Skips that already have outcome_resolved=True should not be re-processed."""
-        from workflow.results import _resolve_skips_for_date
+        from workflow.results_resolution import _resolve_skips_for_date
 
         skips = [_make_skip(outcome_resolved=True, game_id="12345")]
 
-        with patch("workflow.results.get_skips", return_value=skips), \
-             patch("workflow.results.get_games_by_date", new_callable=AsyncMock) as mock_api:
+        with patch("workflow.results_resolution.get_skips", return_value=skips), \
+             patch("workflow.results_resolution.get_games_by_date", new_callable=AsyncMock) as mock_api:
             asyncio.get_event_loop().run_until_complete(
                 _resolve_skips_for_date("2026-02-20", 2025)
             )
@@ -1096,16 +1096,16 @@ class TestSkipResolution:
         mock_api.assert_not_called()
 
     def test_no_finished_games_means_no_resolution(self):
-        from workflow.results import _resolve_skips_for_date
+        from workflow.results_resolution import _resolve_skips_for_date
 
         skips = [_make_skip(game_id="12345")]
 
-        with patch("workflow.results.get_skips", return_value=skips), \
-             patch("workflow.results.get_games_by_date", new_callable=AsyncMock, return_value=["game"]), \
-             patch("workflow.results.parse_game_results", return_value=[
+        with patch("workflow.results_resolution.get_skips", return_value=skips), \
+             patch("workflow.results_resolution.get_games_by_date", new_callable=AsyncMock, return_value=["game"]), \
+             patch("workflow.results_resolution.parse_game_results", return_value=[
                  _make_game_result(status="scheduled"),
              ]), \
-             patch("workflow.results.save_skips_all") as mock_save:
+             patch("workflow.results_resolution.save_skips_all") as mock_save:
             asyncio.get_event_loop().run_until_complete(
                 _resolve_skips_for_date("2026-02-20", 2025)
             )
@@ -1122,22 +1122,22 @@ class TestPaperTradeResolution:
     """Paper trades on skipped games should be graded against actual results."""
 
     def test_paper_trade_resolved_with_outcome(self):
-        from workflow.results import _resolve_paper_trades_for_date
+        from workflow.results_resolution import _resolve_paper_trades_for_date
 
         trades = [_make_paper_trade(game_id="12345")]
         finished = [_make_game_result(game_id="12345")]
 
-        with patch("workflow.results.get_paper_trades", return_value=trades), \
-             patch("workflow.results.get_games_by_date", new_callable=AsyncMock, return_value=["g"]), \
-             patch("workflow.results.parse_game_results", return_value=finished), \
-             patch("workflow.results.get_paper_history", return_value={"trades": [], "summary": {
+        with patch("workflow.results_resolution.get_paper_trades", return_value=trades), \
+             patch("workflow.results_resolution.get_games_by_date", new_callable=AsyncMock, return_value=["g"]), \
+             patch("workflow.results_resolution.parse_game_results", return_value=finished), \
+             patch("workflow.results_resolution.get_paper_history", return_value={"trades": [], "summary": {
                  "total_trades": 0, "wins": 0, "losses": 0, "pushes": 0,
                  "win_rate": 0.0, "net_units": 0.0,
                  "by_confidence": {}, "by_bet_type": {}, "by_skip_reason_category": {},
              }}), \
-             patch("workflow.results.save_paper_trades") as mock_save_trades, \
-             patch("workflow.results.save_paper_history") as mock_save_hist, \
-             patch("workflow.results._append_paper_journal_results"):
+             patch("workflow.results_resolution.save_paper_trades") as mock_save_trades, \
+             patch("workflow.results_resolution.save_paper_history") as mock_save_hist, \
+             patch("workflow.results_resolution._append_paper_journal_results"):
             asyncio.get_event_loop().run_until_complete(
                 _resolve_paper_trades_for_date("2026-02-20", 2025)
             )
@@ -1149,12 +1149,12 @@ class TestPaperTradeResolution:
         assert resolved_trade["winner"] == "Los Angeles Lakers"
 
     def test_already_resolved_paper_trades_skipped(self):
-        from workflow.results import _resolve_paper_trades_for_date
+        from workflow.results_resolution import _resolve_paper_trades_for_date
 
         trades = [_make_paper_trade(game_id="12345", result="win")]
 
-        with patch("workflow.results.get_paper_trades", return_value=trades), \
-             patch("workflow.results.get_games_by_date", new_callable=AsyncMock) as mock_api:
+        with patch("workflow.results_resolution.get_paper_trades", return_value=trades), \
+             patch("workflow.results_resolution.get_games_by_date", new_callable=AsyncMock) as mock_api:
             asyncio.get_event_loop().run_until_complete(
                 _resolve_paper_trades_for_date("2026-02-20", 2025)
             )

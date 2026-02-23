@@ -1,5 +1,6 @@
 """Analytics computation and HTML dashboard generation."""
 
+import logging
 import webbrowser
 from pathlib import Path
 from typing import Optional
@@ -50,5 +51,5 @@ def generate_dashboard(output_path: Optional[str] = None) -> None:
 
     try:
         webbrowser.open(f"file://{path.resolve()}")
-    except Exception:
-        pass
+    except Exception as e:
+        logging.warning("Could not open browser: %s", e)

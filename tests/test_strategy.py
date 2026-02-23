@@ -3,16 +3,18 @@
 import pytest
 
 from workflow.prompts import MIN_ACTIONABLE_SAMPLE, format_history_summary
-from workflow.strategy import (
-    MAX_CHANGE_LOG_ENTRIES,
+from workflow.strategy_format import (
     _compute_summary,
-    _parse_sections,
-    _rebuild_strategy,
     aggregate_reflections,
-    append_change_log,
-    apply_adjustments,
     format_recent_bets,
     format_recent_prop_bets,
+)
+from workflow.strategy_sections import (
+    MAX_CHANGE_LOG_ENTRIES,
+    _parse_sections,
+    _rebuild_strategy,
+    append_change_log,
+    apply_adjustments,
 )
 
 SAMPLE_STRATEGY = """# NBA Betting Strategy

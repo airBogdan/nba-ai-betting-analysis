@@ -4,7 +4,7 @@ import math
 from typing import Dict, List, Optional
 
 from ..api import ProcessedPlayerStats, ProcessedTeamStats, RecentGame
-from ..games import compute_quarter_analysis
+from ..h2h_stats import compute_quarter_analysis
 from ..teams import SeasonStanding
 from ..types import H2HResults, H2HSummary
 from ..utils import get_current_nba_season_year

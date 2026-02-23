@@ -664,8 +664,8 @@ class TestMatchupPipelineIntegration:
         }
 
         # Compute h2h_summary for real (tests H2H→matchup composition)
-        from helpers.games import compute_h2h_summary
-        with patch("helpers.games.get_current_nba_season_year", return_value=2025):
+        from helpers.h2h_stats import compute_h2h_summary
+        with patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2025):
             h2h_summary = compute_h2h_summary(h2h_results, "Celtics", "Lakers")
 
         return {
@@ -690,7 +690,7 @@ class TestMatchupPipelineIntegration:
         from helpers.matchup import build_matchup_analysis
         with patch("helpers.matchup.core.get_current_nba_season_year", return_value=2025), \
              patch("helpers.matchup.h2h.get_current_nba_season_year", return_value=2025), \
-             patch("helpers.games.get_current_nba_season_year", return_value=2025):
+             patch("helpers.h2h_stats.get_current_nba_season_year", return_value=2025):
             return build_matchup_analysis(matchup_input)
 
     def test_full_matchup_returns_all_keys(self, matchup_input):
