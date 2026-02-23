@@ -386,6 +386,7 @@ async def _process_results_for_date(date: str, season: int) -> None:
         append_journal_post_game(date, completed)
 
     # Print summary
+    voided = len(date_bets) - len(matched) - len(unresolved)
     wins = sum(1 for b in completed if b["result"] == "win")
     losses = sum(1 for b in completed if b["result"] == "loss")
     pushes = sum(1 for b in completed if b["result"] == "push")
@@ -398,6 +399,8 @@ async def _process_results_for_date(date: str, season: int) -> None:
     total_pnl = get_dollar_pnl()
     print(f"Dollar P&L: ${total_pnl:+.2f}")
 
+    if voided:
+        print(f"{voided} bet(s) voided (see bets/voids.json)")
     if unresolved:
         print(f"{len(unresolved)} bets still pending (games not finished)")
 
@@ -437,6 +440,9 @@ async def _resolve_paper_trades_for_date(date: str, season: int) -> None:
                     None,
                 )
         if matched:
+            if trade.get("bet_type") == "player_prop":
+                print(f"  Skipping paper trade with unsupported bet_type 'player_prop': {trade['matchup']}")
+                continue
             outcome, profit_loss = _evaluate_bet(trade, matched)
             trade["result"] = outcome
             trade["profit_loss"] = profit_loss

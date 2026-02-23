@@ -18,11 +18,10 @@ def calculate_payout(amount: float, odds_price: int, result: str) -> float:
         return amount  # Stake returned
     if result == "loss":
         return 0.0  # Already deducted when placed
+    if result != "win":
+        raise ValueError(f"Unknown result: {result!r}")
 
     # Win: return stake + profit
-    if odds_price == 0:
-        # Fallback to -110 if odds_price is invalid
-        odds_price = -110
     if odds_price < 0:
         # Favorite: profit = stake * (100 / abs(odds))
         profit = amount * (100 / abs(odds_price))

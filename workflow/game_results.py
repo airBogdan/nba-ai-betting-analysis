@@ -6,15 +6,27 @@ from .types import ActiveBet, GameResult
 
 
 def _teams_match(name1: str, name2: str) -> bool:
-    """Check if two team names match (case-insensitive, partial match)."""
+    """Check if two team names match (case-insensitive, word-based matching)."""
     n1 = name1.lower().strip()
     n2 = name2.lower().strip()
-    if n1 == n2 or n1 in n2 or n2 in n1:
+    if not n1 or not n2:
+        return False
+    if n1 == n2:
+        return True
+    # Word-subset matching: "Lakers" matches "Los Angeles Lakers"
+    # but "Nets" does NOT match "Hornets"
+    w1 = set(n1.split())
+    w2 = set(n2.split())
+    if w1 <= w2 or w2 <= w1:
         return True
     # Handle LA/Los Angeles variations
-    n1_normalized = n1.replace("los angeles", "la").replace("l.a.", "la")
-    n2_normalized = n2.replace("los angeles", "la").replace("l.a.", "la")
-    return n1_normalized == n2_normalized or n1_normalized in n2_normalized or n2_normalized in n1_normalized
+    n1_norm = n1.replace("los angeles", "la").replace("l.a.", "la")
+    n2_norm = n2.replace("los angeles", "la").replace("l.a.", "la")
+    if n1_norm == n2_norm:
+        return True
+    w1n = set(n1_norm.split())
+    w2n = set(n2_norm.split())
+    return w1n <= w2n or w2n <= w1n
 
 
 def _format_score(result: GameResult) -> str:
