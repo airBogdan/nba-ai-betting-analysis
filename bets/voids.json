@@ -1,0 +1,42 @@
+[
+  {
+    "id": "41a7ec9d-e962-4cff-ad93-428b9258d359",
+    "game_id": "16331",
+    "matchup": "Indiana Pacers @ Washington Wizards",
+    "bet_type": "player_prop",
+    "pick": "over",
+    "line": 6.5,
+    "confidence": "medium",
+    "units": 1.0,
+    "reasoning": "Nembhard averages 7.2 APG on the season, 0.7 assists above this line. With Haliburton out for the season and McConnell questionable, Nembhard is the undisputed primary ball-handler. The 30% implied probability for the over is too low - his season average suggests he should clear 6.5 in roughly 55-60% of games. Clear role expansion with depleted backcourt.",
+    "primary_edge": "Primary playmaker role with Haliburton out, line 0.7 below season average",
+    "date": "2026-02-20",
+    "created_at": "2026-02-20T15:34:06.256640+00:00",
+    "prop_type": "assists",
+    "player_name": "Andrew Nembhard",
+    "poly_price": 0.3,
+    "odds_price": 233,
+    "amount": 8.0,
+    "void_reason": "DNP: Andrew Nembhard not in box score"
+  },
+  {
+    "id": "14bd8ec7-f69e-4aea-ba80-41c313b0925b",
+    "game_id": "16330",
+    "matchup": "Cleveland Cavaliers @ Charlotte Hornets",
+    "bet_type": "player_prop",
+    "pick": "over",
+    "line": 6.5,
+    "confidence": "medium",
+    "units": 1.0,
+    "reasoning": "Mobley averages 8.6 RPG, a full 2.1 rebounds above this line. At 29.5% implied probability for the over, this is significantly underpriced - his hit rate should be closer to 65-70% based on season distribution. Charlotte is a below-average rebounding team and even with potential minutes management on a back-to-back, the line is set too conservatively.",
+    "primary_edge": "Season average 2.1 rebounds above line with favorable matchup",
+    "date": "2026-02-20",
+    "created_at": "2026-02-20T15:34:06.256868+00:00",
+    "prop_type": "rebounds",
+    "player_name": "Evan Mobley",
+    "poly_price": 0.295,
+    "odds_price": 239,
+    "amount": 7.0,
+    "void_reason": "DNP: Evan Mobley not in box score"
+  }
+]
