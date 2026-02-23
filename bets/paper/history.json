@@ -1,14 +1,205 @@
 {
-  "trades": [],
+  "trades": [
+    {
+      "matchup": "Indiana Pacers @ Washington Wizards",
+      "date": "2026-02-20",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 230.5,
+      "confidence": "high",
+      "reasoning": "Primary dismissed this citing 'terrible defense could lead to easy buckets' but MASSIVELY underweighted the injury impact. Alex Sarr (16.9 PPG) OUT for Washington. Pascal Siakam (23.2 PPG) and Aaron Nesmith (13.1 PPG) OUT for Indiana. That's 53.2 combined missing PPG with injury-adjusted total of 200.7. The 230.5 line is nearly 30 POINTS above expected. H2H shows only 26% of games over 220. Both teams on B2B adds fatigue. This is the clearest edge on the board.",
+      "primary_edge": "53.2 combined missing PPG creates 30-point edge vs line",
+      "skip_reason": "Under has massive 30-point projected edge but both teams have 116+ DRTG - terrible defense could lead to easy buckets. Tanking teams are unpredictable.",
+      "game_id": "16331",
+      "units": 2.0,
+      "result": "win",
+      "profit_loss": 2.0,
+      "winner": "Washington Wizards",
+      "final_score": "Indiana Pacers 105 @ Washington Wizards 112",
+      "actual_total": 217,
+      "actual_margin": 7
+    },
+    {
+      "matchup": "Orlando Magic @ Phoenix Suns",
+      "date": "2026-02-21",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 217.5,
+      "confidence": "high",
+      "reasoning": "Massive injury impact: Booker OUT (24.4 PPG) and Wagner OUT (20.8 PPG) = 45.2 combined PPG missing. Injury-adjusted total calculates to 204.3. Line at 217.5 is 13+ points too high. Both teams on B2B adds fatigue. H2H games average only 216.0 total WITH healthy rosters. Phoenix recent scoring at 106.8 PPG (6.5 below avg) even before Booker injury. This is the clearest edge of the slate.",
+      "primary_edge": "20.4 point injury-adjusted total reduction with line only moved ~2 points",
+      "skip_reason": "Under 217.5 has 13+ point edge but already have 3 stronger total plays. Spread too close to call with injury uncertainty (Allen/Suggs questionable).",
+      "game_id": "16339",
+      "units": 2.0,
+      "result": "loss",
+      "profit_loss": -2.0,
+      "winner": "Phoenix Suns",
+      "final_score": "Orlando Magic 110 @ Phoenix Suns 113",
+      "actual_total": 223,
+      "actual_margin": 3
+    },
+    {
+      "matchup": "Denver Nuggets @ Golden State Warriors",
+      "date": "2026-02-22",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 228.5,
+      "confidence": "high",
+      "reasoning": "Curry and Butler both OUT for Warriors (45.9 combined PPG), Gordon and Watson OUT for Denver. Injury-adjusted total projects 200.9, giving 27+ point edge. Even with conservative 45% replacement, Under 228.5 has massive value.",
+      "primary_edge": "35.1 point total reduction from injuries",
+      "skip_reason": "Denver ML at 68.5% implied is fair value but not a clear edge. Murray questionable adds uncertainty. Under 228.5 has merit but less edge than PHI/MIN and POR/PHX totals.",
+      "game_id": "16348",
+      "units": 2.0,
+      "result": "loss",
+      "profit_loss": -2.0,
+      "winner": "Golden State Warriors",
+      "final_score": "Denver Nuggets 117 @ Golden State Warriors 128",
+      "actual_total": 245,
+      "actual_margin": 11
+    },
+    {
+      "matchup": "Toronto Raptors @ Milwaukee Bucks",
+      "date": "2026-02-22",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 219.5,
+      "confidence": "high",
+      "reasoning": "Giannis OUT (27.1 PPG) and Scottie Barnes OUT (18.7 PPG). Injury-adjusted total of 205.9 vs 219.5 line is a 13.6 point edge - NOT a small edge as skip reason suggested. Both teams on B2B adds fatigue.",
+      "primary_edge": "13.6 point edge on under with star players out",
+      "skip_reason": "Under 219.5 has value but smaller edge (~13 pts) than other total plays. Side bets too uncertain with both teams missing stars.",
+      "game_id": "16347",
+      "units": 2.0,
+      "result": "win",
+      "profit_loss": 2.0,
+      "winner": "Toronto Raptors",
+      "final_score": "Toronto Raptors 122 @ Milwaukee Bucks 94",
+      "actual_total": 216,
+      "actual_margin": -28
+    },
+    {
+      "matchup": "Boston Celtics @ Los Angeles Lakers",
+      "date": "2026-02-22",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 227.5,
+      "confidence": "medium",
+      "reasoning": "Jaylen Brown OUT on top of Tatum already out. Celtics missing their two best scorers. Injury-adjusted total 215.4 vs 227.5 line. Lakers on B2B typically play slower. Celtics recent scoring 110.6 PPG (5 below average).",
+      "primary_edge": "12+ point edge with Brown OUT",
+      "skip_reason": "Brown OUT on top of Tatum creates under value, but Lakers on B2B and Celtics 16-7 without Tatum creates uncertainty. Other total plays have cleaner edges.",
+      "game_id": "16351",
+      "units": 1.0,
+      "result": "win",
+      "profit_loss": 1.0,
+      "winner": "Boston Celtics",
+      "final_score": "Boston Celtics 111 @ Los Angeles Lakers 89",
+      "actual_total": 200,
+      "actual_margin": -22
+    },
+    {
+      "matchup": "Charlotte Hornets @ Washington Wizards",
+      "date": "2026-02-22",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 226.5,
+      "confidence": "high",
+      "reasoning": "Sarr OUT for Wizards, Bridges and Diabate OUT for Hornets. Injury-adjusted total 211.1 vs 226.5 line gives 15+ point edge. Both teams on B2B. Polymarket at 0.50 is excellent value.",
+      "primary_edge": "15.4 point edge on under with key players out",
+      "skip_reason": "Under 226.5 has strong edge but Hornets ML at 82.5% implied is expensive. Spread at -10.5 exceeds projection. Other plays have cleaner value.",
+      "game_id": "16350",
+      "units": 2.0,
+      "result": "loss",
+      "profit_loss": -2.0,
+      "winner": "Charlotte Hornets",
+      "final_score": "Charlotte Hornets 129 @ Washington Wizards 112",
+      "actual_total": 241,
+      "actual_margin": -17
+    },
+    {
+      "matchup": "Dallas Mavericks @ Indiana Pacers",
+      "date": "2026-02-22",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 231.5,
+      "confidence": "medium",
+      "reasoning": "Flagg OUT for Dallas, Nesmith OUT for Indiana. Both teams on B2B. Dallas demoralized on 10-game losing streak. Injury-adjusted total 214.8 vs 231.5 gives 16+ point edge. Poor defenses matter less when both teams are depleted and fatigued.",
+      "primary_edge": "16.7 point edge despite poor defenses",
+      "skip_reason": "Under 231.5 has value but both teams have poor defenses and Siakam/Nembhard status unknown. Too much uncertainty.",
+      "game_id": "16349",
+      "units": 1.0,
+      "result": "loss",
+      "profit_loss": -1.0,
+      "winner": "Dallas Mavericks",
+      "final_score": "Dallas Mavericks 134 @ Indiana Pacers 130",
+      "actual_total": 264,
+      "actual_margin": -4
+    },
+    {
+      "matchup": "Brooklyn Nets @ Atlanta Hawks",
+      "date": "2026-02-22",
+      "bet_type": "total",
+      "pick": "under",
+      "line": 228.5,
+      "confidence": "low",
+      "reasoning": "Both teams on B2B, both scoring well below season average recently (-8.7 combined). H2H historically high-scoring but current context differs. Marginal edge but worth tracking.",
+      "primary_edge": "Both teams on B2B with recent scoring slumps",
+      "skip_reason": "Under 228.5 has only ~2 point edge - not enough to justify bet given H2H historically high-scoring.",
+      "game_id": "16346",
+      "units": 0.5,
+      "result": "win",
+      "profit_loss": 0.5,
+      "winner": "Atlanta Hawks",
+      "final_score": "Brooklyn Nets 104 @ Atlanta Hawks 115",
+      "actual_total": 219,
+      "actual_margin": 11
+    }
+  ],
   "summary": {
-    "total_trades": 0,
-    "wins": 0,
-    "losses": 0,
+    "total_trades": 8,
+    "wins": 4,
+    "losses": 4,
     "pushes": 0,
-    "win_rate": 0.0,
-    "net_units": 0.0,
-    "by_confidence": {},
-    "by_bet_type": {},
-    "by_skip_reason_category": {}
+    "win_rate": 0.5,
+    "net_units": -1.5,
+    "by_confidence": {
+      "high": {
+        "wins": 2,
+        "losses": 3,
+        "win_rate": 0.4
+      },
+      "medium": {
+        "wins": 1,
+        "losses": 1,
+        "win_rate": 0.5
+      },
+      "low": {
+        "wins": 1,
+        "losses": 0,
+        "win_rate": 1.0
+      }
+    },
+    "by_bet_type": {
+      "total": {
+        "wins": 4,
+        "losses": 4,
+        "win_rate": 0.5
+      }
+    },
+    "by_skip_reason_category": {
+      "high_variance": {
+        "wins": 1,
+        "losses": 2,
+        "win_rate": 0.333
+      },
+      "injury_uncertainty": {
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 0.667
+      },
+      "other": {
+        "wins": 1,
+        "losses": 1,
+        "win_rate": 0.5
+      }
+    }
   }
 }
