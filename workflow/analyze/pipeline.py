@@ -148,6 +148,99 @@ async def synthesize_bets(
     return await complete_json(prompt, system=SYSTEM_ANALYST)
 
 
+def _price_bets(
+    games: List[Dict[str, Any]],
+    new_bets: List[ActiveBet],
+) -> tuple[Dict[str, Dict[str, Any]], List[ActiveBet]]:
+    """Build game lookup, extract Polymarket pricing, filter unpriced bets."""
+    game_lookup: Dict[str, Dict[str, Any]] = {}
+    for game in games:
+        gid = str(game["api_game_id"]) if game.get("api_game_id") else extract_game_id(game["_file"])
+        game_lookup[gid] = game
+
+    for bet in new_bets:
+        game = game_lookup.get(bet["game_id"], {})
+        poly_price, odds_price = _extract_poly_and_odds_price(game, bet)
+        bet["odds_price"] = odds_price
+        if poly_price is not None:
+            bet["poly_price"] = poly_price
+
+    priced = [b for b in new_bets if b.get("poly_price") is not None]
+    return game_lookup, priced
+
+
+async def _build_enriched_skips(
+    date: str,
+    synthesis: Dict[str, Any],
+    sizing_skipped: List[Dict[str, str]],
+    recommendations: List[BetRecommendation],
+    games: List[Dict[str, Any]],
+) -> tuple[List[dict], List[dict]]:
+    """Enrich skip dicts, save skips, run paper trades. Returns (enriched_skips, all_skipped)."""
+    matchup_to_game_id = {rec["matchup"]: rec["game_id"] for rec in recommendations}
+
+    def _enrich_skip(skip, source):
+        enriched = {
+            "matchup": skip.get("matchup", "Unknown"),
+            "reason": skip.get("reason", "No clear edge"),
+            "date": date,
+            "source": source,
+        }
+        gid = skip.get("game_id") or matchup_to_game_id.get(skip.get("matchup"))
+        if gid:
+            enriched["game_id"] = gid
+        return enriched
+
+    all_skipped = synthesis.get("skipped", []) + sizing_skipped
+
+    enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
+    enriched_skips += [_enrich_skip(s, "sizing") for s in sizing_skipped]
+    save_skips(date, enriched_skips)
+
+    if enriched_skips:
+        try:
+            await run_paper_trades(enriched_skips, date, games)
+        except Exception as e:
+            print(f"Paper trading failed (non-fatal): {e}")
+
+    return enriched_skips, all_skipped
+
+
+def _save_and_print_bets(
+    date: str,
+    active: List[ActiveBet],
+    sized_bets: List[ActiveBet],
+    all_skipped: list,
+    synthesis_summary: str,
+    new_bets: List[ActiveBet],
+    balance: float,
+) -> None:
+    """Save active bets, write journal, and print summary."""
+    if sized_bets:
+        save_active_bets(active + sized_bets)
+    write_journal_pre_game(date, sized_bets, all_skipped, synthesis_summary)
+
+    if sized_bets:
+        print(f"\nPlaced {len(sized_bets)} bets (${sum(b['amount'] for b in sized_bets):.2f} total):")
+        for bet in sized_bets:
+            bet_type = bet['bet_type']
+            if bet_type == "spread" and bet.get('line') is not None:
+                pick_str = f"{bet['pick']} {bet['line']:+.1f}"
+            elif bet_type == "total" and bet.get('line') is not None:
+                pick_str = f"{bet['pick']} {bet['line']:.1f}"
+            else:
+                pick_str = bet['pick']
+            print(f"  {bet['matchup']}: [{bet_type.upper()}] {pick_str} - ${bet['amount']:.2f}")
+
+        dollar_pnl = get_dollar_pnl()
+        print(f"\nBalance: ${balance:.2f} | Dollar P&L: ${dollar_pnl:+.2f}")
+        print(f"See bets/journal/{date}.md for details")
+    elif new_bets:
+        print("All bets were vetoed by sizing.")
+    else:
+        print("No game-level bets selected by analysis.")
+
+
 async def run_analyze_workflow(date: str, max_bets: int = 4, force: bool = False, max_props: int = 4) -> None:
     """Run the pre-game analysis workflow."""
     # Check for existing bets on this date (before any API calls)
@@ -236,49 +329,15 @@ async def run_analyze_workflow(date: str, max_bets: int = 4, force: bool = False
     valid_bets = [s for s in selected if s.get("pick") and s.get("matchup")]
     new_bets = [create_active_bet(s, date) for s in valid_bets]
 
-    # Build game lookup and extract Polymarket pricing for bets
-    game_lookup: Dict[str, Dict[str, Any]] = {}
-    for game in games:
-        gid = str(game["api_game_id"]) if game.get("api_game_id") else extract_game_id(game["_file"])
-        game_lookup[gid] = game
-
-    for bet in new_bets:
-        game = game_lookup.get(bet["game_id"], {})
-        poly_price, odds_price = _extract_poly_and_odds_price(game, bet)
-        bet["odds_price"] = odds_price
-        if poly_price is not None:
-            bet["poly_price"] = poly_price
-
-    # Drop bets where no poly_price could be extracted (can't place on Polymarket)
-    new_bets = [b for b in new_bets if b.get("poly_price") is not None]
-
-    # Helper to enrich skip dicts with date/source/game_id for persistence
-    matchup_to_game_id = {rec["matchup"]: rec["game_id"] for rec in recommendations}
-
-    def _enrich_skip(skip, source):
-        enriched = {
-            "matchup": skip.get("matchup", "Unknown"),
-            "reason": skip.get("reason", "No clear edge"),
-            "date": date,
-            "source": source,
-        }
-        gid = skip.get("game_id") or matchup_to_game_id.get(skip.get("matchup"))
-        if gid:
-            enriched["game_id"] = gid
-        return enriched
+    # Price bets via Polymarket
+    game_lookup, new_bets = _price_bets(games, new_bets)
 
     # Get Polymarket balance (needed for game-level and props sizing)
     print("Querying Polymarket balance...")
     balance = get_polymarket_balance()
     if balance is None:
         print("Error: Could not get Polymarket balance. Set POLYMARKET_PRIVATE_KEY and POLYMARKET_FUNDER.")
-        enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
-        save_skips(date, enriched_skips)
-        if enriched_skips:
-            try:
-                await run_paper_trades(enriched_skips, date, games)
-            except Exception as e:
-                print(f"Paper trading failed (non-fatal): {e}")
+        await _build_enriched_skips(date, synthesis, [], recommendations, games)
         return
 
     # Size game-level bets (skip sizing if none to size)
@@ -290,45 +349,16 @@ async def run_analyze_workflow(date: str, max_bets: int = 4, force: bool = False
             new_bets, balance, strategy, history["summary"]
         )
 
-    # Combine skipped lists for journal
-    all_skipped = synthesis.get("skipped", []) + sizing_skipped
+    # Enrich skips, save, paper trade
+    enriched_skips, all_skipped = await _build_enriched_skips(
+        date, synthesis, sizing_skipped, recommendations, games
+    )
 
-    # Enrich and persist skips
-    enriched_skips = [_enrich_skip(s, "synthesis") for s in synthesis.get("skipped", [])]
-    enriched_skips += [_enrich_skip(s, "sizing") for s in sizing_skipped]
-    save_skips(date, enriched_skips)
-
-    # Paper trade skipped games (runs independently, doesn't affect real bets)
-    if enriched_skips:
-        try:
-            await run_paper_trades(enriched_skips, date, games)
-        except Exception as e:
-            print(f"Paper trading failed (non-fatal): {e}")
-
-    # Save game-level bets and journal
-    if sized_bets:
-        save_active_bets(active + sized_bets)
-    write_journal_pre_game(date, sized_bets, all_skipped, synthesis.get("summary", ""))
-
-    if sized_bets:
-        print(f"\nPlaced {len(sized_bets)} bets (${sum(b['amount'] for b in sized_bets):.2f} total):")
-        for bet in sized_bets:
-            bet_type = bet['bet_type']
-            if bet_type == "spread" and bet.get('line') is not None:
-                pick_str = f"{bet['pick']} {bet['line']:+.1f}"
-            elif bet_type == "total" and bet.get('line') is not None:
-                pick_str = f"{bet['pick']} {bet['line']:.1f}"
-            else:
-                pick_str = bet['pick']
-            print(f"  {bet['matchup']}: [{bet_type.upper()}] {pick_str} - ${bet['amount']:.2f}")
-
-        dollar_pnl = get_dollar_pnl()
-        print(f"\nBalance: ${balance:.2f} | Dollar P&L: ${dollar_pnl:+.2f}")
-        print(f"See bets/journal/{date}.md for details")
-    elif new_bets:
-        print("All bets were vetoed by sizing.")
-    else:
-        print("No game-level bets selected by analysis.")
+    # Save and print
+    _save_and_print_bets(
+        date, active, sized_bets, all_skipped,
+        synthesis.get("summary", ""), new_bets, balance,
+    )
 
     # --- Player Props Pipeline (only on games without a game-level bet) ---
     if max_props > 0:

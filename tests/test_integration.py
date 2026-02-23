@@ -688,7 +688,8 @@ class TestMatchupPipelineIntegration:
     def _run_with_mocks(self, matchup_input):
         """Run build_matchup_analysis with season mocks."""
         from helpers.matchup import build_matchup_analysis
-        with patch("helpers.matchup.get_current_nba_season_year", return_value=2025), \
+        with patch("helpers.matchup.core.get_current_nba_season_year", return_value=2025), \
+             patch("helpers.matchup.h2h.get_current_nba_season_year", return_value=2025), \
              patch("helpers.games.get_current_nba_season_year", return_value=2025):
             return build_matchup_analysis(matchup_input)
 

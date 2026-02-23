@@ -237,33 +237,11 @@ def append_journal_check(
     append_text(journal_path, "\n".join(lines))
 
 
-async def run_check_workflow() -> None:
-    """Check open positions, re-evaluate adverse ones, auto-close if needed."""
-    load_dotenv()
-
-    # Load active bets — only those placed on Polymarket with a price
-    active_bets = get_active_bets()
-    placed_bets = [
-        b for b in active_bets
-        if b.get("placed_polymarket") and b.get("poly_price") and b.get("amount")
-    ]
-
-    if not placed_bets:
-        print("No placed positions to check.")
-        return
-
-    print(f"Checking {len(placed_bets)} position(s)...")
-
-    # Get dates and fetch events
-    dates = sorted({b["date"] for b in placed_bets})
-    events_by_date: Dict[str, List[dict]] = {}
-    for date in dates:
-        events = fetch_nba_events(date)
-        events_by_date[date] = events
-        if not events:
-            print(f"  {date}: no Polymarket events found")
-
-    # Compute P&L for each position
+def _compute_positions(
+    placed_bets: List[Dict[str, Any]],
+    events_by_date: Dict[str, List[dict]],
+) -> List[Dict[str, Any]]:
+    """Resolve token IDs and compute P&L for each placed bet."""
     positions: List[Dict[str, Any]] = []
     for bet in placed_bets:
         events = events_by_date.get(bet["date"], [])
@@ -277,51 +255,25 @@ async def run_check_workflow() -> None:
         pnl = compute_position_pnl(bet["poly_price"], live_price, bet["amount"])
         adverse = is_adverse(pnl)
         positions.append({"bet": bet, "pnl": pnl, "adverse": adverse, "token_id": token_id, "live_price": live_price})
+    return positions
 
-    if not positions:
-        print("No open markets found for positions.")
-        return
 
-    # Log position table
-    print(f"\n{'Matchup':<45} {'Type':<8} {'Entry':>6} {'Live':>6} {'P&L':>8} {'Status':<8}")
-    print("-" * 85)
-    for pos in positions:
-        bet = pos["bet"]
-        pnl = pos["pnl"]
-        live = bet["poly_price"] + pnl["price_move"]
-        status = "ADVERSE" if pos["adverse"] else "ok"
-        print(
-            f"  {bet['matchup']:<43} {bet['bet_type']:<8} "
-            f"{bet['poly_price']:>6.2f} {live:>6.2f} "
-            f"{pnl['pnl_pct']:>+7.1f}% {status:<8}"
-        )
-
-    # Find adverse positions
-    adverse_positions = [p for p in positions if p["adverse"]]
-    if not adverse_positions:
-        print("\nAll positions within threshold. No action needed.")
-        # Still log to journal
-        date = dates[0] if len(dates) == 1 else dates[-1]
-        append_journal_check(date, positions, [], [])
-        return
-
-    print(f"\n{len(adverse_positions)} adverse position(s) — running re-evaluation...")
-
-    # Search + LLM re-evaluation for adverse positions
+async def _evaluate_adverse_positions(
+    adverse_positions: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    """Search + LLM re-evaluation for each adverse position."""
     recommendations: List[Dict[str, Any]] = []
     for pos in adverse_positions:
         bet = pos["bet"]
         pnl = pos["pnl"]
         print(f"\n  Evaluating: {bet['matchup']}...")
 
-        # Search for context
         context = await search_position_context(bet["matchup"])
         if context:
             print(f"    Search: {len(context)} chars")
         else:
             print(f"    Search: no results")
 
-        # LLM re-evaluation
         result = await reevaluate_position(bet, pnl, context)
         if result:
             action = result.get("action", "HOLD")
@@ -336,8 +288,14 @@ async def run_check_workflow() -> None:
                 "token_id": pos["token_id"],
                 "live_price": pos["live_price"],
             })
+    return recommendations
 
-    # Execute CLOSE recommendations
+
+def _execute_closes(
+    recommendations: List[Dict[str, Any]],
+    active_bets: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    """Create CLOB client, sell positions for CLOSE recommendations, save state."""
     close_recs = [r for r in recommendations if r["recommendation"].get("action") == "CLOSE"]
     executions: List[Dict[str, Any]] = []
 
@@ -362,12 +320,73 @@ async def run_check_workflow() -> None:
                 if success:
                     executions.append({"bet": bet, "pnl": pnl})
 
-            # Save updated state
             save_active_bets(active_bets)
             total_pnl = get_dollar_pnl()
             print(f"\nDollar P&L: ${total_pnl:+.2f}")
     else:
         print("\nAll adverse positions recommended HOLD. No sells executed.")
+
+    return executions
+
+
+async def run_check_workflow() -> None:
+    """Check open positions, re-evaluate adverse ones, auto-close if needed."""
+    load_dotenv()
+
+    active_bets = get_active_bets()
+    placed_bets = [
+        b for b in active_bets
+        if b.get("placed_polymarket") and b.get("poly_price") and b.get("amount")
+    ]
+
+    if not placed_bets:
+        print("No placed positions to check.")
+        return
+
+    print(f"Checking {len(placed_bets)} position(s)...")
+
+    # Fetch events per date
+    dates = sorted({b["date"] for b in placed_bets})
+    events_by_date: Dict[str, List[dict]] = {}
+    for date in dates:
+        events = fetch_nba_events(date)
+        events_by_date[date] = events
+        if not events:
+            print(f"  {date}: no Polymarket events found")
+
+    # Compute positions
+    positions = _compute_positions(placed_bets, events_by_date)
+    if not positions:
+        print("No open markets found for positions.")
+        return
+
+    # Log position table
+    print(f"\n{'Matchup':<45} {'Type':<8} {'Entry':>6} {'Live':>6} {'P&L':>8} {'Status':<8}")
+    print("-" * 85)
+    for pos in positions:
+        bet = pos["bet"]
+        pnl = pos["pnl"]
+        live = bet["poly_price"] + pnl["price_move"]
+        status = "ADVERSE" if pos["adverse"] else "ok"
+        print(
+            f"  {bet['matchup']:<43} {bet['bet_type']:<8} "
+            f"{bet['poly_price']:>6.2f} {live:>6.2f} "
+            f"{pnl['pnl_pct']:>+7.1f}% {status:<8}"
+        )
+
+    # Check for adverse positions
+    adverse_positions = [p for p in positions if p["adverse"]]
+    if not adverse_positions:
+        print("\nAll positions within threshold. No action needed.")
+        date = dates[0] if len(dates) == 1 else dates[-1]
+        append_journal_check(date, positions, [], [])
+        return
+
+    print(f"\n{len(adverse_positions)} adverse position(s) — running re-evaluation...")
+
+    # Evaluate and execute
+    recommendations = await _evaluate_adverse_positions(adverse_positions)
+    executions = _execute_closes(recommendations, active_bets)
 
     # Journal
     date = dates[0] if len(dates) == 1 else dates[-1]

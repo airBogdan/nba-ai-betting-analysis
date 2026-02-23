@@ -2,10 +2,10 @@
 
 from typing import Dict, List, Optional
 
-from .games import _weighted_h2h_games
-from .matchup_types import H2HMatchupStats, H2HPatterns, H2HRecent
-from .types import H2HResults
-from .utils import get_current_nba_season_year
+from ..games import _weighted_h2h_games
+from .types import H2HMatchupStats, H2HPatterns, H2HRecent
+from ..types import H2HResults
+from ..utils import get_current_nba_season_year
 
 
 def compute_recent_h2h(

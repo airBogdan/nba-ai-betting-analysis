@@ -120,41 +120,21 @@ async def synthesize_player_props(
     return await complete_json(prompt, system=SYSTEM_PROPS_ANALYST)
 
 
-async def _run_props_pipeline(
-    date: str,
+async def _fetch_and_filter_prop_markets(
     games: List[Dict[str, Any]],
-    game_lookup: Dict[str, Dict[str, Any]],
+    date: str,
     polymarket_events: list[dict],
-    strategy: Optional[str],
-    history: dict,
-    balance: float,
-    max_props: int,
-    exclude_game_ids: set[str] | None = None,
-) -> None:
-    """Run the player props analysis pipeline.
-
-    Args:
-        exclude_game_ids: Game IDs that already have game-level bets.
-            Props on these games are skipped to avoid correlated exposure.
-    """
-    from ..search import search_player_props
-
-    # 1. Load props data from output/props_*.json
-    props_data_list = load_props_for_date(date)
-    if not props_data_list:
-        print("\nNo props data files found, skipping player props.")
-        return
-
-    # 2. Fetch prop markets from pre-fetched events
+    exclude_game_ids: set[str] | None,
+) -> Optional[Dict[str, list]]:
+    """Fetch prop markets and exclude games with game-level bets."""
     print("\nFetching player prop markets...")
     prop_markets = await asyncio.to_thread(
         fetch_polymarket_player_props, games, date, polymarket_events
     )
     if not prop_markets:
         print("No player prop markets available.")
-        return
+        return None
 
-    # Exclude games that already have game-level bets (avoid correlated exposure)
     if exclude_game_ids:
         excluded = {gid for gid in prop_markets if gid in exclude_game_ids}
         if excluded:
@@ -162,20 +142,20 @@ async def _run_props_pipeline(
             print(f"Excluding {len(excluded)} game(s) with game-level bets from props")
         if not prop_markets:
             print("No prop markets remaining after excluding games with bets.")
-            return
+            return None
 
     total_props = sum(len(v) for v in prop_markets.values())
     print(f"Found {total_props} prop markets across {len(prop_markets)} games")
+    return prop_markets
 
-    # Build props_data lookup by game_id
-    props_by_game: Dict[str, Dict[str, Any]] = {}
-    for pd in props_data_list:
-        gid = str(pd.get("api_game_id", ""))
-        if gid:
-            props_by_game[gid] = pd
 
-    # 3. Props-specific Perplexity search per game (concurrent)
-    semaphore = asyncio.Semaphore(MAX_CONCURRENT_LLM_CALLS)
+async def _search_props(
+    prop_markets: Dict[str, list],
+    game_lookup: Dict[str, Dict[str, Any]],
+    semaphore: asyncio.Semaphore,
+) -> Dict[str, Optional[str]]:
+    """Concurrent Perplexity search per game for props context."""
+    from ..search import search_player_props
 
     async def search_props_for_game(game_id: str, markets: list[dict]) -> tuple[str, Optional[str]]:
         game = game_lookup.get(game_id, {})
@@ -199,8 +179,18 @@ async def _run_props_pipeline(
         else:
             gid, ctx = r
             props_search[gid] = ctx
+    return props_search
 
-    # 4. Analyze player props per game (concurrent)
+
+async def _analyze_props(
+    prop_markets: Dict[str, list],
+    props_by_game: Dict[str, Dict[str, Any]],
+    game_lookup: Dict[str, Dict[str, Any]],
+    props_search: Dict[str, Optional[str]],
+    strategy: Optional[str],
+    semaphore: asyncio.Semaphore,
+) -> Optional[List[dict]]:
+    """Concurrent LLM analysis per game, returns recommendations or None."""
     print("Analyzing player props...")
 
     async def analyze_props_for_game(game_id: str) -> Optional[dict]:
@@ -232,28 +222,21 @@ async def _run_props_pipeline(
 
     if not prop_recommendations:
         print("No prop recommendations from analysis.")
-        return
+        return None
 
     total_recs = sum(len(r.get("prop_recommendations", [])) for r in prop_recommendations)
     print(f"Got {total_recs} prop recommendations across {len(prop_recommendations)} games")
+    return prop_recommendations
 
-    # 5. Synthesize across games
-    print("Synthesizing prop selections...")
-    synthesis = await synthesize_player_props(
-        prop_recommendations, strategy, history["summary"], max_props
-    )
-    if not synthesis:
-        print("Props synthesis failed.")
-        return
 
-    selected = synthesis.get("selected_props", [])
-    if not selected:
-        print("No props selected.")
-        return
-
-    # Build lookup from original recommendations to recover authoritative game_id/matchup
-    # (don't trust LLM to transcribe these correctly)
-    _prop_origin: Dict[tuple, tuple] = {}  # (norm_name, prop_type, line) -> (game_id, matchup)
+def _create_and_price_prop_bets(
+    selected: list[dict],
+    prop_recommendations: List[dict],
+    prop_markets: Dict[str, list],
+    date: str,
+) -> List[dict]:
+    """Match origins, create bets, and attach Polymarket prices."""
+    _prop_origin: Dict[tuple, tuple] = {}
     for rec in prop_recommendations:
         gid = rec.get("game_id", "")
         mup = rec.get("matchup", "")
@@ -261,10 +244,8 @@ async def _run_props_pipeline(
             key = (normalize_name(p.get("player_name", "")), p.get("prop_type", ""), p.get("line"))
             _prop_origin[key] = (gid, mup)
 
-    # 6. Create prop bets and attach Polymarket prices
     prop_bets = []
     for sel in selected:
-        # Recover game_id and matchup from original recommendations
         lookup_key = (normalize_name(sel.get("player_name", "")), sel.get("prop_type", ""), sel.get("line"))
         origin = _prop_origin.get(lookup_key)
         if origin:
@@ -287,31 +268,19 @@ async def _run_props_pipeline(
         else:
             print(f"  Dropping prop (no Polymarket price): {bet.get('player_name')} {bet.get('prop_type')}")
 
-    if not prop_bets:
-        print("No placeable prop bets (all missing Polymarket prices).")
-        return
+    return prop_bets
 
-    # 7. Size prop bets (reuses existing sizing — exposure includes game-level bets)
-    print("Sizing prop bets...")
-    sized_props, props_skipped = await size_bets(
-        prop_bets, balance, strategy, history["summary"]
-    )
 
-    if not sized_props:
-        print("All prop bets vetoed by sizing.")
-        return
-
-    # 8. Save prop bets to active.json
+def _save_and_journal_props(sized_props: List[dict], date: str) -> None:
+    """Save prop bets to active.json, print summary, and write journal."""
     current_active = get_active_bets()
     save_active_bets(current_active + sized_props)
 
-    # Print summary
     print(f"\nPlaced {len(sized_props)} prop bets (${sum(b['amount'] for b in sized_props):.2f} total):")
     for bet in sized_props:
         print(f"  {bet['matchup']}: {bet.get('player_name', '?')} {bet.get('prop_type', '?')} "
               f"{bet['pick']} {bet.get('line', '?')} - ${bet['amount']:.2f}")
 
-    # Append prop bets to pre-game journal
     journal_path = JOURNAL_DIR / f"{date}.md"
     lines = ["### Player Prop Bets", ""]
     total_wagered = sum(b.get("amount", 0) for b in sized_props)
@@ -334,7 +303,6 @@ async def _run_props_pipeline(
         lines.append(f"- Edge: {bet.get('primary_edge', 'Unknown')}")
         lines.append(f"- Reasoning: {bet.get('reasoning', 'No reasoning provided')}")
         lines.append("")
-    # Insert before the --- separator so props appear inside pre-game section
     content = read_text(journal_path)
     props_block = "\n".join(lines)
     if content:
@@ -346,3 +314,79 @@ async def _run_props_pipeline(
             append_text(journal_path, "\n" + props_block)
     else:
         append_text(journal_path, props_block)
+
+
+async def _run_props_pipeline(
+    date: str,
+    games: List[Dict[str, Any]],
+    game_lookup: Dict[str, Dict[str, Any]],
+    polymarket_events: list[dict],
+    strategy: Optional[str],
+    history: dict,
+    balance: float,
+    max_props: int,
+    exclude_game_ids: set[str] | None = None,
+) -> None:
+    """Run the player props analysis pipeline.
+
+    Args:
+        exclude_game_ids: Game IDs that already have game-level bets.
+            Props on these games are skipped to avoid correlated exposure.
+    """
+    # 1. Load props data
+    props_data_list = load_props_for_date(date)
+    if not props_data_list:
+        print("\nNo props data files found, skipping player props.")
+        return
+
+    # 2. Fetch and filter prop markets
+    prop_markets = await _fetch_and_filter_prop_markets(games, date, polymarket_events, exclude_game_ids)
+    if not prop_markets:
+        return
+
+    props_by_game: Dict[str, Dict[str, Any]] = {}
+    for pd in props_data_list:
+        gid = str(pd.get("api_game_id", ""))
+        if gid:
+            props_by_game[gid] = pd
+
+    # 3. Search and analyze
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_LLM_CALLS)
+    props_search = await _search_props(prop_markets, game_lookup, semaphore)
+    prop_recommendations = await _analyze_props(
+        prop_markets, props_by_game, game_lookup, props_search, strategy, semaphore
+    )
+    if not prop_recommendations:
+        return
+
+    # 4. Synthesize
+    print("Synthesizing prop selections...")
+    synthesis = await synthesize_player_props(
+        prop_recommendations, strategy, history["summary"], max_props
+    )
+    if not synthesis:
+        print("Props synthesis failed.")
+        return
+
+    selected = synthesis.get("selected_props", [])
+    if not selected:
+        print("No props selected.")
+        return
+
+    # 5. Create and price bets
+    prop_bets = _create_and_price_prop_bets(selected, prop_recommendations, prop_markets, date)
+    if not prop_bets:
+        print("No placeable prop bets (all missing Polymarket prices).")
+        return
+
+    # 6. Size
+    print("Sizing prop bets...")
+    sized_props, props_skipped = await size_bets(
+        prop_bets, balance, strategy, history["summary"]
+    )
+    if not sized_props:
+        print("All prop bets vetoed by sizing.")
+        return
+
+    # 7. Save and journal
+    _save_and_journal_props(sized_props, date)

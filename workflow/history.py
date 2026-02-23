@@ -3,6 +3,15 @@
 from .types import CompletedBet
 
 
+def _update_breakdown(summary: dict, breakdown_key: str, category: str, result_key: str) -> None:
+    """Increment wins/losses in a summary breakdown and recompute win_rate."""
+    breakdown = summary.setdefault(breakdown_key, {})
+    entry = breakdown.setdefault(category, {"wins": 0, "losses": 0, "win_rate": 0.0})
+    entry[result_key] = entry.get(result_key, 0) + 1
+    ct = entry["wins"] + entry["losses"]
+    entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
+
+
 def _categorize_edge(edge: str) -> str:
     """Normalize edge description to a category for tracking."""
     edge_lower = edge.lower()
@@ -66,26 +75,9 @@ def update_history_with_bet(history: dict, bet: CompletedBet) -> None:
     if result in ("win", "loss"):
         result_key = "wins" if result == "win" else "losses"
 
-        confidence = bet["confidence"]
-        by_conf = summary.setdefault("by_confidence", {})
-        entry = by_conf.setdefault(confidence, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] = entry.get(result_key, 0) + 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-        edge_cat = _categorize_edge(bet["primary_edge"])
-        by_edge = summary.setdefault("by_primary_edge", {})
-        entry = by_edge.setdefault(edge_cat, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] = entry.get(result_key, 0) + 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-        bet_type = bet.get("bet_type", "moneyline")
-        by_type = summary.setdefault("by_bet_type", {})
-        entry = by_type.setdefault(bet_type, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] = entry.get(result_key, 0) + 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
+        _update_breakdown(summary, "by_confidence", bet["confidence"], result_key)
+        _update_breakdown(summary, "by_primary_edge", _categorize_edge(bet["primary_edge"]), result_key)
+        _update_breakdown(summary, "by_bet_type", bet.get("bet_type", "moneyline"), result_key)
 
     # Recompute current_streak from last 10 results
     recent = [
@@ -144,26 +136,6 @@ def update_paper_history_with_trade(history: dict, trade: dict) -> None:
     if result in ("win", "loss"):
         result_key = "wins" if result == "win" else "losses"
 
-        # By confidence
-        conf = trade.get("confidence", "low")
-        by_conf = summary.setdefault("by_confidence", {})
-        entry = by_conf.setdefault(conf, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] += 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-        # By bet type
-        bt = trade.get("bet_type", "moneyline")
-        by_bt = summary.setdefault("by_bet_type", {})
-        entry = by_bt.setdefault(bt, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] += 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
-
-        # By skip reason category
-        reason_cat = _categorize_skip_reason(trade.get("skip_reason", ""))
-        by_reason = summary.setdefault("by_skip_reason_category", {})
-        entry = by_reason.setdefault(reason_cat, {"wins": 0, "losses": 0, "win_rate": 0.0})
-        entry[result_key] += 1
-        ct = entry["wins"] + entry["losses"]
-        entry["win_rate"] = round(entry["wins"] / ct, 3) if ct > 0 else 0.0
+        _update_breakdown(summary, "by_confidence", trade.get("confidence", "low"), result_key)
+        _update_breakdown(summary, "by_bet_type", trade.get("bet_type", "moneyline"), result_key)
+        _update_breakdown(summary, "by_skip_reason_category", _categorize_skip_reason(trade.get("skip_reason", "")), result_key)

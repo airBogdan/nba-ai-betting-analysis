@@ -4,9 +4,9 @@ from typing import Any, Dict, List, Optional
 
 from typing_extensions import TypedDict
 
-from .api import Injury, ProcessedPlayerStats, ProcessedTeamStats, RecentGame
-from .teams import SeasonStanding
-from .types import H2HResults, H2HSummary, QuarterAnalysis
+from ..api import Injury, ProcessedPlayerStats, ProcessedTeamStats, RecentGame
+from ..teams import SeasonStanding
+from ..types import H2HResults, H2HSummary, QuarterAnalysis
 
 
 # === Constants ===
