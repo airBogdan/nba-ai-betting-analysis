@@ -1,0 +1,118 @@
+"""NBA Betting Analysis CLI."""
+
+import argparse
+import asyncio
+import re
+import sys
+from datetime import datetime
+from pathlib import Path
+
+
+OUTPUT_DIR = Path(__file__).parent.parent / "output"
+
+
+def get_dates_from_output() -> list[str]:
+    """Extract unique dates from matchup files in output folder."""
+    if not OUTPUT_DIR.exists():
+        return []
+
+    dates = set()
+    date_pattern = re.compile(r"(\d{4}-\d{2}-\d{2})\.json$")
+
+    for f in OUTPUT_DIR.glob("*.json"):
+        match = date_pattern.search(f.name)
+        if match:
+            dates.add(match.group(1))
+
+    return sorted(dates)
+
+
+def validate_date(date_str: str) -> str:
+    """Validate date format is YYYY-MM-DD and is a real date."""
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")
+        return date_str
+    except ValueError:
+        print(f"Error: Invalid date '{date_str}'. Use YYYY-MM-DD format.")
+        sys.exit(1)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="NBA Betting Workflow System")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # init
+    subparsers.add_parser("init", help="Initialize bets directory and files")
+
+    # analyze
+    analyze = subparsers.add_parser("analyze", help="Pre-game analysis")
+    analyze.add_argument("--date", "-d", help="YYYY-MM-DD (optional, extracts from output folder)")
+    analyze.add_argument("--max-bets", "-m", type=int, default=3)
+    analyze.add_argument("--max-props", "-p", type=int, default=3)
+    analyze.add_argument("--force", "-f", action="store_true", help="Re-analyze even if bets exist")
+
+    # results
+    results = subparsers.add_parser("results", help="Post-game results")
+    results.add_argument("--date", "-d", help="YYYY-MM-DD (optional, defaults to all active bets)")
+
+    # update-strategy
+    subparsers.add_parser("update-strategy", help="Update strategy from history")
+
+    # check
+    subparsers.add_parser("check", help="Check open positions and auto-close if edge lost")
+
+    # stats
+    subparsers.add_parser("stats", help="Generate HTML stats dashboard")
+
+    # update-paper-strategy
+    subparsers.add_parser("update-paper-strategy", help="Update paper trading strategy from history")
+
+    args = parser.parse_args()
+
+    if args.command == "init":
+        from betting.init import run_init
+
+        run_init()
+    elif args.command == "analyze":
+        if args.date:
+            validate_date(args.date)
+            dates = [args.date]
+        else:
+            dates = get_dates_from_output()
+            if not dates:
+                print("no files in output dir")
+                sys.exit(0)
+            print(f"Found matchups for: {', '.join(dates)}")
+
+        from betting.analyze import run_analyze_workflow
+
+        for date in dates:
+            asyncio.run(run_analyze_workflow(date, args.max_bets, args.force, args.max_props))
+    elif args.command == "results":
+        if args.date:
+            validate_date(args.date)
+        from betting.results import run_results_workflow
+
+        asyncio.run(run_results_workflow(args.date))
+
+        # Clear output folder so processed matchup files get removed on commit
+        if OUTPUT_DIR.exists():
+            for f in OUTPUT_DIR.glob("*.json"):
+                f.unlink()
+            print("Cleared output folder.")
+    elif args.command == "update-strategy":
+        from betting.strategy import run_strategy_workflow
+
+        asyncio.run(run_strategy_workflow())
+    elif args.command == "check":
+        from betting.check import run_check_workflow
+
+        asyncio.run(run_check_workflow())
+    elif args.command == "stats":
+        from betting.stats import generate_dashboard
+
+        generate_dashboard()
+    elif args.command == "update-paper-strategy":
+        from betting.paper import run_paper_strategy_workflow
+
+        asyncio.run(run_paper_strategy_workflow())

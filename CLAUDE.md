@@ -33,9 +33,10 @@ Optional: `INJURIES_API_KEY`, `THE_ODDS_API`, `POLYMARKET_PRIVATE_KEY` / `POLYMA
 
 ## Architecture
 
-- **Matchup pipeline**: `main.py` orchestrates `helpers/api/` (client, processors, injuries, odds), `helpers/teams.py`, `helpers/games.py`, `helpers/matchup.py` (core engine: snapshots, edges, totals, signals)
-- **Betting workflow**: `betting.py` CLI delegates to `workflow/` — `analyze.py` (pre-game), `results.py` (post-game), `strategy.py` (incremental LLM evolution), `paper.py` (contrarian paper trades on skipped games), `check.py` (position re-eval), `stats.py` (dashboard), `llm.py`, `search.py`, `prompts.py`, `io.py`, `types.py`
-- **Polymarket**: `polymarket.py` + `polymarket_helpers/` (gamma.py, matching.py, odds.py)
+- **Matchup pipeline**: `main.py` → `sports/nba/pipeline.py` orchestrates `sports/nba/api/` (client, processors, injuries, odds), `sports/nba/teams.py`, `sports/nba/games.py`, `sports/nba/matchup/` (core engine: snapshots, edges, totals, signals)
+- **Betting workflow**: `betting.py` → `betting/cli.py` delegates to `betting/` — `analyze/` (pre-game), `results/` (post-game: results.py, resolution.py, game_results.py, history.py), `strategy/` (incremental LLM evolution: strategy.py, format.py, sections.py), `stats/` (dashboard: stats.py, compute.py, html.py), `paper.py` (contrarian paper trades), `check.py` (position re-eval), `llm.py`, `search.py`, `prompts/`, `io.py`, `types.py`
+- **Polymarket**: `polymarket.py` → `execution/polymarket.py` + `execution/` (gamma.py, matching.py, odds.py)
+- **Crypto**: `crypto/` (Polymarket crypto paper trading, self-contained)
 
 ## Output Locations
 
@@ -54,7 +55,7 @@ Optional: `INJURIES_API_KEY`, `THE_ODDS_API`, `POLYMARKET_PRIVATE_KEY` / `POLYMA
 ## Key Conventions
 
 - TypedDicts throughout — not enforced at runtime, safe to add optional fields
-- Season logic (`helpers/utils.py::get_current_nba_season_year()`): Sep-Dec → current year, Jan-May → previous year, Jun-Aug → None
+- Season logic (`sports/nba/utils.py::get_current_nba_season_year()`): Sep-Dec → current year, Jan-May → previous year, Jun-Aug → None
 - `run.sh` wraps commands for cron with venv, `.env`, logging, and Telegram notifications (see `CRONS.md`)
 
 ## Before Editing Any File
@@ -75,11 +76,11 @@ Optional: `INJURIES_API_KEY`, `THE_ODDS_API`, `POLYMARKET_PRIVATE_KEY` / `POLYMA
 
 | File type | Target range | Action when exceeding |
 |---|---|---|
-| Utility / helper (`helpers/`) | 100–300 lines | Split into focused modules or subdirectory package |
-| Workflow module (`workflow/`) | 150–400 lines | Extract helper functions into separate files |
+| Utility / helper (`sports/nba/`) | 100–300 lines | Split into focused modules or subdirectory package |
+| Workflow module (`betting/`) | 150–400 lines | Extract helper functions into separate files |
 | Test file (`tests/`) | 200–600 lines | Split by feature area |
 
-Some existing files exceed these ranges (e.g., `helpers/games.py`, `workflow/strategy.py`, intent test files). When modifying them, look for opportunities to extract — don't just pile on.
+Some existing files exceed these ranges (e.g., `sports/nba/games.py`, `betting/strategy/strategy.py`, intent test files). When modifying them, look for opportunities to extract — don't just pile on.
 
 ### Data & Error Handling
 
