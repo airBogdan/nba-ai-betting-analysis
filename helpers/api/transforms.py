@@ -27,6 +27,75 @@ def parse_minutes(min_str: str) -> float:
     return minutes + seconds / 60
 
 
+def _group_stats_by_player(
+    raw_stats: List[TeamPlayerStatistics],
+) -> Dict[int, Dict[str, Any]]:
+    by_player: Dict[int, Dict[str, Any]] = {}
+    for stat in raw_stats:
+        player = stat.get("player")
+        if not player or "id" not in player:
+            continue
+        pid = player["id"]
+        if pid not in by_player:
+            by_player[pid] = {
+                "name": f"{player.get('firstname', '')} {player.get('lastname', '')}".strip(),
+                "games": []
+            }
+        by_player[pid]["games"].append(stat)
+    return by_player
+
+
+def _safe_int(value: Any, default: int = 0) -> int:
+    if not value or value == '--':
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        return default
+
+
+_STAT_FIELDS = [
+    ("points", "pts"), ("totReb", "reb"), ("assists", "ast"),
+    ("steals", "stl"), ("blocks", "blk"), ("turnovers", "tov"),
+    ("fgm", "fgm"), ("fga", "fga"), ("tpm", "tpm"),
+    ("tpa", "tpa"), ("ftm", "ftm"), ("fta", "fta"),
+]
+
+
+def _aggregate_player_stats(
+    player_id: int, data: Dict[str, Any], min_games: int
+) -> ProcessedPlayerStats | None:
+    games = data["games"]
+    game_count = len(games)
+    if game_count < min_games:
+        return None
+
+    totals = {short: 0 for _, short in _STAT_FIELDS}
+    total_min = 0.0
+    total_pm = 0
+
+    for g in games:
+        total_min += parse_minutes(g.get("min", ""))
+        for api_key, short in _STAT_FIELDS:
+            totals[short] += g.get(api_key, 0) or 0
+        total_pm += _safe_int(g.get("plusMinus", "0"))
+
+    t = totals
+    return {
+        "id": player_id,
+        "name": data["name"],
+        "games": game_count,
+        "mpg": round(total_min / game_count, 1),
+        "ppg": round(t["pts"] / game_count, 1),
+        "rpg": round(t["reb"] / game_count, 1),
+        "apg": round(t["ast"] / game_count, 1),
+        "disruption": round((t["stl"] + t["blk"]) / game_count, 1),
+        "fgp": round((t["fgm"] / t["fga"]) * 100, 1) if t["fga"] > 0 else 0.0,
+        "tpp": round((t["tpm"] / t["tpa"]) * 100, 1) if t["tpa"] > 0 else 0.0,
+        "plus_minus": round(total_pm / game_count, 1),
+    }
+
+
 def process_player_statistics(
     raw_stats: List[TeamPlayerStatistics],
     top_n: int = TOP_PLAYERS,
@@ -46,83 +115,13 @@ def process_player_statistics(
     if not raw_stats:
         return []
 
-    # Group stats by player id
-    by_player: Dict[int, Dict[str, Any]] = {}
-
-    for stat in raw_stats:
-        player = stat.get("player")
-        if not player or "id" not in player:
-            continue
-        pid = player["id"]
-        if pid not in by_player:
-            by_player[pid] = {
-                "name": f"{player.get('firstname', '')} {player.get('lastname', '')}".strip(),
-                "games": []
-            }
-        by_player[pid]["games"].append(stat)
-
-    # Aggregate each player's stats
+    by_player = _group_stats_by_player(raw_stats)
     aggregated: List[ProcessedPlayerStats] = []
-
     for player_id, data in by_player.items():
-        games = data["games"]
-        game_count = len(games)
+        result = _aggregate_player_stats(player_id, data, min_games)
+        if result is not None:
+            aggregated.append(result)
 
-        # Skip players with too few games
-        if game_count < min_games:
-            continue
-
-        # Sum up all stats
-        total_min = 0.0
-        total_pts = 0
-        total_reb = 0
-        total_ast = 0
-        total_stl = 0
-        total_blk = 0
-        total_tov = 0
-        total_fgm = 0
-        total_fga = 0
-        total_tpm = 0
-        total_tpa = 0
-        total_ftm = 0
-        total_fta = 0
-        total_pm = 0
-
-        for g in games:
-            total_min += parse_minutes(g.get("min", ""))
-            total_pts += g.get("points", 0) or 0
-            total_reb += g.get("totReb", 0) or 0
-            total_ast += g.get("assists", 0) or 0
-            total_stl += g.get("steals", 0) or 0
-            total_blk += g.get("blocks", 0) or 0
-            total_tov += g.get("turnovers", 0) or 0
-            total_fgm += g.get("fgm", 0) or 0
-            total_fga += g.get("fga", 0) or 0
-            total_tpm += g.get("tpm", 0) or 0
-            total_tpa += g.get("tpa", 0) or 0
-            total_ftm += g.get("ftm", 0) or 0
-            total_fta += g.get("fta", 0) or 0
-            pm_str = g.get("plusMinus", "0")
-            try:
-                total_pm += int(pm_str) if pm_str and pm_str != '--' else 0
-            except ValueError:
-                pass  # Skip invalid plus/minus values
-
-        aggregated.append({
-            "id": player_id,
-            "name": data["name"],
-            "games": game_count,
-            "mpg": round(total_min / game_count, 1),
-            "ppg": round(total_pts / game_count, 1),
-            "rpg": round(total_reb / game_count, 1),
-            "apg": round(total_ast / game_count, 1),
-            "disruption": round((total_stl + total_blk) / game_count, 1),
-            "fgp": round((total_fgm / total_fga) * 100, 1) if total_fga > 0 else 0.0,
-            "tpp": round((total_tpm / total_tpa) * 100, 1) if total_tpa > 0 else 0.0,
-            "plus_minus": round(total_pm / game_count, 1),
-        })
-
-    # Sort by minutes per game and return top N
     aggregated.sort(key=lambda x: x["mpg"], reverse=True)
     return aggregated[:top_n]
 

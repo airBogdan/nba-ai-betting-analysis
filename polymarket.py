@@ -112,6 +112,50 @@ def get_polymarket_balance() -> Optional[float]:
         return None
 
 
+def _bet_label(bet: dict) -> str:
+    if bet.get("bet_type") == "player_prop":
+        return f"{bet['matchup']} | {bet.get('player_name', '?')} {bet.get('prop_type', '?')} {bet['pick']} {bet.get('line', '?')}"
+    return f"{bet['matchup']} | {bet['bet_type']} {bet['pick']}"
+
+
+def _process_single_bet(bet: dict, events: list[dict], client: ClobClient) -> bool:
+    """Process one bet: resolve token, check drift, place order. Returns True if placed."""
+    label = _bet_label(bet)
+    result = resolve_token_id(bet, events)
+
+    if not result:
+        print(f"  SKIP: {label} -> no matching market")
+        return False
+
+    token_id, poly_price = result
+    odds_price = bet.get("odds_price")
+    if odds_price:
+        print(f"  {format_price_comparison(odds_price, poly_price)}")
+
+    analysis_price = bet.get("poly_price")
+    if analysis_price is not None:
+        drift = abs(poly_price - analysis_price)
+        if drift > PRICE_DRIFT_TOLERANCE:
+            print(f"  SKIP: {label} -> price drifted {drift:.2f} "
+                  f"(was {analysis_price:.2f}, now {poly_price:.2f})")
+            return False
+
+    amount = bet.get("amount", 0)
+    if amount <= 0:
+        print(f"  SKIP: {label} -> no amount set")
+        return False
+
+    try:
+        resp = place_bet(client, token_id, amount)
+        print(f"  OK:   {label} -> ${amount:.2f} placed")
+        print(f"        Response: {resp}")
+        bet["placed_polymarket"] = True
+        return True
+    except Exception as e:
+        print(f"  FAIL: {label} -> {e}")
+        return False
+
+
 def run() -> None:
     """Load unplaced active bets, resolve markets, and place orders."""
     load_dotenv()
@@ -148,46 +192,9 @@ def run() -> None:
         print(f"\n{date}: {len(events)} event(s), {len(date_bets)} bet(s)")
 
         for bet in date_bets:
-            if bet.get("bet_type") == "player_prop":
-                label = f"{bet['matchup']} | {bet.get('player_name', '?')} {bet.get('prop_type', '?')} {bet['pick']} {bet.get('line', '?')}"
-            else:
-                label = f"{bet['matchup']} | {bet['bet_type']} {bet['pick']}"
-            result = resolve_token_id(bet, events)
-
-            if not result:
-                print(f"  SKIP: {label} -> no matching market")
-                skipped += 1
-                continue
-
-            token_id, poly_price = result
-            odds_price = bet.get("odds_price")
-            if odds_price:
-                print(f"  {format_price_comparison(odds_price, poly_price)}")
-
-            # Price drift gate: skip if live price moved too far from analysis price
-            analysis_price = bet.get("poly_price")
-            if analysis_price is not None:
-                drift = abs(poly_price - analysis_price)
-                if drift > PRICE_DRIFT_TOLERANCE:
-                    print(f"  SKIP: {label} -> price drifted {drift:.2f} "
-                          f"(was {analysis_price:.2f}, now {poly_price:.2f})")
-                    skipped += 1
-                    continue
-
-            amount = bet.get("amount", 0)
-            if amount <= 0:
-                print(f"  SKIP: {label} -> no amount set")
-                skipped += 1
-                continue
-
-            try:
-                resp = place_bet(client, token_id, amount)
-                print(f"  OK:   {label} -> ${amount:.2f} placed")
-                print(f"        Response: {resp}")
-                bet["placed_polymarket"] = True
+            if _process_single_bet(bet, events, client):
                 placed += 1
-            except Exception as e:
-                print(f"  FAIL: {label} -> {e}")
+            else:
                 skipped += 1
 
     save_active_bets(all_active)

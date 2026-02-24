@@ -88,46 +88,51 @@ async def get_team_recent_games(
         reverse=True
     )
 
-    # Take the last N games and process
-    results: List[RecentGame] = []
-    for game in completed[:RECENT_GAMES_LIMIT]:
-        is_home = game["teams"]["home"]["id"] == team_id
-        team_points = (
-            game["scores"]["home"]["points"]
-            if is_home
-            else game["scores"]["visitors"]["points"]
-        )
-        opp_points = (
-            game["scores"]["visitors"]["points"]
-            if is_home
-            else game["scores"]["home"]["points"]
-        )
-        opponent = (
-            game["teams"]["visitors"]["name"]
-            if is_home
-            else game["teams"]["home"]["name"]
-        )
+    return [
+        _build_recent_game(game, team_id, all_standings)
+        for game in completed[:RECENT_GAMES_LIMIT]
+    ]
 
-        # Look up opponent's record
-        vs_record = "N/A"
-        vs_win_pct = 0.0
-        if all_standings and opponent in all_standings:
-            opp_data = all_standings[opponent]
-            vs_record = f"{opp_data['wins']}-{opp_data['losses']}"
-            vs_win_pct = opp_data["win_pct"]
 
-        results.append({
-            "vs": opponent,
-            "vs_record": vs_record,
-            "vs_win_pct": vs_win_pct,
-            "result": "W" if team_points > opp_points else "L",
-            "score": f"{team_points}-{opp_points}",
-            "home": is_home,
-            "margin": team_points - opp_points,
-            "date": game["date"]["start"].split("T")[0],
-        })
+def _build_recent_game(
+    game: Dict[str, Any],
+    team_id: int,
+    all_standings: Optional[Dict[str, Dict[str, Any]]],
+) -> RecentGame:
+    is_home = game["teams"]["home"]["id"] == team_id
+    team_points = (
+        game["scores"]["home"]["points"]
+        if is_home
+        else game["scores"]["visitors"]["points"]
+    )
+    opp_points = (
+        game["scores"]["visitors"]["points"]
+        if is_home
+        else game["scores"]["home"]["points"]
+    )
+    opponent = (
+        game["teams"]["visitors"]["name"]
+        if is_home
+        else game["teams"]["home"]["name"]
+    )
 
-    return results
+    vs_record = "N/A"
+    vs_win_pct = 0.0
+    if all_standings and opponent in all_standings:
+        opp_data = all_standings[opponent]
+        vs_record = f"{opp_data['wins']}-{opp_data['losses']}"
+        vs_win_pct = opp_data["win_pct"]
+
+    return {
+        "vs": opponent,
+        "vs_record": vs_record,
+        "vs_win_pct": vs_win_pct,
+        "result": "W" if team_points > opp_points else "L",
+        "score": f"{team_points}-{opp_points}",
+        "home": is_home,
+        "margin": team_points - opp_points,
+        "date": game["date"]["start"].split("T")[0],
+    }
 
 
 def _utc_to_et_date(date_start_str: Optional[str]) -> Optional[str]:

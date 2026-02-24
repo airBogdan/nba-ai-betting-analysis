@@ -167,6 +167,67 @@ async def analyze_game(
     return matchup_analysis
 
 
+async def _process_game(
+    game: dict,
+    game_date: str,
+    season: int,
+    league_avg_efficiency: float,
+    odds_data: list | None,
+) -> tuple[str, str, str]:
+    home = game["teams"]["home"]
+    away = game["teams"]["visitors"]
+
+    home_raw = await get_team_players_statistics(home["id"], season)
+    home_players = process_player_statistics(home_raw or [])
+    away_raw = await get_team_players_statistics(away["id"], season)
+    away_players = process_player_statistics(away_raw or [])
+
+    analysis = await analyze_game(
+        home_id=home["id"],
+        home_name=home["name"],
+        away_id=away["id"],
+        away_name=away["name"],
+        game_date=game_date,
+        season=season,
+        api_game_id=game["id"],
+        league_avg_efficiency=league_avg_efficiency,
+        team1_players=home_players,
+        team2_players=away_players,
+    )
+
+    if odds_data:
+        event = find_game_odds(odds_data, home["name"], away["name"])
+        if event:
+            event_id = event.get("id")
+            alternates = None
+            if event_id:
+                print("  Fetching alternate lines...")
+                alternates = await fetch_event_alternates(event_id)
+            odds = extract_odds(event, alternates)
+            if odds:
+                analysis["odds"] = odds
+
+    away_slug = away["name"].lower().replace(" ", "_")
+    home_slug = home["name"].lower().replace(" ", "_")
+    filename = f"{away_slug}_vs_{home_slug}_{game_date}.json"
+
+    write_json(filename, analysis)
+
+    props_filename = f"props_{away_slug}_vs_{home_slug}_{game_date}.json"
+    props_data = {
+        "api_game_id": game["id"],
+        "game_date": game_date,
+        "team1": home["name"],
+        "team2": away["name"],
+        "home_team": home["name"],
+        "team1_players": home_players,
+        "team2_players": away_players,
+    }
+    write_json(props_filename, props_data)
+
+    return (filename, home["name"], away["name"])
+
+
 async def main() -> None:
     """Process all games for a given date."""
     if len(sys.argv) > 2:
@@ -199,77 +260,24 @@ async def main() -> None:
     else:
         print("No odds data available (continuing without)")
 
-    # Track generated files and their teams for injury enrichment
-    generated_files: list[tuple[str, str, str]] = []  # (filename, home_name, away_name)
+    generated_files: list[tuple[str, str, str]] = []
 
     for game in games:
         home = game["teams"]["home"]
         away = game["teams"]["visitors"]
-
         print(f"\nProcessing: {away['name']} @ {home['name']}")
 
         try:
-            # Pre-fetch player stats (used for both matchup analysis and props output)
-            home_raw = await get_team_players_statistics(home["id"], season)
-            home_players = process_player_statistics(home_raw or [])
-            away_raw = await get_team_players_statistics(away["id"], season)
-            away_players = process_player_statistics(away_raw or [])
-
-            analysis = await analyze_game(
-                home_id=home["id"],
-                home_name=home["name"],
-                away_id=away["id"],
-                away_name=away["name"],
-                game_date=game_date,
-                season=season,
-                api_game_id=game["id"],
-                league_avg_efficiency=league_avg_efficiency,
-                team1_players=home_players,
-                team2_players=away_players,
+            result = await _process_game(
+                game, game_date, season, league_avg_efficiency, odds_data
             )
-
-            # Add odds if available
-            if odds_data:
-                event = find_game_odds(odds_data, home["name"], away["name"])
-                if event:
-                    # Fetch alternate lines for this event
-                    event_id = event.get("id")
-                    alternates = None
-                    if event_id:
-                        print("  Fetching alternate lines...")
-                        alternates = await fetch_event_alternates(event_id)
-                    odds = extract_odds(event, alternates)
-                    if odds:
-                        analysis["odds"] = odds
-
-            # Filename: away_vs_home_date.json (standard "@ notation")
-            away_slug = away["name"].lower().replace(" ", "_")
-            home_slug = home["name"].lower().replace(" ", "_")
-            filename = f"{away_slug}_vs_{home_slug}_{game_date}.json"
-
-            write_json(filename, analysis)
-            generated_files.append((filename, home["name"], away["name"]))
-
-            # Write props file with full player stats for player prop analysis
-            props_filename = f"props_{away_slug}_vs_{home_slug}_{game_date}.json"
-            props_data = {
-                "api_game_id": game["id"],
-                "game_date": game_date,
-                "team1": home["name"],
-                "team2": away["name"],
-                "home_team": home["name"],
-                "team1_players": home_players,
-                "team2_players": away_players,
-            }
-            write_json(props_filename, props_data)
-
+            generated_files.append(result)
         except Exception as e:
             print(f"Error processing {away['name']} @ {home['name']}: {e}")
             continue
 
     print(f"\nProcessed {len(games)} games.")
 
-    # Fetch and apply injuries
     await enrich_with_injuries(generated_files)
 
     print("\nDone.")

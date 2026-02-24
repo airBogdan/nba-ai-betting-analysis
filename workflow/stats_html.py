@@ -5,68 +5,60 @@ import json
 from typing import Optional
 
 
-def _render_html(
-    overview: dict,
-    cumulative_pnl: list,
-    rolling_win_rate: list,
-    breakdowns: dict,
-    skip_stats: dict,
-    paper_overview: Optional[dict] = None,
-    paper_cumulative_pnl: Optional[list] = None,
-    paper_breakdowns: Optional[dict] = None,
-) -> str:
-    """Render self-contained HTML dashboard."""
-    pnl_dates = json.dumps([p["date"] for p in cumulative_pnl])
-    pnl_units = json.dumps([p["cumulative_units"] for p in cumulative_pnl])
-    pnl_dollars = json.dumps([p["cumulative_dollars"] for p in cumulative_pnl])
+def _color(val: float) -> str:
+    if val > 0:
+        return "color: #22c55e"
+    if val < 0:
+        return "color: #ef4444"
+    return ""
 
-    rwr_numbers = json.dumps([r["bet_number"] for r in rolling_win_rate])
-    rwr_rates = json.dumps([r["rolling_win_rate"] for r in rolling_win_rate])
 
-    def _color(val: float) -> str:
-        if val > 0:
-            return "color: #22c55e"
-        if val < 0:
-            return "color: #ef4444"
-        return ""
+def _esc(val: str) -> str:
+    return html.escape(str(val))
 
-    def _esc(val: str) -> str:
-        return html.escape(str(val))
 
-    def _breakdown_rows(rows: list) -> str:
-        out = ""
-        for r in rows:
-            wr_pct = f"{r['win_rate'] * 100:.1f}%"
-            roi_pct = f"{r['roi'] * 100:.1f}%"
-            nu_style = _color(r["net_units"])
-            roi_style = _color(r["roi"])
-            out += (
-                f"<tr><td>{_esc(r['category'])}</td><td>{r['wins']}</td><td>{r['losses']}</td>"
-                f"<td>{r['pushes']}</td><td>{r['total']}</td><td>{wr_pct}</td>"
-                f"<td style=\"{nu_style}\">{r['net_units']:+.2f}</td>"
-                f"<td style=\"{roi_style}\">{roi_pct}</td></tr>\n"
-            )
-        return out
+def _breakdown_rows(rows: list) -> str:
+    out = ""
+    for r in rows:
+        wr_pct = f"{r['win_rate'] * 100:.1f}%"
+        roi_pct = f"{r['roi'] * 100:.1f}%"
+        nu_style = _color(r["net_units"])
+        roi_style = _color(r["roi"])
+        out += (
+            f"<tr><td>{_esc(r['category'])}</td><td>{r['wins']}</td><td>{r['losses']}</td>"
+            f"<td>{r['pushes']}</td><td>{r['total']}</td><td>{wr_pct}</td>"
+            f"<td style=\"{nu_style}\">{r['net_units']:+.2f}</td>"
+            f"<td style=\"{roi_style}\">{roi_pct}</td></tr>\n"
+        )
+    return out
 
-    def _skip_rows(skips: list) -> str:
-        out = ""
-        for s in skips:
-            outcome = ""
-            if s.get("outcome_resolved"):
-                outcome = f"{_esc(s.get('final_score', ''))} ({_esc(s.get('winner', ''))})"
-            out += (
-                f"<tr><td>{_esc(s.get('date', ''))}</td><td>{_esc(s.get('matchup', ''))}</td>"
-                f"<td>{_esc(s.get('reason', ''))}</td><td>{_esc(s.get('source', ''))}</td>"
-                f"<td>{outcome}</td></tr>\n"
-            )
-        return out
 
-    # Paper trading HTML section (conditional)
+def _skip_rows(skips: list) -> str:
+    out = ""
+    for s in skips:
+        outcome = ""
+        if s.get("outcome_resolved"):
+            outcome = f"{_esc(s.get('final_score', ''))} ({_esc(s.get('winner', ''))})"
+        out += (
+            f"<tr><td>{_esc(s.get('date', ''))}</td><td>{_esc(s.get('matchup', ''))}</td>"
+            f"<td>{_esc(s.get('reason', ''))}</td><td>{_esc(s.get('source', ''))}</td>"
+            f"<td>{outcome}</td></tr>\n"
+        )
+    return out
+
+
+def _build_paper_section(
+    paper_overview: Optional[dict],
+    paper_cumulative_pnl: Optional[list],
+    paper_breakdowns: Optional[dict],
+) -> tuple:
     paper_section = ""
     paper_chart_js = ""
-    if paper_overview and paper_overview.get("total_trades", 0) > 0:
-        p_nu_style = _color(paper_overview["net_units"])
-        paper_section = f"""
+    if not paper_overview or paper_overview.get("total_trades", 0) <= 0:
+        return paper_section, paper_chart_js
+
+    p_nu_style = _color(paper_overview["net_units"])
+    paper_section = f"""
 <h1>Paper Trading</h1>
 
 <div class="cards">
@@ -97,10 +89,10 @@ def _render_html(
 {_breakdown_rows(paper_breakdowns['by_skip_reason']) if paper_breakdowns else ''}
 </table>
 """
-        if paper_cumulative_pnl:
-            p_dates = json.dumps([p["date"] for p in paper_cumulative_pnl])
-            p_units = json.dumps([p["cumulative_units"] for p in paper_cumulative_pnl])
-            paper_chart_js = f"""
+    if paper_cumulative_pnl:
+        p_dates = json.dumps([p["date"] for p in paper_cumulative_pnl])
+        p_units = json.dumps([p["cumulative_units"] for p in paper_cumulative_pnl])
+        paper_chart_js = f"""
 new Chart(document.getElementById('paperPnlChart'), {{
   type: 'line',
   data: {{
@@ -119,6 +111,31 @@ new Chart(document.getElementById('paperPnlChart'), {{
   }}
 }});
 """
+
+    return paper_section, paper_chart_js
+
+
+def _render_html(
+    overview: dict,
+    cumulative_pnl: list,
+    rolling_win_rate: list,
+    breakdowns: dict,
+    skip_stats: dict,
+    paper_overview: Optional[dict] = None,
+    paper_cumulative_pnl: Optional[list] = None,
+    paper_breakdowns: Optional[dict] = None,
+) -> str:
+    """Render self-contained HTML dashboard."""
+    pnl_dates = json.dumps([p["date"] for p in cumulative_pnl])
+    pnl_units = json.dumps([p["cumulative_units"] for p in cumulative_pnl])
+    pnl_dollars = json.dumps([p["cumulative_dollars"] for p in cumulative_pnl])
+
+    rwr_numbers = json.dumps([r["bet_number"] for r in rolling_win_rate])
+    rwr_rates = json.dumps([r["rolling_win_rate"] for r in rolling_win_rate])
+
+    paper_section, paper_chart_js = _build_paper_section(
+        paper_overview, paper_cumulative_pnl, paper_breakdowns
+    )
 
     nu_style = _color(overview["net_units"])
     nd_style = _color(overview["net_dollars"])

@@ -249,6 +249,10 @@ async def run_paper_strategy_workflow() -> None:
         for insight in new_insights:
             print(f"  * {insight}")
 
+    _apply_paper_adjustments(current, result)
+
+
+def _apply_paper_adjustments(current: str, result: Dict[str, Any]) -> None:
     required_keys = {"section", "updated_content", "change_description", "reasoning"}
     adjustments = [
         adj for adj in result.get("adjustments", [])
