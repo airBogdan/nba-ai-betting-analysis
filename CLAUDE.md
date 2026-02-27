@@ -23,18 +23,27 @@ python betting.py check                        # Re-evaluate open positions
 python betting.py stats                        # Generate HTML analytics dashboard
 python betting.py update-paper-strategy        # Evolve paper trading strategy
 python polymarket.py                            # Place bets on Polymarket
+
+# Football analysis
+python football.py analyze -l uel --date YYYY-MM-DD  # Goal probability analysis
+python football.py leagues                            # Show league shorthand mapping
+python football.py leagues --verify                   # Verify IDs against API
+python football.py league-averages                    # Compute per-league goal averages
+python football.py league-averages --force            # Force recompute
 ```
 
 ## Environment
 
 Required in `.env`: `NBA_RAPID_API_KEY`, `OPENROUTER_API_KEY`
 
-Optional: `INJURIES_API_KEY`, `THE_ODDS_API`, `POLYMARKET_PRIVATE_KEY` / `POLYMARKET_FUNDER`, `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`, `LLM_MODEL`, `PERPLEXITY_MODEL`
+Optional: `INJURIES_API_KEY`, `THE_ODDS_API`, `APIFOOTBAL`, `POLYMARKET_PRIVATE_KEY` / `POLYMARKET_FUNDER`, `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`, `LLM_MODEL`, `PERPLEXITY_MODEL`
 
 ## Architecture
 
 - **Matchup pipeline**: `main.py` → `sports/nba/pipeline.py` orchestrates `sports/nba/api/` (client, processors, injuries, odds), `sports/nba/teams.py`, `sports/nba/games.py`, `sports/nba/matchup/` (core engine: snapshots, edges, totals, signals)
 - **Betting workflow**: `betting.py` → `betting/cli.py` delegates to `betting/` — `analyze/` (pre-game), `results/` (post-game: results.py, resolution.py, game_results.py, history.py), `strategy/` (incremental LLM evolution: strategy.py, format.py, sections.py), `stats/` (dashboard: stats.py, compute.py, html.py), `paper.py` (contrarian paper trades), `check.py` (position re-eval), `llm.py`, `search.py`, `prompts/`, `io.py`, `types.py`
+- **Football analysis**: `football.py` → `sports/football/analysis.py` orchestrates `sports/football/client.py` (APIFootball REST), `sports/football/stats.py` (Poisson model), Perplexity search → `output/football/{date}/`
+- **Football live**: `sports/football/live.py` (WebSocket goal monitor with Polymarket odds)
 - **Polymarket**: `polymarket.py` → `execution/polymarket.py` + `execution/` (gamma.py, matching.py, odds.py)
 - **Crypto**: `crypto/` (Polymarket crypto paper trading, self-contained)
 
@@ -51,6 +60,7 @@ Optional: `INJURIES_API_KEY`, `THE_ODDS_API`, `POLYMARKET_PRIVATE_KEY` / `POLYMA
 - `bets/paper/history.json` — Paper trade history with summary stats
 - `bets/paper/strategy.md` — Paper trading strategy (LLM-maintained)
 - `bets/paper/journal/` — Daily paper trade markdown entries
+- `output/football/{date}/analysis.md` — Football goal analysis reports
 
 ## Key Conventions
 
