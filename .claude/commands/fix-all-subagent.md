@@ -1,0 +1,1 @@
+Fix all the issues using issue-fixer subagents. Make sure each agent gets proper instructions.

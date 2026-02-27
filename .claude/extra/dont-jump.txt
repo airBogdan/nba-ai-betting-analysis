@@ -1,0 +1,3 @@
+Don't jump on the first solution you come up with. Write it out first, think about it, find at least 1 other way of doing it, if not 2, find their weaknesses and strenghts, and then pick one.
+
+create to dos for the first 4, then pick them one by one, and tell me more in details about the issue and what we can do about it, and after I confirm, you can implement the fix, and then move on to the second, do the same, and so on
