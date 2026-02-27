@@ -6,8 +6,8 @@ __pycache__/
 *.db-wal
 *.db-shm
 logs/*.log
-/.claude/
 /.idea/
 /synth-data-1.1.5/
 .worktrees/
 output/
+sports/football/league_averages.json

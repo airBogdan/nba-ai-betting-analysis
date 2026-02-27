@@ -5,6 +5,7 @@ import json
 import os
 import re
 import subprocess
+import unicodedata
 from datetime import datetime, timezone
 
 import aiohttp
@@ -28,12 +29,53 @@ FOOTBALL_SERIES_IDS = [
 
 ODDS_POLL_INTERVAL = 60
 
-TEAM_SUFFIXES = re.compile(r"\b(FC|CF|AFC|SC)\b", re.IGNORECASE)
+TEAM_SUFFIXES = re.compile(
+    r"\b(FC|CF|AFC|SC|UD|RCD|de Futbol)\b", re.IGNORECASE
+)
+
+# APIFootball short name → canonical name used in fuzzy matching.
+# Polymarket uses full official names; APIFootball often abbreviates.
+TEAM_ALIASES: dict[str, str] = {
+    # EPL
+    "wolves": "wolverhampton wanderers",
+    # La Liga
+    "atl. madrid": "atletico madrid",
+    "ath bilbao": "athletic bilbao",
+    "athletic club": "athletic bilbao",
+    "alaves": "deportivo alaves",
+    "betis": "real betis",
+    # Bundesliga
+    "b. monchengladbach": "borussia monchengladbach",
+    "dortmund": "borussia dortmund",
+    "fc koln": "koln",
+    "bayern munich": "bayern munchen",
+    # Serie A
+    "ac milan": "milan",
+    "as roma": "roma",
+    # Ligue 1
+    "psg": "paris saint-germain",
+    "lyon": "olympique lyonnais",
+    "marseille": "olympique marseille",
+    "st etienne": "saint-etienne",
+}
+
+
+def _strip_accents(text: str) -> str:
+    """Remove diacritics (é→e, ö→o, ü→u, etc.)."""
+    nfkd = unicodedata.normalize("NFKD", text)
+    return "".join(c for c in nfkd if not unicodedata.combining(c))
+
+
+def _apply_alias(name: str) -> str:
+    """Resolve known APIFootball abbreviations to canonical names."""
+    key = _strip_accents(name.lower())
+    return TEAM_ALIASES.get(key, name)
 
 
 def _normalize_team_name(name: str) -> str:
-    """Strip common suffixes and extra whitespace for matching."""
-    cleaned = TEAM_SUFFIXES.sub("", name).strip()
+    """Strip accents, common suffixes, and extra whitespace for matching."""
+    cleaned = _strip_accents(name)
+    cleaned = TEAM_SUFFIXES.sub("", cleaned).strip()
     return re.sub(r"\s+", " ", cleaned)
 
 
@@ -44,8 +86,11 @@ def _significant_words(name: str) -> set[str]:
 
 def teams_match(api_name: str, poly_name: str) -> bool:
     """Check if an APIFootball team name matches a Polymarket team name."""
-    norm_api = _normalize_team_name(api_name)
-    norm_poly = _normalize_team_name(poly_name)
+    resolved_api = _apply_alias(api_name)
+    resolved_poly = _apply_alias(poly_name)
+
+    norm_api = _normalize_team_name(resolved_api)
+    norm_poly = _normalize_team_name(resolved_poly)
 
     if norm_api.lower() == norm_poly.lower():
         return True
@@ -151,12 +196,28 @@ class OddsCache:
         self._cache: dict[str, dict] = {}
         self._task: asyncio.Task | None = None
 
+    @property
+    def titles(self) -> list[str]:
+        """Return all tracked event titles."""
+        return list(self._cache.keys())
+
+    def has_match(self, home_team: str, away_team: str) -> bool:
+        """Check if a match is tracked on Polymarket."""
+        return any(
+            _event_matches_teams(title, home_team, away_team)
+            for title in self._cache
+        )
+
     def get(self, home_team: str, away_team: str) -> dict | None:
         """Look up cached odds by team names."""
         for title, odds in self._cache.items():
             if _event_matches_teams(title, home_team, away_team):
                 return odds
         return None
+
+    async def initial_fetch(self):
+        """Run first fetch before starting background loop."""
+        await self._refresh()
 
     def start(self):
         self._task = asyncio.create_task(self._poll_loop())
@@ -167,8 +228,8 @@ class OddsCache:
 
     async def _poll_loop(self):
         while True:
-            await self._refresh()
             await asyncio.sleep(ODDS_POLL_INTERVAL)
+            await self._refresh()
 
     async def _refresh(self):
         try:
@@ -206,10 +267,18 @@ def _extract_match_odds(event: dict) -> dict | None:
         if "draw" in question:
             odds["draw"] = yes_price
         elif "win" in question or "beat" in question:
-            label = market.get("groupItemTitle", question)
-            odds[label] = yes_price
+            label = _short_label(market.get("groupItemTitle", ""))
+            odds[label or "win"] = yes_price
 
     return odds if odds else None
+
+
+def _short_label(group_item_title: str) -> str:
+    """Extract short label from groupItemTitle like 'Arsenal FC (Arsenal FC vs. Chelsea FC)'."""
+    paren = group_item_title.find("(")
+    if paren > 0:
+        return group_item_title[:paren].strip()
+    return group_item_title.strip()
 
 
 def _find_yes_price(outcomes: list, prices: list) -> float | None:
@@ -268,6 +337,8 @@ async def fetch_polymarket_odds(home_team: str, away_team: str) -> dict | None:
 
 def _event_matches_teams(title: str, home_team: str, away_team: str) -> bool:
     """Check if a Polymarket event title matches both team names."""
+    if title.endswith("- More Markets"):
+        return False
     parts = re.split(r"\s+vs\.?\s+", title, flags=re.IGNORECASE)
     if len(parts) != 2:
         return False
@@ -287,6 +358,15 @@ async def run():
 
     tracker = ScoreTracker()
     odds_cache = OddsCache()
+
+    print("Fetching Polymarket football events...")
+    await odds_cache.initial_fetch()
+    _print_tracked_games(odds_cache)
+
+    if not odds_cache.titles:
+        print("No active football events on Polymarket. Exiting.")
+        return
+
     odds_cache.start()
     backoff = 1
 
@@ -310,6 +390,8 @@ async def run():
                         new_goals = tracker.update(data)
 
                         for goal in new_goals:
+                            if not odds_cache.has_match(goal["home_team"], goal["away_team"]):
+                                continue
                             await _handle_goal(goal, odds_cache)
 
             except (websockets.ConnectionClosed, ConnectionError, OSError) as e:
@@ -320,7 +402,15 @@ async def run():
         odds_cache.stop()
 
 
-SOUND_GOAL = "/System/Library/Sounds/Glass.aiff"
+def _print_tracked_games(odds_cache: OddsCache):
+    """Print list of Polymarket football events being tracked."""
+    titles = odds_cache.titles
+    print(f"Tracking {len(titles)} Polymarket football events:")
+    for title in titles:
+        print(f"  - {title}")
+
+
+SOUND_GOAL = "/System/Library/Sounds/Funk.aiff"
 SOUND_TIE_BREAKER = "/System/Library/Sounds/Hero.aiff"
 
 
