@@ -92,25 +92,28 @@ def compute_expected_goals(
     home_avg_against: float,
     away_avg_for: float,
     away_avg_against: float,
-    league_avg: float = DEFAULT_LEAGUE_AVG,
+    league_home_avg: float,
+    league_away_avg: float,
 ) -> tuple[float, float]:
     """Compute expected goals for home and away teams.
 
-    Uses attack/defense strength indices relative to league average.
+    Uses attack/defense strength indices relative to league home/away
+    baselines. This captures home advantage: home teams score more and
+    concede less on average, so strength indices are measured against
+    the appropriate venue baseline.
+
     Returns (home_xG, away_xG).
     """
-    if league_avg <= 0:
+    if league_home_avg <= 0 or league_away_avg <= 0:
         return (0.0, 0.0)
 
-    half_avg = league_avg / 2
+    home_attack = home_avg_for / league_home_avg
+    home_defense = home_avg_against / league_away_avg
+    away_attack = away_avg_for / league_away_avg
+    away_defense = away_avg_against / league_home_avg
 
-    home_attack = home_avg_for / half_avg
-    home_defense = home_avg_against / half_avg
-    away_attack = away_avg_for / half_avg
-    away_defense = away_avg_against / half_avg
-
-    home_xg = max(home_attack * away_defense * half_avg, MIN_XG)
-    away_xg = max(away_attack * home_defense * half_avg, MIN_XG)
+    home_xg = max(home_attack * away_defense * league_home_avg, MIN_XG)
+    away_xg = max(away_attack * home_defense * league_away_avg, MIN_XG)
 
     return (home_xg, away_xg)
 

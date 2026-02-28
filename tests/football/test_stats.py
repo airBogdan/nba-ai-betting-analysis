@@ -93,33 +93,49 @@ class TestComputeSeasonAverages:
 
 
 class TestComputeExpectedGoals:
-    def test_symmetric_teams(self):
+    def test_symmetric_teams_equal_baselines(self):
         half = DEFAULT_LEAGUE_AVG / 2
-        home_xg, away_xg = compute_expected_goals(half, half, half, half)
+        home_xg, away_xg = compute_expected_goals(half, half, half, half, half, half)
         assert abs(home_xg - half) < 0.01
         assert abs(away_xg - half) < 0.01
 
+    def test_symmetric_teams_split_baselines(self):
+        h_avg, a_avg = 1.5, 1.2
+        home_xg, away_xg = compute_expected_goals(h_avg, a_avg, a_avg, h_avg, h_avg, a_avg)
+        assert abs(home_xg - h_avg) < 0.01
+        assert abs(away_xg - a_avg) < 0.01
+
     def test_strong_home_team(self):
-        half = DEFAULT_LEAGUE_AVG / 2
         home_xg, away_xg = compute_expected_goals(
-            2.5, 0.5, 1.0, 1.5
+            2.5, 0.5, 1.0, 1.5, 1.5, 1.2,
         )
         assert home_xg > away_xg
 
     def test_zero_league_avg(self):
-        home_xg, away_xg = compute_expected_goals(1.5, 1.0, 1.2, 1.3, 0.0)
+        home_xg, away_xg = compute_expected_goals(1.5, 1.0, 1.2, 1.3, 0.0, 0.0)
+        assert home_xg == 0.0
+        assert away_xg == 0.0
+
+    def test_zero_one_baseline(self):
+        home_xg, away_xg = compute_expected_goals(1.5, 1.0, 1.2, 1.3, 0.0, 1.2)
         assert home_xg == 0.0
         assert away_xg == 0.0
 
     def test_zero_input_gets_floored(self):
-        home_xg, away_xg = compute_expected_goals(0.0, 0.0, 0.0, 0.0)
+        home_xg, away_xg = compute_expected_goals(0.0, 0.0, 0.0, 0.0, 1.5, 1.2)
         assert home_xg == MIN_XG
         assert away_xg == MIN_XG
 
     def test_partial_zero_floors_only_affected(self):
-        home_xg, away_xg = compute_expected_goals(0.0, 1.0, 1.2, 0.0)
+        home_xg, away_xg = compute_expected_goals(0.0, 1.0, 1.2, 0.0, 1.5, 1.2)
         assert home_xg == MIN_XG
         assert away_xg > MIN_XG
+
+    def test_home_advantage_in_baselines(self):
+        """Higher home baseline should produce higher home xG for average teams."""
+        h_avg, a_avg = 1.6, 1.1
+        home_xg, away_xg = compute_expected_goals(h_avg, a_avg, a_avg, h_avg, h_avg, a_avg)
+        assert home_xg > away_xg
 
 
 class TestComputeGoalProbabilities:

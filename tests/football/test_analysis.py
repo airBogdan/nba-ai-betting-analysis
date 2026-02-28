@@ -140,9 +140,11 @@ class TestAvgOrDefault:
         base.update(kwargs)
         return base
 
-    def test_returns_venue_avg_when_available(self):
+    def test_returns_blended_venue_avg(self):
         avg = self._avg()
-        assert _avg_or_default(avg, "home_gf_avg", "goals_for_avg", 1.34) == 1.8
+        # (1.8 * 5 + 1.5 * 6) / (5 + 6) = 1.636...
+        result = _avg_or_default(avg, "home_gf_avg", "goals_for_avg", 1.34)
+        assert round(result, 2) == 1.64
 
     def test_falls_back_to_overall_when_no_venue_matches(self):
         avg = self._avg(home_matches=0)
@@ -158,9 +160,11 @@ class TestAvgOrDefault:
         result = _avg_or_default(avg, "home_gf_avg", "goals_for_avg", 1.34)
         assert result == 1.5
 
-    def test_returns_zero_when_genuinely_zero(self):
+    def test_blends_zero_venue_toward_overall(self):
         avg = self._avg(home_gf_avg=0.0, home_matches=5)
-        assert _avg_or_default(avg, "home_gf_avg", "goals_for_avg", 1.34) == 0.0
+        # (0.0 * 5 + 1.5 * 6) / (5 + 6) = 0.818...
+        result = _avg_or_default(avg, "home_gf_avg", "goals_for_avg", 1.34)
+        assert round(result, 2) == 0.82
 
     def test_falls_back_to_overall_when_too_few_venue_matches(self):
         avg = self._avg(home_gf_avg=0.0, home_matches=2)

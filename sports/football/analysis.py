@@ -8,7 +8,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-from .averages import DOMESTIC_LEAGUES, ensure_averages, get_league_avg
+from .averages import DOMESTIC_LEAGUES, ensure_averages, get_league_avg, get_league_home_away_avg
 from .client import (
     LEAGUES,
     close_session,
@@ -62,6 +62,8 @@ async def analyze_match(
     match: dict,
     date: str,
     league_avg: float = DEFAULT_LEAGUE_AVG,
+    league_home_avg: float | None = None,
+    league_away_avg: float | None = None,
     standings: dict[str, dict] | None = None,
 ) -> dict | None:
     """Run full analysis on a single match."""
@@ -74,7 +76,10 @@ async def analyze_match(
     if not home or not away:
         return None
 
-    logger.info("  Analyzing: %s vs %s (league avg: %.2f)", home, away, league_avg)
+    lg_home = league_home_avg if league_home_avg is not None else league_avg / 2
+    lg_away = league_away_avg if league_away_avg is not None else league_avg / 2
+
+    logger.info("  Analyzing: %s vs %s (league avg: %.2f, H:%.2f A:%.2f)", home, away, league_avg, lg_home, lg_away)
 
     home_hist = await _fetch_team_history(home_id, date)
     away_hist = await _fetch_team_history(away_id, date)
@@ -82,13 +87,13 @@ async def analyze_match(
     home_avg = compute_season_averages(home_hist, home_id)
     away_avg = compute_season_averages(away_hist, away_id)
 
-    half_avg = league_avg / 2
     home_xg, away_xg = compute_expected_goals(
-        _avg_or_default(home_avg, "home_gf_avg", "goals_for_avg", half_avg),
-        _avg_or_default(home_avg, "home_ga_avg", "goals_against_avg", half_avg),
-        _avg_or_default(away_avg, "away_gf_avg", "goals_for_avg", half_avg),
-        _avg_or_default(away_avg, "away_ga_avg", "goals_against_avg", half_avg),
-        league_avg=league_avg,
+        _avg_or_default(home_avg, "home_gf_avg", "goals_for_avg", lg_home),
+        _avg_or_default(home_avg, "home_ga_avg", "goals_against_avg", lg_away),
+        _avg_or_default(away_avg, "away_gf_avg", "goals_for_avg", lg_away),
+        _avg_or_default(away_avg, "away_ga_avg", "goals_against_avg", lg_home),
+        league_home_avg=lg_home,
+        league_away_avg=lg_away,
     )
 
     probabilities = compute_goal_probabilities(home_xg, away_xg)
@@ -114,16 +119,20 @@ async def analyze_match(
 
 
 MIN_VENUE_MATCHES = 3
+VENUE_REGRESSION_WEIGHT = 6
 
 
 def _avg_or_default(avg: dict, primary: str, fallback: str, default: float) -> float:
-    """Get a venue-specific average, falling back to overall then league default.
+    """Get a venue-specific average, regressed toward overall average.
 
-    Requires MIN_VENUE_MATCHES before trusting venue splits to avoid
-    small-sample distortion in the Poisson model.
+    Blends venue splits toward the overall average to reduce small-sample
+    noise. With VENUE_REGRESSION_WEIGHT=6, a 12-game venue split is weighted
+    2:1 against the overall; a 6-game split is weighted 1:1.
     """
     if avg.get("matches", 0) == 0:
         return default
+
+    overall = avg.get(fallback, default)
 
     if primary.startswith("home_"):
         venue_count = avg.get("home_matches", 0)
@@ -132,12 +141,14 @@ def _avg_or_default(avg: dict, primary: str, fallback: str, default: float) -> f
     else:
         return avg.get(primary, default)
 
-    if venue_count >= MIN_VENUE_MATCHES:
-        val = avg.get(primary)
-        if val is not None:
-            return val
+    if venue_count < MIN_VENUE_MATCHES:
+        return overall
 
-    return avg.get(fallback, default)
+    venue_val = avg.get(primary)
+    if venue_val is None:
+        return overall
+
+    return (venue_val * venue_count + overall * VENUE_REGRESSION_WEIGHT) / (venue_count + VENUE_REGRESSION_WEIGHT)
 
 
 def _ordinal(n) -> str:
@@ -314,7 +325,8 @@ async def run_analysis(
     try:
         averages = await ensure_averages()
         lg_avg = get_league_avg(league, averages)
-        logger.info("Using league average: %.2f goals/game", lg_avg)
+        lg_home, lg_away = get_league_home_away_avg(league, averages)
+        logger.info("Using league average: %.2f goals/game (H:%.2f A:%.2f)", lg_avg, lg_home, lg_away)
 
         standings_lookup = None
         if league in DOMESTIC_LEAGUES:
@@ -336,7 +348,9 @@ async def run_analysis(
         analyses = []
         for match in all_matches:
             result = await analyze_match(
-                match, date, league_avg=lg_avg, standings=standings_lookup
+                match, date, league_avg=lg_avg,
+                league_home_avg=lg_home, league_away_avg=lg_away,
+                standings=standings_lookup,
             )
             if result:
                 analyses.append(result)
