@@ -370,6 +370,21 @@ async def run_analysis(
         await close_session()
 
 
+_CARD_RE = re.compile(r'<div class="match-card">.*?</div>\s*(?=<div class="match-card">|</body>|$)', re.DOTALL)
+_TIME_RE = re.compile(r'<span class="meta">.*?(\d{1,2}:\d{2})', re.DOTALL)
+
+
+def _extract_cards(html: str) -> list[str]:
+    """Split HTML into individual match-card divs."""
+    return _CARD_RE.findall(html)
+
+
+def _card_start_time(card: str) -> str:
+    """Extract kickoff time from a card for sorting (e.g. '16:00')."""
+    m = _TIME_RE.search(card)
+    return m.group(1) if m else "99:99"
+
+
 def merge_reports() -> Path | None:
     """Merge all league HTML reports in OUTPUT_DIR into a single all.html."""
     if not OUTPUT_DIR.exists():
@@ -387,18 +402,12 @@ def merge_reports() -> Path | None:
 
     all_path = OUTPUT_DIR / "all.html"
     if all_path.exists():
-        existing = all_path.read_text()
-        start = existing.find('<div class="match-card">')
-        end = existing.rfind("</div>")
-        if start != -1 and end != -1:
-            cards.append(existing[start : end + len("</div>")])
+        cards.extend(_extract_cards(all_path.read_text()))
 
     for path in league_files:
-        html = path.read_text()
-        start = html.find('<div class="match-card">')
-        end = html.rfind("</div>")
-        if start != -1 and end != -1:
-            cards.append(html[start : end + len("</div>")])
+        cards.extend(_extract_cards(path.read_text()))
+
+    cards.sort(key=_card_start_time)
 
     today = datetime.now().strftime("%Y-%m-%d")
     merged = (
