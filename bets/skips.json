@@ -712,5 +712,649 @@
     "date": "2026-02-23",
     "source": "sizing",
     "game_id": "16358"
+  },
+  {
+    "matchup": "Orlando Magic @ Los Angeles Lakers",
+    "reason": "Under 226.5 has value with Wagner out, but edge (7.3 points) is smaller than other totals plays available. Magic H2H dominance (3-1) creates spread uncertainty.",
+    "date": "2026-02-24",
+    "source": "synthesis",
+    "game_id": "16368"
+  },
+  {
+    "matchup": "New York Knicks @ Cleveland Cavaliers",
+    "reason": "Under 228.5 has modest 1.5 point edge, but Knicks 2-0 season series and high H2H variance make this less compelling than other options.",
+    "date": "2026-02-24",
+    "source": "synthesis",
+    "game_id": "16363"
+  },
+  {
+    "matchup": "Washington Wizards @ Atlanta Hawks",
+    "reason": "Under 235.5 has 7.6 point edge but Hawks have their own injury concerns and H2H historically high-scoring. Less clean than other injury-driven unders.",
+    "date": "2026-02-24",
+    "source": "synthesis",
+    "game_id": "16360"
+  },
+  {
+    "matchup": "Dallas Mavericks @ Brooklyn Nets",
+    "reason": "Under 223.5 has edge but both teams are bad and unpredictable. Garbage time scoring risk in games between struggling teams.",
+    "date": "2026-02-24",
+    "source": "synthesis",
+    "game_id": "16361"
+  },
+  {
+    "matchup": "Boston Celtics @ Phoenix Suns",
+    "reason": "Strong edge with Booker/Brooks out, but strategy notes caution on large spreads with injury edges vs elite organizations. Celtics also on first night of B2B with Brown questionable.",
+    "date": "2026-02-24",
+    "source": "synthesis",
+    "game_id": "16367"
+  },
+  {
+    "matchup": "Philadelphia 76ers @ Indiana Pacers",
+    "reason": "Under 233.5 has massive 29.5 point edge but Embiid questionable and injury reports volatile. 76ers on B2B adds uncertainty.",
+    "date": "2026-02-24",
+    "source": "synthesis",
+    "game_id": "16359"
+  },
+  {
+    "matchup": "Charlotte Hornets @ Chicago Bulls",
+    "reason": "Hornets have +5.6 net rating edge but price at 0.735 already reflects most value. Bulls H2H dominance (8-3) creates risk.",
+    "date": "2026-02-24",
+    "source": "synthesis",
+    "game_id": "16364"
+  },
+  {
+    "matchup": "Golden State Warriors @ New Orleans Pelicans",
+    "reason": "Under 223.5 has large edge but Warriors showed ability to score without stars (128 vs Nuggets). Too much uncertainty with multiple questionable players.",
+    "date": "2026-02-24",
+    "source": "synthesis",
+    "game_id": "16366"
+  },
+  {
+    "matchup": "Boston Celtics @ Denver Nuggets",
+    "reason": "While Denver spread has value with expected margin ~13 vs -4.5 line, strategy notes caution on injury edges vs elite organizations. Boston's depth (Derrick White +10.1% usage) could compensate. Under 227.5 is tempting but less clear edge than other totals today.",
+    "date": "2026-02-25",
+    "source": "synthesis",
+    "game_id": "16375"
+  },
+  {
+    "matchup": "San Antonio Spurs @ Toronto Raptors",
+    "reason": "Moneyline at 72.5% implied is fair but not compelling value. Spurs on 9-game streak suggests regression risk. Net rating edge is real but not the 10+ point differential we prioritize. Prefer cleaner edges elsewhere.",
+    "date": "2026-02-25",
+    "source": "synthesis",
+    "game_id": "16371"
+  },
+  {
+    "matchup": "Cleveland Cavaliers @ Milwaukee Bucks",
+    "reason": "Giannis out is significant but 75.5% implied already prices this in. Under 227.5 has merit but both teams on B2B creates variance. Milwaukee just beat Miami by 11 without Giannis showing competitiveness. Edge not clear enough.",
+    "date": "2026-02-25",
+    "source": "synthesis",
+    "game_id": "16374"
+  },
+  {
+    "matchup": "Charlotte Hornets @ Indiana Pacers",
+    "reason": "Under 228.5 has value but lower edge (15.9 points) compared to other under plays. Pacers injury situation creates uncertainty with Siakam doubtful status unknown.",
+    "date": "2026-02-26",
+    "source": "synthesis",
+    "game_id": "16376"
+  },
+  {
+    "matchup": "Miami Heat @ Philadelphia 76ers",
+    "reason": "Heat +2.5 has merit with H2H dominance but both teams on B2B creates variance. Paul George suspension helps but Maxey playing at elite level. Edge exists but not as clear as other selections.",
+    "date": "2026-02-26",
+    "source": "synthesis",
+    "game_id": "16377"
+  },
+  {
+    "matchup": "New Orleans Pelicans @ Utah Jazz",
+    "reason": "Under 240.5 has 24+ point edge but Markkanen/George status unknown until game time. Too much uncertainty on key player availability to commit units.",
+    "date": "2026-02-26",
+    "source": "synthesis",
+    "game_id": "16384"
+  },
+  {
+    "matchup": "Sacramento Kings @ Dallas Mavericks",
+    "reason": "Under 232.5 has value but both teams are shells of themselves with chaotic injury situations. High variance tank-mode matchup.",
+    "date": "2026-02-26",
+    "source": "synthesis",
+    "game_id": "16382"
+  },
+  {
+    "matchup": "Washington Wizards @ Atlanta Hawks",
+    "reason": "Under 233.5 has 17+ point edge but already have two high-confidence under plays. Diversifying away from over-concentration on injury-driven unders.",
+    "date": "2026-02-26",
+    "source": "synthesis",
+    "game_id": "16378"
+  },
+  {
+    "matchup": "Minnesota Timberwolves @ LA Clippers",
+    "reason": "Timberwolves ML has modest value but Leonard's ability to play through questionable tags creates uncertainty. B2B fatigue for Minnesota is concerning.",
+    "date": "2026-02-26",
+    "source": "synthesis",
+    "game_id": "16385"
+  },
+  {
+    "matchup": "Houston Rockets @ Orlando Magic",
+    "reason": "Under 215.5 has only 3.5 point edge - too thin compared to other under plays. Houston's B2B fatigue vs their superior net rating creates conflicting signals.",
+    "date": "2026-02-26",
+    "source": "synthesis",
+    "game_id": "16380"
+  },
+  {
+    "matchup": "Portland Trail Blazers @ Chicago Bulls",
+    "reason": "Vetoed: VETO: Injury_edge bets are performing at 44.8% (13-16) - below breakeven. The claimed '35+ point edge' is implausible; markets adjust for injuries. A 35-point mispricing would be unprecedented. The reasoning conflates raw PPG missing with actual scoring impact (bench players absorb minutes, pace changes). Additionally, totals bets overall are 43.5% (10-13). Despite the logical-sounding analysis, this edge type has been a consistent loser. Protecting bankroll.",
+    "date": "2026-02-26",
+    "source": "sizing",
+    "game_id": "16381"
+  },
+  {
+    "matchup": "New York Knicks @ Milwaukee Bucks",
+    "reason": "Giannis OUT creates edge but strategy warns against large spreads with injury edges vs elite organizations. Bucks 8-2 L10 shows depth resilience. Under 219.5 has merit but less clear edge than other totals plays tonight.",
+    "date": "2026-02-27",
+    "source": "synthesis",
+    "game_id": "16388"
+  },
+  {
+    "matchup": "Memphis Grizzlies @ Dallas Mavericks",
+    "reason": "While Memphis is devastated by injuries (59.5 PPG out), both teams are struggling (combined 5-15 L10) and Dallas on B2B. High variance situation with volatile injury reports. Under has edge but less conviction than CLE/DET and DEN/OKC unders.",
+    "date": "2026-02-27",
+    "source": "synthesis",
+    "game_id": "16389"
+  },
+  {
+    "matchup": "Cleveland Cavaliers @ Detroit Pistons",
+    "reason": "Vetoed: VETO: Despite strong reasoning on paper, injury_edge totals are 13-18 (41.9%) - our worst performing edge type. High confidence totals are hitting at only 44.4%. The 12-point projected edge sounds compelling but our actual results show we consistently overestimate injury impact on totals. The market prices these in better than we do. Cannot justify betting into a losing edge type.",
+    "date": "2026-02-27",
+    "source": "sizing",
+    "game_id": "16386"
+  },
+  {
+    "matchup": "Denver Nuggets @ Oklahoma City Thunder",
+    "reason": "Vetoed: VETO: Same fundamental problem - injury_edge on totals. A claimed 30-point edge is a red flag, not a green light. If our model consistently found 30-point edges and we're still 41.9% on injury totals, the model is broken for this bet type. Murray being 'questionable' adds uncertainty that could flip either direction. OKC's elite defense is already priced in. Declining until injury_edge totals prove profitable.",
+    "date": "2026-02-27",
+    "source": "sizing",
+    "game_id": "16390"
+  },
+  {
+    "matchup": "Toronto Raptors @ Washington Wizards",
+    "reason": "Under 226.5 has only 5.5 point edge - much smaller than other totals plays available. H2H historically high-scoring (81% over 220, avg 232.7) creates risk. Prioritizing larger edges on other games.",
+    "date": "2026-02-28",
+    "source": "synthesis",
+    "game_id": "16393"
+  },
+  {
+    "matchup": "Houston Rockets @ Miami Heat",
+    "reason": "Under 223.5 has 14.7 point edge but smaller than LAL/GSW, NOP/UTA, and POR/CHA totals. Heat have been high-scoring at home recently (121.4 PPG). Diversifying across different games rather than loading up on totals.",
+    "date": "2026-02-28",
+    "source": "synthesis",
+    "game_id": "16392",
+    "winner": "Miami Heat",
+    "final_score": "Houston Rockets 105 @ Miami Heat 115",
+    "actual_total": 220,
+    "actual_margin": 10,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Los Angeles Lakers @ Golden State Warriors",
+    "reason": "Vetoed: VETO - Critical logic flaw: Jimmy Butler plays for the Warriors? This appears to be a data error. Butler is on the Heat/another team, not Golden State. The 45.9 PPG injury impact is inflated by including a player who doesn't play for the Warriors. Without Butler's 19.5 PPG in the calculation, the edge shrinks significantly. Cannot trust this analysis.",
+    "date": "2026-02-28",
+    "source": "sizing",
+    "game_id": "16394"
+  },
+  {
+    "matchup": "New Orleans Pelicans @ LA Clippers",
+    "reason": "Spread edge of 4.5 points is solid but strategy warns against large spreads with injury edges. Total edge of only 1.5 points is too thin. Better injury-driven under opportunities available elsewhere.",
+    "date": "2026-03-01",
+    "source": "synthesis",
+    "game_id": "16405"
+  },
+  {
+    "matchup": "Portland Trail Blazers @ Atlanta Hawks",
+    "reason": "Under has 24-point edge but injury reports may not be fully updated. Less certainty on exact absences compared to other games. Medium confidence doesn't warrant selection over high-confidence plays.",
+    "date": "2026-03-01",
+    "source": "synthesis",
+    "game_id": "16401",
+    "winner": "Atlanta Hawks",
+    "final_score": "Portland Trail Blazers 101 @ Atlanta Hawks 135",
+    "actual_total": 236,
+    "actual_margin": 34,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Oklahoma City Thunder @ Dallas Mavericks",
+    "reason": "Under has value but blowout risk could inflate garbage time scoring. OKC spread at -15.5 is too large given strategy warnings. Better opportunities elsewhere.",
+    "date": "2026-03-01",
+    "source": "synthesis",
+    "game_id": "16404"
+  },
+  {
+    "matchup": "Milwaukee Bucks @ Chicago Bulls",
+    "reason": "Under has 22-point edge but H2H historically high-scoring (68% over 220). Less certainty than other injury-driven unders selected.",
+    "date": "2026-03-01",
+    "source": "synthesis",
+    "game_id": "16398",
+    "winner": "Chicago Bulls",
+    "final_score": "Milwaukee Bucks 97 @ Chicago Bulls 120",
+    "actual_total": 217,
+    "actual_margin": 23,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Detroit Pistons @ Orlando Magic",
+    "reason": "Under edge of ~4 points is smaller than other opportunities. Detroit ML has net rating edge but B2B fatigue is a concern. Better plays available.",
+    "date": "2026-03-01",
+    "source": "synthesis",
+    "game_id": "16403",
+    "winner": "Detroit Pistons",
+    "final_score": "Detroit Pistons 106 @ Orlando Magic 92",
+    "actual_total": 198,
+    "actual_margin": -14,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Cleveland Cavaliers @ Brooklyn Nets",
+    "reason": "Under has 10-point edge but Mitchell's status creates uncertainty. Nets spread has value but strategy warns against large spreads with injury edges.",
+    "date": "2026-03-01",
+    "source": "synthesis",
+    "game_id": "16397",
+    "winner": "Cleveland Cavaliers",
+    "final_score": "Cleveland Cavaliers 106 @ Brooklyn Nets 102",
+    "actual_total": 208,
+    "actual_margin": -4,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Minnesota Timberwolves @ Denver Nuggets",
+    "reason": "Under has 13.6-point edge but Randle questionable adds uncertainty. Jokic at home is dangerous despite Denver's injuries. Less clean than selected plays.",
+    "date": "2026-03-01",
+    "source": "synthesis",
+    "game_id": "16399",
+    "winner": "Minnesota Timberwolves",
+    "final_score": "Minnesota Timberwolves 117 @ Denver Nuggets 108",
+    "actual_total": 225,
+    "actual_margin": -9,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Memphis Grizzlies @ Indiana Pacers",
+    "reason": "Vetoed: 50-point edge claim is unrealistic. Replacement players score, pace adjusts. Our injury-edge unders are 45.5% - this exact bet type is losing us money. Veto.",
+    "date": "2026-03-01",
+    "source": "sizing",
+    "game_id": "16400",
+    "winner": "Memphis Grizzlies",
+    "final_score": "Memphis Grizzlies 125 @ Indiana Pacers 106",
+    "actual_total": 231,
+    "actual_margin": -19,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Denver Nuggets @ Utah Jazz",
+    "reason": "While the under 242.5 has a massive projected edge (37+ points), the H2H history shows 92% of games over 220 with avg total 239.7. This historical pattern creates significant risk despite injury carnage. The spread also conflicts with Denver's 2-8 ATS record as double-digit favorites vs H2H blowout history. Too much uncertainty.",
+    "date": "2026-03-02",
+    "source": "synthesis",
+    "game_id": "16409"
+  },
+  {
+    "matchup": "LA Clippers @ Golden State Warriors",
+    "reason": "Vetoed: VETO - Critical logic flaw: Jimmy Butler plays for the Clippers, not the Warriors. The reasoning claims 45.9 PPG removed from Warriors lineup by citing Butler (19.5 PPG) as a Warriors player. This fundamentally breaks the edge calculation. If Butler is out for the Clippers, that actually helps the under case differently than stated. The analysis is built on incorrect team assignment regardless of data source - the reasoning itself contradicts basic logic (why would Butler being out hurt Warriors scoring?). Cannot trust the 16-point edge claim.",
+    "date": "2026-03-02",
+    "source": "sizing",
+    "game_id": "16410"
+  },
+  {
+    "matchup": "San Antonio Spurs @ Philadelphia 76ers",
+    "reason": "Under 231.5 has strong edge but already have 3 total unders selected. Spurs ML at 73.5% is fairly priced. Strategy notes caution on injury-based spread edges vs elite organizations.",
+    "date": "2026-03-03",
+    "source": "synthesis",
+    "game_id": "16416"
+  },
+  {
+    "matchup": "Memphis Grizzlies @ Minnesota Timberwolves",
+    "reason": "Under 236.5 has value but already at bet limit with higher-confidence plays. MEM +14.5 spread edge is only 1 point.",
+    "date": "2026-03-03",
+    "source": "synthesis",
+    "game_id": "16418"
+  },
+  {
+    "matchup": "Washington Wizards @ Orlando Magic",
+    "reason": "Under 226.5 has 16+ point edge but already at bet limit. Spread at +15.5 exceeds expected margin.",
+    "date": "2026-03-03",
+    "source": "synthesis",
+    "game_id": "16413"
+  },
+  {
+    "matchup": "New Orleans Pelicans @ Los Angeles Lakers",
+    "reason": "Under 243.5 has value but lower confidence than selected plays. Both teams on B2B creates uncertainty.",
+    "date": "2026-03-03",
+    "source": "synthesis",
+    "game_id": "16419"
+  },
+  {
+    "matchup": "Phoenix Suns @ Sacramento Kings",
+    "reason": "Under 222.5 has edge but Kings injuries already priced in somewhat. Spread offers no value at -9.5.",
+    "date": "2026-03-03",
+    "source": "synthesis",
+    "game_id": "16420"
+  },
+  {
+    "matchup": "New York Knicks @ Toronto Raptors",
+    "reason": "H2H dominance is compelling but spread edge is only 0.3 points. ML at 56.5% offers slight value but not enough for selection.",
+    "date": "2026-03-03",
+    "source": "synthesis",
+    "game_id": "16415"
+  },
+  {
+    "matchup": "Brooklyn Nets @ Miami Heat",
+    "reason": "Under 225.5 has 10.5 point edge but Powell injury may already be priced in. Lower confidence than selected plays.",
+    "date": "2026-03-03",
+    "source": "synthesis",
+    "game_id": "16414"
+  },
+  {
+    "matchup": "Oklahoma City Thunder @ New York Knicks",
+    "reason": "OKC injury situation creates value on Knicks +4.5, but H2H dominance (4-0, OKC shoots 48.3% from 3 vs NYK) and SGA's status being GTD (could play healthy) creates too much uncertainty. Medium confidence edge not strong enough given H2H patterns.",
+    "date": "2026-03-04",
+    "source": "synthesis",
+    "game_id": "16421"
+  },
+  {
+    "matchup": "Indiana Pacers @ LA Clippers",
+    "reason": "Pacers +12.5 has 5.5 point edge vs projection, but Pacers are 5-24 on road (worst in league), on 6-game skid, and have multiple questionable starters (Siakam, Nembhard, Nesmith). Low confidence edge with significant downside risk.",
+    "date": "2026-03-04",
+    "source": "synthesis",
+    "game_id": "16426"
+  },
+  {
+    "matchup": "Charlotte Hornets @ Boston Celtics",
+    "reason": "Strategy explicitly warns against laying large spreads with injury edges vs elite organizations. Boston 7-1 H2H historically. Hornets on B2B. While Tatum out is significant, Celtics depth (Brown 28.1 PPG, White, Pritchard) can compensate. Injury_edge bets are only 52.5%.",
+    "date": "2026-03-04",
+    "source": "synthesis",
+    "game_id": "16422"
+  },
+  {
+    "matchup": "Atlanta Hawks @ Milwaukee Bucks",
+    "reason": "Vetoed: No sizing decision",
+    "date": "2026-03-04",
+    "source": "sizing",
+    "game_id": "16425"
+  },
+  {
+    "matchup": "Toronto Raptors @ Minnesota Timberwolves",
+    "reason": "Only 1.5 point edge on total (228 vs 226.5). Both teams on B2B and Ingram questionable creates too much uncertainty. Spread edge is razor thin (0.2 points).",
+    "date": "2026-03-05",
+    "source": "synthesis",
+    "game_id": "16431"
+  },
+  {
+    "matchup": "Chicago Bulls @ Phoenix Suns",
+    "reason": "Under has merit (18.8 point edge) but H2H historically high-scoring (100% over 220). Conflicting signals between injury impact and H2H patterns reduce confidence.",
+    "date": "2026-03-05",
+    "source": "synthesis",
+    "game_id": "16433"
+  },
+  {
+    "matchup": "Brooklyn Nets @ Miami Heat",
+    "reason": "Under has 10.5 point edge but Nets on 9-game losing streak with potential tank motivation. Heat just dominated 124-98 two days ago - garbage time risk in blowout.",
+    "date": "2026-03-05",
+    "source": "synthesis",
+    "game_id": "16429"
+  },
+  {
+    "matchup": "Detroit Pistons @ San Antonio Spurs",
+    "reason": "Elite defensive matchup favors under but only 2 point edge (225.5 vs 227.5). Small H2H sample (5 games) and both teams on B2B creates uncertainty.",
+    "date": "2026-03-05",
+    "source": "synthesis",
+    "game_id": "16432"
+  },
+  {
+    "matchup": "Utah Jazz @ Washington Wizards",
+    "reason": "Massive 43-point edge on under looks compelling but both teams have terrible defense (116-117 DRTG). Garbage time between tanking teams can inflate totals unpredictably.",
+    "date": "2026-03-05",
+    "source": "synthesis",
+    "game_id": "16428"
+  },
+  {
+    "matchup": "Dallas Mavericks @ Orlando Magic",
+    "reason": "Spread edge is solid (8 points on +8.5) but Dallas on 4-game losing streak with 7-20 road record. Injury edge against Orlando but strategy notes caution on large spreads vs quality organizations.",
+    "date": "2026-03-05",
+    "source": "synthesis",
+    "game_id": "16427"
+  },
+  {
+    "matchup": "Dallas Mavericks @ Boston Celtics",
+    "reason": "Mavericks +14.5 has edge but Dallas is genuinely terrible (5-game losing streak, missing Kyrie for season). Tatum returning adds uncertainty. Under 221.5 has merit but only 3.5 point edge - not strong enough.",
+    "date": "2026-03-06",
+    "source": "synthesis",
+    "game_id": "16436"
+  },
+  {
+    "matchup": "LA Clippers @ San Antonio Spurs",
+    "reason": "Conflicting signals - Spurs have elite net rating edge but brutal H2H history (1-6) and B2B fatigue. Under 222.5 has 5.5 point edge but less compelling than other totals plays today.",
+    "date": "2026-03-06",
+    "source": "synthesis",
+    "game_id": "16441"
+  },
+  {
+    "matchup": "New Orleans Pelicans @ Phoenix Suns",
+    "reason": "Both teams depleted and on B2B. Under has value but Suns' injury situation makes spread risky. Too much uncertainty with multiple questionable players on both sides.",
+    "date": "2026-03-06",
+    "source": "synthesis",
+    "game_id": "16440"
+  },
+  {
+    "matchup": "Indiana Pacers @ Los Angeles Lakers",
+    "reason": "Lakers fatigue situation is real but Pacers are genuinely awful (15-47, 7-game losing streak). Under 234.5 has edge but high variance expected. Avoiding this mess.",
+    "date": "2026-03-06",
+    "source": "synthesis",
+    "game_id": "16442"
+  },
+  {
+    "matchup": "Miami Heat @ Charlotte Hornets",
+    "reason": "Charlotte spread has value with Powell out, but H2H history strongly favors Miami (10-2 all-time). Heat culture could overcome injuries. Edge not strong enough given historical pattern.",
+    "date": "2026-03-06",
+    "source": "synthesis",
+    "game_id": "16437"
+  },
+  {
+    "matchup": "Portland Trail Blazers @ Houston Rockets",
+    "reason": "Vetoed: Kelly recommended is $0.00 for good reason - the juice at -208 destroys the value. Even with 85% projected win probability, laying -208 requires ~67.5% just to break even. The reasoning acknowledges Houston only 'approaches' the 10+ net rating threshold. Moneylines are 73.7% winners but that's at better prices. This is a high-probability win but negative EV at this price. VETO.",
+    "date": "2026-03-06",
+    "source": "sizing",
+    "game_id": "16438"
+  },
+  {
+    "matchup": "Brooklyn Nets @ Detroit Pistons",
+    "reason": "Spread edge exists (5.9 points) but Cunningham/Duren GTD status creates too much uncertainty. If both play healthy, Detroit could blow out. Strategy warns against injury-edge spreads vs quality teams.",
+    "date": "2026-03-07",
+    "source": "synthesis",
+    "game_id": "16444",
+    "winner": "Brooklyn Nets",
+    "final_score": "Brooklyn Nets 107 @ Detroit Pistons 105",
+    "actual_total": 212,
+    "actual_margin": -2,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "LA Clippers @ Memphis Grizzlies",
+    "reason": "Under 225.5 has value but less clear than other totals. Clippers on B2B adds uncertainty. Prioritizing higher-conviction plays.",
+    "date": "2026-03-07",
+    "source": "synthesis",
+    "game_id": "16446"
+  },
+  {
+    "matchup": "Orlando Magic @ Minnesota Timberwolves",
+    "reason": "Under 226.5 has 10-point edge but less extreme than other injury situations. Wagner OUT is significant but Orlando still has Banchero. Diversifying away from all-unders slate.",
+    "date": "2026-03-07",
+    "source": "synthesis",
+    "game_id": "16443",
+    "winner": "Orlando Magic",
+    "final_score": "Orlando Magic 119 @ Minnesota Timberwolves 92",
+    "actual_total": 211,
+    "actual_margin": -27,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Charlotte Hornets @ Phoenix Suns",
+    "reason": "Under 218.5 has only 5.2 point edge - weaker than other injury-based unders available. Suns' elite 3PT defense creates variance risk.",
+    "date": "2026-03-08",
+    "source": "synthesis",
+    "game_id": "16456"
+  },
+  {
+    "matchup": "Dallas Mavericks @ Toronto Raptors",
+    "reason": "Only 2.5 point edge on under 229.5 and H2H history shows high-scoring games (avg 254.9). Low confidence play not worth taking over stronger options.",
+    "date": "2026-03-08",
+    "source": "synthesis",
+    "game_id": "16452",
+    "winner": "Toronto Raptors",
+    "final_score": "Dallas Mavericks 92 @ Toronto Raptors 122",
+    "actual_total": 214,
+    "actual_margin": 30,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Boston Celtics @ Cleveland Cavaliers",
+    "reason": "Near toss-up matchup with offsetting factors. No clear edge on spread or total. Boston's B2B fatigue vs Cleveland's rest advantage creates too much uncertainty.",
+    "date": "2026-03-08",
+    "source": "synthesis",
+    "game_id": "16449",
+    "winner": "Boston Celtics",
+    "final_score": "Boston Celtics 109 @ Cleveland Cavaliers 98",
+    "actual_total": 207,
+    "actual_margin": -11,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Washington Wizards @ New Orleans Pelicans",
+    "reason": "Under 239.5 has value but market pricing (0.39 for under) and line movement toward higher totals suggests caution. Prioritized cleaner injury edges elsewhere.",
+    "date": "2026-03-08",
+    "source": "synthesis",
+    "game_id": "16453",
+    "winner": "New Orleans Pelicans",
+    "final_score": "Washington Wizards 118 @ New Orleans Pelicans 138",
+    "actual_total": 256,
+    "actual_margin": 20,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "New York Knicks @ Los Angeles Lakers",
+    "reason": "Under 226.5 has 5.5 point edge but weaker than other injury-based unders. H2H average of 219.3 supports under but not as compelling as other options.",
+    "date": "2026-03-08",
+    "source": "synthesis",
+    "game_id": "16450",
+    "winner": "Los Angeles Lakers",
+    "final_score": "New York Knicks 97 @ Los Angeles Lakers 110",
+    "actual_total": 207,
+    "actual_margin": 13,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "Orlando Magic @ Milwaukee Bucks",
+    "reason": "Magic ML has merit with +5.35 net rating edge and Bucks fatigue, but Franz Wagner out significantly hurts Magic offense. Under 218.5 only has 3.4 point edge - not compelling enough.",
+    "date": "2026-03-08",
+    "source": "synthesis",
+    "game_id": "16454"
+  },
+  {
+    "matchup": "Houston Rockets @ San Antonio Spurs",
+    "reason": "Spurs -4.5 has ~1.85 point edge but Houston has Durant/Sengun capable of keeping it close. H2H shows Houston 5-3 in recent meetings. Not enough edge to prioritize.",
+    "date": "2026-03-08",
+    "source": "synthesis",
+    "game_id": "16455"
+  },
+  {
+    "matchup": "Chicago Bulls @ Sacramento Kings",
+    "reason": "Vetoed: VETO: Fundamental logic error - analysis claims LaVine (Bulls player) being out hurts Sacramento's scoring. This isn't roster skepticism; it's a clear analytical mistake that invalidates the 35.5-point edge calculation. Cannot trust the projection.",
+    "date": "2026-03-08",
+    "source": "sizing",
+    "game_id": "16458"
+  },
+  {
+    "matchup": "Memphis Grizzlies @ Brooklyn Nets",
+    "reason": "While under has merit with ~70 combined PPG missing, both teams have poor defense (115+ DRTG) which could lead to easy buckets. Line likely already adjusted for known injuries. Prefer the cleaner injury situations in other games.",
+    "date": "2026-03-09",
+    "source": "synthesis",
+    "game_id": "16460",
+    "winner": "Brooklyn Nets",
+    "final_score": "Memphis Grizzlies 115 @ Brooklyn Nets 126",
+    "actual_total": 241,
+    "actual_margin": 11,
+    "outcome_resolved": true
+  },
+  {
+    "matchup": "New York Knicks @ LA Clippers",
+    "reason": "Only 4-point edge on under (216.5 vs 220.5) is marginal compared to other opportunities. High-variance H2H (\u00b126.3 pts std dev) makes totals risky. Both teams on B2B creates unpredictability.",
+    "date": "2026-03-09",
+    "source": "synthesis",
+    "game_id": "16463"
+  },
+  {
+    "matchup": "Golden State Warriors @ Utah Jazz",
+    "reason": "Vetoed: VETO - Critical logic flaw: Jimmy Butler plays for the Warriors now? Even trusting the data, the reasoning claims 109+ PPG out between both teams creating a '39-point edge' which would be historically unprecedented. Markets don't miss by 39 points. Additionally, our injury_edge bets are running exactly 50.0% (25-25) - no demonstrated edge. The math here is too aggressive and replacement players still score. This smells like a trap line.",
+    "date": "2026-03-09",
+    "source": "sizing",
+    "game_id": "16462"
+  },
+  {
+    "matchup": "Detroit Pistons @ Brooklyn Nets",
+    "reason": "Under 216.5 has value but smaller edge (10 points) than other unders. Pistons ML at -1000 offers no value despite high win probability.",
+    "date": "2026-03-10",
+    "source": "synthesis",
+    "game_id": "16465"
+  },
+  {
+    "matchup": "Indiana Pacers @ Sacramento Kings",
+    "reason": "Under 234.5 has massive edge but already have 3 high-confidence under plays. Would be 4th selection if allowed.",
+    "date": "2026-03-10",
+    "source": "synthesis",
+    "game_id": "16473"
+  },
+  {
+    "matchup": "Washington Wizards @ Miami Heat",
+    "reason": "Under 241.5 has 34.5 point edge but already at bet limit with higher-confidence plays.",
+    "date": "2026-03-10",
+    "source": "synthesis",
+    "game_id": "16466"
+  },
+  {
+    "matchup": "Minnesota Timberwolves @ Los Angeles Lakers",
+    "reason": "Only 3.5 point edge on under with high variance. Lakers 9-2 without LeBron creates uncertainty.",
+    "date": "2026-03-10",
+    "source": "synthesis",
+    "game_id": "16474"
+  },
+  {
+    "matchup": "Boston Celtics @ San Antonio Spurs",
+    "reason": "Under edge is only 1.8 points. Spurs hot at home averaging 123.9 PPG recently.",
+    "date": "2026-03-10",
+    "source": "synthesis",
+    "game_id": "16470"
+  },
+  {
+    "matchup": "Dallas Mavericks @ Atlanta Hawks",
+    "reason": "Under has 6.5 point edge but Hawks averaging 123.5 PPG recently could inflate total.",
+    "date": "2026-03-10",
+    "source": "synthesis",
+    "game_id": "16467"
+  },
+  {
+    "matchup": "Toronto Raptors @ Houston Rockets",
+    "reason": "Over has 7.5 point edge based on H2H but Houston on B2B after blowout loss creates uncertainty.",
+    "date": "2026-03-10",
+    "source": "synthesis",
+    "game_id": "16468"
+  },
+  {
+    "matchup": "Phoenix Suns @ Milwaukee Bucks",
+    "reason": "Under has 7.5 point edge but H2H historically high-scoring (238.2 avg). High variance matchup.",
+    "date": "2026-03-10",
+    "source": "synthesis",
+    "game_id": "16469"
+  },
+  {
+    "matchup": "Chicago Bulls @ Golden State Warriors",
+    "reason": "Vetoed: VETO - Flawed reasoning. Jimmy Butler is NOT on the Warriors - he's on the Heat (or wherever he was traded, but definitely not GSW). This is a factual error in the analysis that invalidates the edge calculation. The 57.9 PPG out figure is wrong, which means the 35-point edge claim is fabricated. Cannot trust this bet's foundation. Note: I'm vetoing based on logical inconsistency in the reasoning itself, not roster skepticism - Butler being listed as a Warriors player is an analytical error, not a trade I'm unaware of.",
+    "date": "2026-03-10",
+    "source": "sizing",
+    "game_id": "16471"
   }
 ]

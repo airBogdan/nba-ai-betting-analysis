@@ -38,5 +38,26 @@
     "odds_price": 239,
     "amount": 7.0,
     "void_reason": "DNP: Evan Mobley not in box score"
+  },
+  {
+    "id": "ed410785-573a-419f-a730-84b51b21ba15",
+    "game_id": "16382",
+    "matchup": "Sacramento Kings @ Dallas Mavericks",
+    "bet_type": "player_prop",
+    "pick": "over",
+    "line": 4.5,
+    "confidence": "medium",
+    "units": 1.0,
+    "reasoning": "Westbrook averages 6.3 APG, 1.8 assists (40%) above the 4.5 line. With Sabonis out, his playmaking role expands significantly. The 31% implied probability is far too low for a player whose season average suggests he should exceed 4.5 assists in roughly 60%+ of games.",
+    "primary_edge": "Season average 40% above line with expanded role due to Sabonis absence",
+    "date": "2026-02-26",
+    "created_at": "2026-02-26T15:34:49.568900+00:00",
+    "prop_type": "assists",
+    "player_name": "Russell Westbrook",
+    "poly_price": 0.31,
+    "odds_price": 223,
+    "amount": 4.5,
+    "placed_polymarket": true,
+    "void_reason": "DNP: Russell Westbrook not in box score"
   }
 ]
